@@ -36,7 +36,7 @@
 
 
 ;; use org files for fleeting notes
-(defun todo-org ()
+(defun fleet-todo-org ()
   (interactive)
   (with-current-buffer (find-file-noselect (concat emacs-dir "todo.org"))
     (goto-char (point-min))
@@ -47,7 +47,7 @@
     (display-buffer (current-buffer))
     (switch-to-buffer (current-buffer))))
 
-(defun done-org ()
+(defun fleet-done-org ()
   (interactive)
   (org-refile nil nil '("" "done.org" nil nil))
   (save-buffer)
@@ -55,6 +55,12 @@
     (with-current-buffer (find-file-noselect (concat emacs-dir "done.org"))
       (save-buffer))))
 
+(defun fleet-todo-visit ()
+  (interactive)
+  (with-current-buffer (find-file-noselect (concat emacs-dir "todo.org"))
+    (goto-char (point-min))
+    (display-buffer (current-buffer))
+    (switch-to-buffer (current-buffer))))
 
 ;; tool bar
 ;; M-x and C-g
@@ -62,9 +68,12 @@
 (tool-bar-add-item "zoom-in" 'delete-other-windows 'max :help "maximise window")
 ;; utils
 (tool-bar-add-item "sort-column-ascending" 'diary 'diary :help "display diary")
-(tool-bar-add-item "sort-criteria" 'todo-org 'todo :help "new todo")
-(tool-bar-add-item "spell" 'done-org 'done :help "done todo")
+(tool-bar-add-item "spell" 'fleet-todo-visit 'visit :help "visit todo")
+(tool-bar-add-item "separator" nil 'Nil)
+(tool-bar-add-item "sort-criteria" 'fleet-todo-org 'todo :help "new todo")
+(tool-bar-add-item "info" 'fleet-done-org 'done :help "done todo")
 ;; directions
+(tool-bar-add-item "separator" nil nil)
 (tool-bar-add-item "left-arrow" 'backward-char 'bw :help "backward char")
 (tool-bar-add-item "up-arrow" 'previous-line 'up :help "previous line")
 (tool-bar-add-item "sort-ascending" 'next-line 'down :help "next line")
