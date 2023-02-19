@@ -36,18 +36,27 @@
 
 
 (require 'todo-mode)
-(setq todo-directory (concat emacs-dir "todos")
-      todo-add-item-if-new-category nil)
+(setq todo-directory (concat emacs-dir "todos/"))
 
-;; customise tool bar
-(tool-bar-add-item "left-arrow" 'backward-char 'bw :help "backward char")
-(tool-bar-add-item "right-arrow" 'forward-char 'fw :help "forward char")
-(tool-bar-add-item "sort-column-ascending" 'diary 'diary :help "display diary")
+;; tool bar
+;; M-x and C-g
+(tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
 (tool-bar-add-item "zoom-in" 'delete-other-windows 'max :help "maximise window")
+;; utils
+(tool-bar-add-item "sort-column-ascending" 'diary 'diary :help "display diary")
+(tool-bar-add-item "spell" 'todo-show 'todo :help "todo show")
+;; directions
+(tool-bar-add-item "left-arrow" 'backward-char 'bw :help "backward char")
+(tool-bar-add-item "up-arrow" 'previous-line 'up :help "previous line")
+(tool-bar-add-item "sort-ascending" 'next-line 'down :help "next line")
+(tool-bar-add-item "right-arrow" 'forward-char 'fw :help "forward char")
+
+;; mode line
 (setq-default mode-line-format
       '("%e" mode-line-front-space mode-line-modes " " mode-line-buffer-identification " " mode-line-misc-info " " mode-line-position
   mode-line-end-spaces))
 
+;; menu
 (define-key global-map
   [menu-bar edit set-mark]
   '("Set mark" . set-mark-command))
