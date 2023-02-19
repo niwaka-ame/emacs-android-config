@@ -1,0 +1,38 @@
+(defvar emacs-dir "/sdcard/emacs/")
+(when (= emacs-major-version 28)
+  (setq emacs-dir "/home/yu/emacs-android/"))
+
+;;; larger font on phone
+(set-face-attribute 'default nil :height 120)
+
+;;; set up a splash screen for diary
+
+(setq inhibit-startup-screen t)
+
+(require 'calendar)
+(calendar-set-date-style 'iso)
+(setq calendar-chinese-all-holidays-flag t
+      calendar-minimum-window-height 12)
+(calendar)
+
+(require 'diary-lib)
+(setq diary-display-function #'diary-fancy-display
+      diary-number-of-entries 7
+      diary-file (concat emacs-dir "diary"))
+(add-hook 'diary-list-entries-hook #'diary-sort-entries t)
+(add-hook 'diary-list-entries-hook #'diary-include-other-diary-files)
+(add-hook 'diary-mark-entries-hook #'diary-mark-included-diary-files)
+(add-hook 'diary-nongregorian-listing-hook #'diary-chinese-list-entries)
+(add-hook 'diary-nongregorian-listing-hook #'diary-chinese-mark-entries)
+(calendar-goto-today)
+(diary)
+
+(require 'appt)
+(setq appt-display-mode-line t
+      appt-message-warning-time 30)
+(appt-activate t)
+
+
+(require 'todo-mode)
+(setq todo-directory (concat emacs-dir "todos")
+      todo-add-item-if-new-category nil)
