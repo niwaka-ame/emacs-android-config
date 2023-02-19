@@ -37,3 +37,9 @@
 (require 'todo-mode)
 (setq todo-directory (concat emacs-dir "todos")
       todo-add-item-if-new-category nil)
+
+;; customise tool bar
+(tool-bar-add-item "sort-column-ascending" 'diary 'diary :help "display diary")
+(setq-default mode-line-format
+      '("%e" mode-line-front-space mode-line-modes " " mode-line-buffer-identification " " mode-line-misc-info " " mode-line-position
+  mode-line-end-spaces))
