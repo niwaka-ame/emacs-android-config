@@ -35,8 +35,26 @@
 (appt-activate t)
 
 
-(require 'todo-mode)
-(setq todo-directory (concat emacs-dir "todos/"))
+;; use org files for fleeting notes
+(defun todo-org ()
+  (interactive)
+  (with-current-buffer (find-file-noselect (concat emacs-dir "todo.org"))
+    (goto-char (point-min))
+    (org-insert-heading)
+    (save-excursion
+      (newline)
+      (insert (format-time-string "<%F %a>" (current-time))))
+    (display-buffer (current-buffer))
+    (switch-to-buffer (current-buffer))))
+
+(defun done-org ()
+  (interactive)
+  (org-refile nil nil '("" "done.org" nil nil))
+  (save-buffer)
+  (save-excursion
+    (with-current-buffer (find-file-noselect (concat emacs-dir "done.org"))
+      (save-buffer))))
+
 
 ;; tool bar
 ;; M-x and C-g
@@ -44,7 +62,8 @@
 (tool-bar-add-item "zoom-in" 'delete-other-windows 'max :help "maximise window")
 ;; utils
 (tool-bar-add-item "sort-column-ascending" 'diary 'diary :help "display diary")
-(tool-bar-add-item "spell" 'todo-show 'todo :help "todo show")
+(tool-bar-add-item "sort-criteria" 'todo-org 'todo :help "new todo")
+(tool-bar-add-item "spell" 'done-org 'done :help "done todo")
 ;; directions
 (tool-bar-add-item "left-arrow" 'backward-char 'bw :help "backward char")
 (tool-bar-add-item "up-arrow" 'previous-line 'up :help "previous line")
@@ -60,3 +79,4 @@
 (define-key global-map
   [menu-bar edit set-mark]
   '("Set mark" . set-mark-command))
+
