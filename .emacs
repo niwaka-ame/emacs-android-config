@@ -57,10 +57,7 @@
 
 (defun fleet-todo-visit ()
   (interactive)
-  (with-current-buffer (find-file-noselect (concat emacs-dir "todo.org"))
-    (goto-char (point-min))
-    (display-buffer (current-buffer))
-    (switch-to-buffer (current-buffer))))
+  (switch-to-buffer (find-file-noselect (concat emacs-dir "todo.org"))))
 
 ;; tool bar
 ;; M-x and C-g
