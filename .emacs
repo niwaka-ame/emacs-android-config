@@ -18,7 +18,8 @@
 (require 'diary-lib)
 (setq diary-display-function #'diary-fancy-display
       diary-number-of-entries 7
-      diary-file (concat emacs-dir "diary"))
+      diary-file (concat emacs-dir "diary")
+      diary-show-holidays-flag nil)
 (add-hook 'diary-list-entries-hook #'diary-sort-entries t)
 (add-hook 'diary-list-entries-hook #'diary-include-other-diary-files)
 (add-hook 'diary-mark-entries-hook #'diary-mark-included-diary-files)
@@ -40,6 +41,7 @@
 
 ;; customise tool bar
 (tool-bar-add-item "sort-column-ascending" 'diary 'diary :help "display diary")
+(tool-bar-add-item "zoom-in" 'delete-other-windows 'max :help "maximise window")
 (setq-default mode-line-format
       '("%e" mode-line-front-space mode-line-modes " " mode-line-buffer-identification " " mode-line-misc-info " " mode-line-position
   mode-line-end-spaces))
