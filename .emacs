@@ -3,7 +3,7 @@
   (setq emacs-dir "/home/yu/emacs-android/"))
 
 ;;; larger font on phone
-(set-face-attribute 'default nil :height 120)
+(set-face-attribute 'default nil :height 200)
 
 ;;; set up a splash screen for diary
 
@@ -26,6 +26,7 @@
 (add-hook 'diary-nongregorian-listing-hook #'diary-chinese-mark-entries)
 (calendar-goto-today)
 (diary)
+(calendar-exit)
 
 (require 'appt)
 (setq appt-display-mode-line t
