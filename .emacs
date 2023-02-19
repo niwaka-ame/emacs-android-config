@@ -40,8 +40,14 @@
       todo-add-item-if-new-category nil)
 
 ;; customise tool bar
+(tool-bar-add-item "left-arrow" 'backward-char 'bw :help "backward char")
+(tool-bar-add-item "right-arrow" 'forward-char 'fw :help "forward char")
 (tool-bar-add-item "sort-column-ascending" 'diary 'diary :help "display diary")
 (tool-bar-add-item "zoom-in" 'delete-other-windows 'max :help "maximise window")
 (setq-default mode-line-format
       '("%e" mode-line-front-space mode-line-modes " " mode-line-buffer-identification " " mode-line-misc-info " " mode-line-position
   mode-line-end-spaces))
+
+(define-key global-map
+  [menu-bar edit set-mark]
+  '("Set mark" . set-mark-command))
