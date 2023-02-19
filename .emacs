@@ -66,6 +66,7 @@
 ;; utils
 (tool-bar-add-item "sort-column-ascending" 'diary 'diary :help "display diary")
 (tool-bar-add-item "spell" 'fleet-todo-visit 'visit :help "visit todo")
+(tool-bar-add-item "preferences" 'eshell 'eshell :help "eshell")
 (tool-bar-add-item "separator" nil 'Nil)
 (tool-bar-add-item "sort-criteria" 'fleet-todo-org 'todo :help "new todo")
 (tool-bar-add-item "info" 'fleet-done-org 'done :help "done todo")
