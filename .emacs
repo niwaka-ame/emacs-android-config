@@ -2,6 +2,9 @@
 (when (= emacs-major-version 28)
   (setq emacs-dir "/home/yu/emacs-android/"))
 
+;; load theme
+(load-theme 'tango-dark t)
+
 ;;; larger font on phone
 (set-face-attribute 'default nil :height 200)
 
@@ -87,3 +90,4 @@
   [menu-bar edit set-mark]
   '("Set mark" . set-mark-command))
 
+; (add-hook 'after-init-hook (lambda () (load-theme "wombat" t)))
