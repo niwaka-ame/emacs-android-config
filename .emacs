@@ -12,11 +12,20 @@
 
 (setq inhibit-startup-screen t)
 
+;; some useful builtin mode
+(require 'delsel)
+(delete-selection-mode)
+
+(require 'paren)
+(setq show-paren-when-point-inside-paren t
+        show-paren-when-point-in-periphery t)
+(show-paren-mode)
+
 (require 'calendar)
 (calendar-set-date-style 'iso)
 (setq calendar-chinese-all-holidays-flag t
       calendar-minimum-window-height 12)
-(calendar)
+(add-hook 'calendar-today-visible-hook #'calendar-mark-today)
 
 (require 'diary-lib)
 (setq diary-display-function #'diary-fancy-display
@@ -28,6 +37,8 @@
 (add-hook 'diary-mark-entries-hook #'diary-mark-included-diary-files)
 (add-hook 'diary-nongregorian-listing-hook #'diary-chinese-list-entries)
 (add-hook 'diary-nongregorian-listing-hook #'diary-chinese-mark-entries)
+
+(calendar)
 (calendar-goto-today)
 (diary)
 (calendar-exit)
@@ -37,6 +48,19 @@
       appt-message-warning-time 30)
 (appt-activate t)
 
+;; internet
+(require 'browse-url)
+(require 'webjump)
+(require 'eww)
+(setq browse-url-browser-function 'eww)
+(setq webjump-sites
+      '(("ddg" . [simple-query "duckduckgo.com" "duckduckgo.com/?q=" ""])
+        ("gsc" . [simple-query "scholar.google.com" "scholar.google.com/scholar?q=" ""])))
+(setq eww-bookmarks-directory (concat emacs-dir "eww"))
+
+;; truncate line in orgmode
+(require 'org)
+(add-hook 'org-mode-hook (lambda () (toggle-truncate-lines -1)))
 
 ;; use org files for fleeting notes
 (defun fleet-todo-org ()
@@ -63,7 +87,6 @@
   (switch-to-buffer (find-file-noselect (concat emacs-dir "todo.org"))))
 
 ;; tool bar
-;; M-x and C-g
 (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
 (tool-bar-add-item "zoom-in" 'delete-other-windows 'max :help "maximise window")
 ;; utils
@@ -89,5 +112,6 @@
 (define-key global-map
   [menu-bar edit set-mark]
   '("Set mark" . set-mark-command))
-
-; (add-hook 'after-init-hook (lambda () (load-theme "wombat" t)))
+(define-key global-map
+  [menu-bar edit eww-readable]
+  '("EWW readable" . eww-readable))
