@@ -56,7 +56,20 @@
 (setq webjump-sites
       '(("ddg" . [simple-query "duckduckgo.com" "duckduckgo.com/?q=" ""])
         ("gsc" . [simple-query "scholar.google.com" "scholar.google.com/scholar?q=" ""])))
-(setq eww-bookmarks-directory (concat emacs-dir "eww"))
+(setq eww-bookmarks-directory (concat emacs-dir "eww")
+      shr-inhibit-images t)
+
+;; RSS
+(require 'newsticker)
+(setq
+     newsticker-url-list-defaults nil
+     newsticker-retrieval-interval 0
+     newsticker-automatically-mark-items-as-old nil
+     newsticker-obsolete-item-max-age (* 2 86400)
+     newsticker-frontend 'newsticker-plainview)
+(setq newsticker-url-list
+      '(("Sacha Chua" "https://sachachua.com/blog/feed")
+        ("Science daily" "http://www.sciencemag.org/rss/news_current.xml")))
 
 ;; truncate line in orgmode
 (require 'org)
@@ -113,5 +126,11 @@
   [menu-bar edit set-mark]
   '("Set mark" . set-mark-command))
 (define-key global-map
-  [menu-bar edit eww-readable]
+  [menu-bar tools eww-readable]
   '("EWW readable" . eww-readable))
+(define-key global-map
+  [menu-bar tools eww-list-bookmarks]
+  '("EWW bookmark" . eww-list-bookmarks))
+(define-key global-map
+  [menu-bar tools webjump]
+  '("Web jump" . webjump))
