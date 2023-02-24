@@ -67,9 +67,8 @@
      newsticker-automatically-mark-items-as-old nil
      newsticker-obsolete-item-max-age (* 2 86400)
      newsticker-frontend 'newsticker-plainview)
-(setq newsticker-url-list
-      '(("Sacha Chua" "https://sachachua.com/blog/feed")
-        ("Science daily" "http://www.sciencemag.org/rss/news_current.xml")))
+; RSS feed list in a separate file
+(load (concat emacs-dir "rssfeeds.el"))
 
 ;; truncate line in orgmode
 (require 'org)
@@ -106,6 +105,7 @@
 (tool-bar-add-item "sort-column-ascending" 'diary 'diary :help "display diary")
 (tool-bar-add-item "spell" 'fleet-todo-visit 'visit :help "visit todo")
 (tool-bar-add-item "preferences" 'eshell 'eshell :help "eshell")
+(tool-bar-add-item "describe" 'newsticker-show-news 'news :help "News ticker")
 (tool-bar-add-item "separator" nil 'Nil)
 (tool-bar-add-item "sort-criteria" 'fleet-todo-org 'todo :help "new todo")
 (tool-bar-add-item "info" 'fleet-done-org 'done :help "done todo")
