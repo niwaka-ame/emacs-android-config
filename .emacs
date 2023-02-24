@@ -37,6 +37,8 @@
 (add-hook 'diary-mark-entries-hook #'diary-mark-included-diary-files)
 (add-hook 'diary-nongregorian-listing-hook #'diary-chinese-list-entries)
 (add-hook 'diary-nongregorian-listing-hook #'diary-chinese-mark-entries)
+(add-hook 'diary-mode-hook #'variable-pitch-mode)
+(add-hook 'diary-fancy-display-mode-hook #'variable-pitch-mode)
 
 (calendar)
 (calendar-goto-today)
@@ -69,10 +71,12 @@
      newsticker-frontend 'newsticker-plainview)
 ; RSS feed list in a separate file
 (load (concat emacs-dir "rssfeeds.el"))
+(add-hook 'newsticker-mode-hook #'variable-pitch-mode)
 
 ;; truncate line in orgmode
 (require 'org)
 (add-hook 'org-mode-hook (lambda () (toggle-truncate-lines -1)))
+(add-hook 'org-mode-hook #'variable-pitch-mode)
 
 ;; use org files for fleeting notes
 (defun fleet-todo-org ()
