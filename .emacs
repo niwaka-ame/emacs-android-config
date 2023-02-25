@@ -1,7 +1,6 @@
 (defvar emacs-dir "/sdcard/emacs/")
-(if (= emacs-major-version 28)
-  (setq emacs-dir "/home/yu/emacs-android/")
-  (load "~/init-packages.el"))
+(when (= emacs-major-version 28)
+  (setq emacs-dir "/home/yu/emacs-android/"))
 
 ;; load theme
 (load-theme 'tango-dark t)
@@ -11,7 +10,11 @@
 
 ;;; set up a splash screen for diary
 
-(setq inhibit-startup-screen t)
+(setq inhibit-startup-screen t
+      initial-scratch-message nil)
+
+(unless (= emacs-major-version 28)
+  (load "~/init-packages.el"))
 
 ;; some useful builtin mode
 (require 'delsel)
@@ -144,4 +147,8 @@
 ;; third-party packages
 ;; pangu-spacing
 (require 'pangu-spacing)
-(global-pangu-spacing-mode 1)
+(add-hook 'org-mode-hook #'pangu-spacing)
+
+;; scratch buffer
+(with-current-buffer "*scratch*"
+  (org-mode))
