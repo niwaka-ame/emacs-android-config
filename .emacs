@@ -1,6 +1,7 @@
 (defvar emacs-dir "/sdcard/emacs/")
-(when (= emacs-major-version 28)
-  (setq emacs-dir "/home/yu/emacs-android/"))
+(if (= emacs-major-version 28)
+  (setq emacs-dir "/home/yu/emacs-android/")
+  (load "~/init-packages.el"))
 
 ;; load theme
 (load-theme 'tango-dark t)
@@ -139,3 +140,8 @@
 (define-key global-map
   [menu-bar tools webjump]
   '("Web jump" . webjump))
+
+;; third-party packages
+;; pangu-spacing
+(require 'pangu-spacing)
+(global-pangu-spacing-mode 1)
