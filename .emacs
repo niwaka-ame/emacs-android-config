@@ -153,7 +153,10 @@
 (define-key global-map
   [menu-bar my visit-init]
   '("visit .emacs file" .
-    (lambda () (find-file-noselect "~/.emacs"))))
+    (lambda ()
+      (interactive)
+      (find-file-noselect "~/.emacs")
+      (switch-to-buffer ".emacs"))))
 (define-key global-map
   [menu-bar my ielm]
   '("ielm" . ielm))
@@ -181,7 +184,7 @@
 (unless (= emacs-major-version 28)
   ;; pangu-spacing
   (require 'pangu-spacing)
-  (add-hook 'org-mode-hook #'pangu-spacing)
+  (add-hook 'org-mode-hook #'pangu-spacing-mode)
   )
 
 ;; finalise startup apperance
