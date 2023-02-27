@@ -82,6 +82,7 @@
 (add-hook 'org-mode-hook (lambda () (toggle-truncate-lines -1)))
 (add-hook 'org-mode-hook #'variable-pitch-mode)
 (add-hook 'org-mode-hook #'org-indent-mode)
+(setq org-cite-global-bibliography (list "/home/yu/denote/lib.bib"))
 
 ;; use org files for fleeting notes
 (defun fleet-todo-org ()
