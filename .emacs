@@ -1,4 +1,4 @@
-(defvar emacs-dir "/sdcard/emacs/")
+(defvar emacs-dir "/sdcard/emacs/kawa/")
 (when (= emacs-major-version 28)
   (setq emacs-dir "/home/yu/emacs-android/"))
 
@@ -62,7 +62,7 @@
 (setq webjump-sites
       '(("ddg" . [simple-query "duckduckgo.com" "duckduckgo.com/?q=" ""])
         ("gsc" . [simple-query "scholar.google.com" "scholar.google.com/scholar?q=" ""])))
-(setq eww-bookmarks-directory (concat emacs-dir "eww")
+(setq eww-bookmarks-directory emacs-dir
       shr-inhibit-images t)
 
 ;; RSS
@@ -187,7 +187,7 @@
   (add-hook 'org-mode-hook #'pangu-spacing-mode)
   ;; denote
   (require 'denote)
-  (setq denote-directory (concat emacs-dir "denote/")
+  (setq denote-directory "/sdcard/emacs/denote/"
         denote-backlinks-show-context t)
   (setq denote-known-keywords
         '(life philosophy gedanken biology cs maths physics economics politics history))
