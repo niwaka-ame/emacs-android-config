@@ -185,6 +185,12 @@
   ;; pangu-spacing
   (require 'pangu-spacing)
   (add-hook 'org-mode-hook #'pangu-spacing-mode)
+  ;; denote
+  (require 'denote)
+  (setq denote-directory (concat emacs-dir "denote/")
+        denote-backlinks-show-context t)
+  (setq denote-known-keywords
+        '(life philosophy gedanken biology cs maths physics economics politics history))
   )
 
 ;; finalise startup apperance

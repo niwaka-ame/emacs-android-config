@@ -2,7 +2,7 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
 (defvar my-package-list
-  '(pangu-spacing))
+  '(pangu-spacing denote))
 
 ; activate all the packages
 (package-initialize)
