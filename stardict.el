@@ -170,7 +170,7 @@ You should close the dict file yourself."
   (with-current-buffer (get-buffer-create "*stardict*")
     (erase-buffer)
     (insert (concat word "\n"))
-    (insert (stardict-lookup stardict-dict-hash (string-trim (downcase word))))
+    (insert (stardict-lookup stardict-dict-hash word))
     (goto-char (point-min))
     (switch-to-buffer (current-buffer))))
 
@@ -178,7 +178,7 @@ You should close the dict file yourself."
   "Define the word at point."
   (interactive)
   (stardict--load-dict)
-  (let ((word (thing-at-point 'word)))
+  (let ((word (downcase (thing-at-point 'word))))
     ;; if word is not in dictionary, try to truncate
     (unless (stardict-word-exist-p stardict-dict-hash word)
       (let ((trunc-char
@@ -199,6 +199,7 @@ You should close the dict file yourself."
   "Prompt for `WORD' and define it."
   (interactive "sWord: ")
   (stardict--load-dict)
+  (setq word (string-trim (downcase word)))
   (if (stardict-word-exist-p stardict-dict-hash word)
       (stardict--lookup-and-display word)
     (message "No definition is found!")))
