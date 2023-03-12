@@ -166,6 +166,14 @@ You should close the dict file yourself."
     (setq stardict-dict-hash
           (stardict-open stardict-dir stardict-name))))
 
+(defun stardict--lookup-and-display (word)
+  (with-current-buffer (get-buffer-create "*stardict*")
+    (erase-buffer)
+    (insert (concat word "\n"))
+    (insert (stardict-lookup stardict-dict-hash (string-trim (downcase word))))
+    (goto-char (point-min))
+    (switch-to-buffer (current-buffer))))
+
 (defun stardict-define-at-point ()
   "Define the word at point."
   (interactive)
@@ -184,22 +192,14 @@ You should close the dict file yourself."
           (setq word (substring word 0 trunc-char))
           (setq word nil))))
     (if word
-        (with-current-buffer (get-buffer-create "*stardict*")
-          (erase-buffer)
-          (insert (concat word "\n"))
-          (insert (stardict-lookup stardict-dict-hash (downcase word)))
-          (switch-to-buffer (current-buffer)))
+        (stardict--lookup-and-display word)
       (message "No definition is found!"))))
 
 (defun stardict-define (word)
   "Prompt for `WORD' and define it."
   (interactive "sWord: ")
   (stardict--load-dict)
-  (with-current-buffer (get-buffer-create "*stardict*")
-    (erase-buffer)
-    (insert (concat word "\n"))
-    (insert (stardict-lookup stardict-dict-hash (string-trim (downcase word))))
-    (switch-to-buffer (current-buffer))))
+  (stardict--lookup-and-display word))
 
 (provide 'stardict)
 
