@@ -85,7 +85,7 @@
 (setq org-cite-global-bibliography (list "/home/yu/denote/lib.bib"))
 
 ;; use org files for fleeting notes
-(defun fleet-todo-org ()
+(defun fleet-todo-org (&optional no-switch)
   (interactive)
   (with-current-buffer (find-file-noselect (concat emacs-dir "todo.org"))
     (goto-char (point-min))
@@ -93,8 +93,8 @@
     (save-excursion
       (newline)
       (insert (format-time-string "<%F %a>" (current-time))))
-    (display-buffer (current-buffer))
-    (switch-to-buffer (current-buffer))))
+    (unless no-switch
+      (switch-to-buffer (current-buffer)))))
 
 (defun fleet-done-org ()
   (interactive)
@@ -107,6 +107,27 @@
 (defun fleet-todo-visit ()
   (interactive)
   (switch-to-buffer (find-file-noselect (concat emacs-dir "todo.org"))))
+
+(defun fleet-add-region ()
+  (interactive)
+  (let* ((regionp (region-active-p))
+         (beg (and regionp (region-beginning)))
+         (end (and regionp (region-end)))
+         (buf (current-buffer)))
+    (when regionp
+      (fleet-todo-org 'no-switch)
+      (with-current-buffer "todo.org"
+        (insert-buffer-substring-no-properties buf beg end)
+        (save-buffer)))))
+
+(defun fleet-add-url ()
+  (interactive)
+  (let ((url (eww-copy-page-url)))
+    (when url
+      (fleet-todo-org 'no-switch)
+      (with-current-buffer "todo.org"
+        (insert url)
+        (save-buffer)))))
 
 ;; tool bar
 (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
@@ -169,6 +190,12 @@
   '("calendar" . calendar))
 ; EWW series
 (define-key global-map
+  [menu-bar my fleet-add-region]
+  '("copy region to fleet note" . fleet-add-region))
+(define-key global-map
+  [menu-bar my fleet-add-url]
+  '("copy URL to fleet note" . fleet-add-url))
+(define-key global-map
   [menu-bar my webjump]
   '("web jump" . webjump))
 (define-key global-map
@@ -194,7 +221,7 @@
         '(life philosophy gedanken biology cs maths physics economics politics history))
   (defun visit-random-denote ()
     (interactive)
-    (let* ((filelist (cddr (directory-files denote-directory)))
+    (let* ((filelist (remove "lib.bib" (cddr (directory-files denote-directory))))
            (numfiles (length filelist)))
       (switch-to-buffer
        (find-file-noselect
