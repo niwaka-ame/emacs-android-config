@@ -199,7 +199,9 @@ You should close the dict file yourself."
   "Prompt for `WORD' and define it."
   (interactive "sWord: ")
   (stardict--load-dict)
-  (stardict--lookup-and-display word))
+  (if (stardict-word-exist-p stardict-dict-hash word)
+      (stardict--lookup-and-display word)
+    (message "No definition is found!")))
 
 (provide 'stardict)
 
