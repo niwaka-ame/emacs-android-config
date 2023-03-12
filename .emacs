@@ -133,12 +133,27 @@
         (insert url)
         (save-buffer)))))
 
+;; glossary
+(defun glossary-add-at-point ()
+  (interactive)
+  (let ((word (thing-at-point 'word)))
+    (with-current-buffer (find-file-noselect (concat emacs-dir "glossary"))
+      (goto-char (point-min))
+      (insert (concat word "\n"))
+      (save-buffer)
+      (kill-buffer))))
+
+(defun glossary-visit ()
+  (interactive)
+  (switch-to-buffer (find-file-noselect (concat emacs-dir "glossary"))))
+
 ;; tool bar
 (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
 (tool-bar-add-item "zoom-in" 'delete-other-windows 'max :help "maximise window")
 ;; utils
 (tool-bar-add-item "sort-column-ascending" 'diary 'diary :help "display diary")
-(tool-bar-add-item "spell" 'fleet-todo-visit 'visit :help "visit todo")
+(tool-bar-add-item "sort-descending" 'fleet-todo-visit 'visit :help "visit todo")
+(tool-bar-add-item "spell" 'glossary-visit 'glossary :help "visit glossary")
 (tool-bar-add-item "describe" 'newsticker-show-news 'news :help "News ticker")
 (tool-bar-add-item "separator" nil 'Nil)
 (tool-bar-add-item "sort-criteria" 'fleet-todo-org 'todo :help "new todo")
@@ -213,11 +228,15 @@
   '("EWW" . eww))
 ; dictionary
 (define-key global-map
-  [menu-bar my stardict-define-at-point]
-  '("Define at point" . stardict-define-at-point))
+  [menu-bar my glossary-add-at-point]
+  '("Add to glossary" . glossary-add-at-point))
 (define-key global-map
   [menu-bar my stardict-define]
   '("Define word" . stardict-define))
+(define-key global-map
+  [menu-bar my stardict-define-at-point]
+  '("Define at point" . stardict-define-at-point))
+
 
 ;; third-party packages
 (unless (= emacs-major-version 28)
