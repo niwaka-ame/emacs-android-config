@@ -18,6 +18,8 @@
 (unless (= emacs-major-version 28)
   (add-to-list 'load-path "/sdcard/emacs/emacs-android-config/")
   (require 'stardict)
+  (setq stardict-dir "/sdcard/emacs/langdao/"
+        stardict-name "langdao-ec-gb")
   (load "init-packages.el"))
 
 ;; some useful builtin mode
