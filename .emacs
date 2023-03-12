@@ -16,7 +16,9 @@
       initial-scratch-message nil)
 
 (unless (= emacs-major-version 28)
-  (load "~/init-packages.el"))
+  (add-to-list 'load-path "/sdcard/emacs/emacs-android-config/")
+  (require 'stardict)
+  (load "init-packages.el"))
 
 ;; some useful builtin mode
 (require 'delsel)
@@ -164,6 +166,13 @@
   [my]
   (cons "My" (make-sparse-keymap "My"))
   'buffers)
+; dictionary
+(define-key global-map
+  [menu-bar my stardict-define-at-point]
+  '("Define at point" . stardict-define-at-point))
+(define-key global-map
+  [menu-bar my stardict-define]
+  '("Define word" . stardict-define))
 ; zoom in and out
 (define-key global-map
   [menu-bar my text-scale-increase]
