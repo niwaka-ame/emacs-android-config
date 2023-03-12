@@ -168,13 +168,6 @@
   [my]
   (cons "My" (make-sparse-keymap "My"))
   'buffers)
-; dictionary
-(define-key global-map
-  [menu-bar my stardict-define-at-point]
-  '("Define at point" . stardict-define-at-point))
-(define-key global-map
-  [menu-bar my stardict-define]
-  '("Define word" . stardict-define))
 ; zoom in and out
 (define-key global-map
   [menu-bar my text-scale-increase]
@@ -218,6 +211,13 @@
 (define-key global-map
   [menu-bar my eww]
   '("EWW" . eww))
+; dictionary
+(define-key global-map
+  [menu-bar my stardict-define-at-point]
+  '("Define at point" . stardict-define-at-point))
+(define-key global-map
+  [menu-bar my stardict-define]
+  '("Define word" . stardict-define))
 
 ;; third-party packages
 (unless (= emacs-major-version 28)

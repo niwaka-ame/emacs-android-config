@@ -198,7 +198,7 @@ You should close the dict file yourself."
   (with-current-buffer (get-buffer-create "*stardict*")
     (erase-buffer)
     (insert (concat word "\n"))
-    (insert (stardict-lookup stardict-dict-hash (downcase word)))
+    (insert (stardict-lookup stardict-dict-hash (string-trim (downcase word))))
     (switch-to-buffer (current-buffer))))
 
 (provide 'stardict)
