@@ -38,7 +38,7 @@
       calendar-minimum-window-height 8)
 (add-hook 'calendar-today-visible-hook #'calendar-mark-today)
 (add-hook 'calendar-mode-hook (lambda () (toggle-truncate-lines 1)))
-(add-hook 'calendar-mode-hook #'delete-other-windows)
+(add-hook 'calendar-initial-window-hook #'delete-other-windows)
 
 (require 'diary-lib)
 (setq diary-display-function #'diary-fancy-display
@@ -120,16 +120,22 @@
   (let* ((regionp (region-active-p))
          (beg (and regionp (region-beginning)))
          (end (and regionp (region-end)))
-         (buf (current-buffer)))
+         (buf (current-buffer))
+         (url (and (string= (buffer-name) "*eww*") (plist-get eww-data :url)))
     (when regionp
       (fleet-todo-org 'no-switch)
       (with-current-buffer "todo.org"
         (insert-buffer-substring-no-properties buf beg end)
-        (save-buffer)))))
+        (when url
+          (save-excursion
+            (next-line)
+            (newline)
+            (insert url)))
+        (save-buffer))))))
 
 (defun fleet-add-url ()
   (interactive)
-  (let ((url (eww-copy-page-url)))
+  (let ((url (plist-get eww-data :url)))
     (when url
       (fleet-todo-org 'no-switch)
       (with-current-buffer "todo.org"
