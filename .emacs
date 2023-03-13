@@ -52,6 +52,7 @@
 (add-hook 'diary-nongregorian-listing-hook #'diary-chinese-mark-entries)
 (add-hook 'diary-mode-hook #'variable-pitch-mode)
 (add-hook 'diary-fancy-display-mode-hook #'variable-pitch-mode)
+(add-hook 'diary-fancy-display-mode-hook #'delete-other-windows)
 
 (require 'appt)
 (setq appt-display-mode-line t
