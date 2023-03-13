@@ -187,7 +187,10 @@ You should close the dict file yourself."
               ((string-match "^.*ing$" word) -3)
               ((string-match "^.*es$" word) -2)
               ((string-match "^.*'s$" word) -2)
-              ((string-match "^.*s$" word) -1))))
+              ((string-match "^.*s$" word) -1)
+              ((string-match "^.*ly$" word) -2)
+              ((string-match "^.*er$" word) -2)
+              ((string-match "^.*est$" word) -3))))
         (if trunc-char
           (setq word (substring word 0 trunc-char))
           (setq word nil))))
