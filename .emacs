@@ -38,6 +38,7 @@
       calendar-minimum-window-height 8)
 (add-hook 'calendar-today-visible-hook #'calendar-mark-today)
 (add-hook 'calendar-mode-hook (lambda () (toggle-truncate-lines 1)))
+(add-hook 'calendar-mode-hook #'delete-other-windows)
 
 (require 'diary-lib)
 (setq diary-display-function #'diary-fancy-display
