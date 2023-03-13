@@ -121,17 +121,17 @@
          (beg (and regionp (region-beginning)))
          (end (and regionp (region-end)))
          (buf (current-buffer))
-         (url (and (string= (buffer-name) "*eww*") (plist-get eww-data :url)))
+         (url (and (string= (buffer-name) "*eww*") (plist-get eww-data :url))))
     (when regionp
       (fleet-todo-org 'no-switch)
       (with-current-buffer "todo.org"
-        (insert-buffer-substring-no-properties buf beg end)
         (when url
-          (save-excursion
-            (next-line)
-            (newline)
-            (insert url)))
-        (save-buffer))))))
+          (insert url)
+          (next-line)
+          (newline))
+        (insert-buffer-substring-no-properties buf beg end))
+      (goto-char (point-min))
+      (save-buffer))))
 
 (defun fleet-add-url ()
   (interactive)
