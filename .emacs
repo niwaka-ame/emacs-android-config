@@ -129,9 +129,10 @@
           (insert url)
           (next-line)
           (newline))
-        (insert-buffer-substring-no-properties buf beg end))
-      (goto-char (point-min))
-      (save-buffer))))
+        (insert-buffer-substring-no-properties buf beg end)
+        (newline)
+        (goto-char (point-min))
+        (save-buffer)))))
 
 (defun fleet-add-url ()
   (interactive)
