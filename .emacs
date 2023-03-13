@@ -141,6 +141,8 @@
       (goto-char (point-min))
       (insert (concat word "\n"))
       (save-buffer)
+      (kill-buffer))
+    (when (string= (buffer-name) "*stardict*")
       (kill-buffer))))
 
 (defun glossary-visit ()
