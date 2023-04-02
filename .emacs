@@ -91,6 +91,17 @@
 (add-hook 'org-mode-hook #'org-indent-mode)
 (setq org-cite-global-bibliography (list "/home/yu/denote/lib.bib"))
 
+;; org-habit
+(add-to-list 'org-modules 'org-habit)
+(setq org-agenda-files '(concat emacs-dir "habits.org")
+      org-habit-show-all-today t
+      org-agenda-span 1
+      org-agenda-start-day "+0d"
+      org-habit-preceding-days 14
+      org-habit-following-days 6
+      org-habit-graph-column 30
+      )
+
 ;; use org files for fleeting notes
 (defun fleet-todo-org (&optional no-switch)
   (interactive)
