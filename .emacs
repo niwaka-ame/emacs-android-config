@@ -99,8 +99,16 @@
       org-agenda-start-day "+0d"
       org-habit-preceding-days 14
       org-habit-following-days 6
-      org-habit-graph-column 30
+      org-habit-graph-column 27
       )
+
+(defun my/org-habit-done ()
+  (interactive)
+  (org-todo 'done))
+
+(defun my/visit-habit-file ()
+  (interactive)
+  (switch-to-buffer (find-file-noselect (concat emacs-dir "habits.org"))))
 
 ;; use org files for fleeting notes
 (defun fleet-todo-org (&optional no-switch)
