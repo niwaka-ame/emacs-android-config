@@ -101,6 +101,7 @@
       org-habit-following-days 6
       org-habit-graph-column 27
       )
+(add-hook 'org-agenda-mode-hook #'delete-other-windows)
 
 (defun my/org-habit-done ()
   (interactive)
@@ -267,6 +268,16 @@
 (define-key global-map
   [menu-bar my stardict-define-at-point]
   '("Define at point" . stardict-define-at-point))
+;; habit
+(define-key global-map
+  [menu-bar my my/org-habit-done]
+  '("Complete habit" . my/org-habit-done))
+(define-key global-map
+  [menu-bar my my/visit-habit-file]
+  '("Visit habit file" . my/visit-habit-file))
+(define-key global-map
+  [menu-bar my org-agenda-list]
+  '("List habit" . org-agenda-list))
 
 
 ;; third-party packages
