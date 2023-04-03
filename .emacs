@@ -93,7 +93,7 @@
 
 ;; org-habit
 (add-to-list 'org-modules 'org-habit)
-(setq org-agenda-files '((concat emacs-dir "habits.org"))
+(setq org-agenda-files (list (concat emacs-dir "habits.org"))
       org-habit-show-all-today t
       org-agenda-span 1
       org-agenda-start-day "+0d"
