@@ -103,16 +103,34 @@
       )
 (add-hook 'org-agenda-mode-hook #'delete-other-windows)
 
-(defun my/org-habit-done ()
+(defun habit/org-habit-done ()
   (interactive)
   (org-todo 'done))
 
-(defun my/visit-habit-file ()
+(defun habit/visit-habit-file ()
   (interactive)
   (switch-to-buffer (find-file-noselect (concat emacs-dir "habits.org"))))
 
+(defun habit/add-habit (habit freq)
+  (interactive "sHabit: \nsFrequency: ")
+  (with-current-buffer (find-file-noselect (concat emacs-dir "habits.org"))
+    (org-mode)
+    (goto-char (point-max))
+    (newline)
+    (org-insert-heading)
+    (insert habit)
+    (save-excursion
+      (newline)
+      (insert (concat
+               "SCHEDULED:"
+               (format-time-string "<%F %a " (current-time))
+               freq
+               ">")))
+    (org-set-property "STYLE" "habit")
+    (switch-to-buffer (current-buffer))))
+
 ;; use org files for fleeting notes
-(defun fleet-todo-org (&optional no-switch)
+(defun fleet/todo-org (&optional no-switch)
   (interactive)
   (with-current-buffer (find-file-noselect (concat emacs-dir "todo.org"))
     (goto-char (point-min))
@@ -123,7 +141,7 @@
     (unless no-switch
       (switch-to-buffer (current-buffer)))))
 
-(defun fleet-done-org ()
+(defun fleet/done-org ()
   (interactive)
   (org-refile nil nil '("" "done.org" nil nil))
   (save-buffer)
@@ -131,11 +149,11 @@
     (with-current-buffer (find-file-noselect (concat emacs-dir "done.org"))
       (save-buffer))))
 
-(defun fleet-todo-visit ()
+(defun fleet/todo-visit ()
   (interactive)
   (switch-to-buffer (find-file-noselect (concat emacs-dir "todo.org"))))
 
-(defun fleet-add-region ()
+(defun fleet/add-region ()
   (interactive)
   (let* ((regionp (region-active-p))
          (beg (and regionp (region-beginning)))
@@ -143,7 +161,7 @@
          (buf (current-buffer))
          (url (and (string= (buffer-name) "*eww*") (plist-get eww-data :url))))
     (when regionp
-      (fleet-todo-org 'no-switch)
+      (fleet/todo-org 'no-switch)
       (with-current-buffer "todo.org"
         (when url
           (insert url)
@@ -154,11 +172,11 @@
         (goto-char (point-min))
         (save-buffer)))))
 
-(defun fleet-add-url ()
+(defun fleet/add-url ()
   (interactive)
   (let ((url (plist-get eww-data :url)))
     (when url
-      (fleet-todo-org 'no-switch)
+      (fleet/todo-org 'no-switch)
       (with-current-buffer "todo.org"
         (insert url)
         (save-buffer)))))
@@ -184,12 +202,12 @@
 (tool-bar-add-item "zoom-in" 'delete-other-windows 'max :help "maximise window")
 ;; utils
 (tool-bar-add-item "sort-column-ascending" 'diary 'diary :help "display diary")
-(tool-bar-add-item "sort-descending" 'fleet-todo-visit 'visit :help "visit todo")
+(tool-bar-add-item "sort-descending" 'fleet/todo-visit 'visit :help "visit todo")
 (tool-bar-add-item "spell" 'glossary-visit 'glossary :help "visit glossary")
 (tool-bar-add-item "describe" 'newsticker-show-news 'news :help "News ticker")
 (tool-bar-add-item "separator" nil 'Nil)
-(tool-bar-add-item "sort-criteria" 'fleet-todo-org 'todo :help "new todo")
-(tool-bar-add-item "info" 'fleet-done-org 'done :help "done todo")
+(tool-bar-add-item "sort-criteria" 'fleet/todo-org 'todo :help "new todo")
+(tool-bar-add-item "info" 'fleet/done-org 'done :help "done todo")
 ;; directions
 (tool-bar-add-item "separator" nil nil)
 (tool-bar-add-item "left-arrow" 'backward-char 'bw :help "backward char")
@@ -241,11 +259,11 @@
   '("calendar" . calendar))
 ; EWW series
 (define-key global-map
-  [menu-bar my fleet-add-region]
-  '("copy region to fleet note" . fleet-add-region))
+  [menu-bar my fleet/add-region]
+  '("copy region to fleet note" . fleet/add-region))
 (define-key global-map
-  [menu-bar my fleet-add-url]
-  '("copy URL to fleet note" . fleet-add-url))
+  [menu-bar my fleet/add-url]
+  '("copy URL to fleet note" . fleet/add-url))
 (define-key global-map
   [menu-bar my webjump]
   '("web jump" . webjump))
@@ -270,11 +288,11 @@
   '("Define at point" . stardict-define-at-point))
 ;; habit
 (define-key global-map
-  [menu-bar my my/org-habit-done]
-  '("Complete habit" . my/org-habit-done))
+  [menu-bar my habit/org-habit-done]
+  '("Complete habit" . habit/org-habit-done))
 (define-key global-map
-  [menu-bar my my/visit-habit-file]
-  '("Visit habit file" . my/visit-habit-file))
+  [menu-bar my habit/visit-habit-file]
+  '("Visit habit file" . habit/visit-habit-file))
 (define-key global-map
   [menu-bar my org-agenda-list]
   '("List habit" . org-agenda-list))
