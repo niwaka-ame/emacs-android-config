@@ -211,7 +211,7 @@
               (with-current-buffer (get-buffer-create "*glossary-revisit*")
                 (when (= i 0) (erase-buffer))
                 (goto-char (point-max))
-                (when (> i 0) (new-line))
+                (when (> i 0) (newline))
                 (insert (stardict--lookup-and-return word)))))))))
   (switch-to-buffer "*glossary-revisit*"))
 
