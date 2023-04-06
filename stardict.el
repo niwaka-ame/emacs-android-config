@@ -174,6 +174,10 @@ You should close the dict file yourself."
     (goto-char (point-min))
     (switch-to-buffer (current-buffer))))
 
+(defun stardict--lookup-and-return (word)
+  (stardict--load-dict)
+  (concat word "\n" (stardict-lookup stardict-dict-hash word)))
+
 (defun stardict-define-at-point ()
   "Define the word at point."
   (interactive)

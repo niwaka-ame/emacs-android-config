@@ -182,7 +182,7 @@
         (save-buffer)))))
 
 ;; glossary
-(defun glossary-add-at-point ()
+(defun glossary/add-at-point ()
   (interactive)
   (let ((word (thing-at-point 'word)))
     (with-current-buffer (find-file-noselect (concat emacs-dir "glossary"))
@@ -193,9 +193,28 @@
     (when (string= (buffer-name) "*stardict*")
       (kill-buffer))))
 
-(defun glossary-visit ()
+(defun glossary/visit ()
   (interactive)
   (switch-to-buffer (find-file-noselect (concat emacs-dir "glossary"))))
+
+(defun glossary/revisit ()
+  (interactive)
+  (let ((word-number 5))
+    (with-current-buffer (find-file-noselect (concat emacs-dir "glossary"))
+      (erase-buffer)
+      (let ((total-word-number
+             (count-lines (point-min) (point-max))))
+        (dotimes (i word-number)
+          (goto-char (point-min))
+          (let ((line (random total-word-number)))
+            (forward-line line)
+            (let ((word (downcase (thing-at-point 'word))))
+              (with-current-buffer (get-buffer-create "*glossary-revisit*")
+                (when (= i 0) (erase-buffer))
+                (goto-char (point-max))
+                (when (> i 0) (new-line))
+                (insert (stardict--lookup-and-return)))))))))
+  (switch-to-buffer "*glossary-revisit*"))
 
 ;; tool bar
 (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
@@ -203,7 +222,7 @@
 ;; utils
 (tool-bar-add-item "sort-column-ascending" 'diary 'diary :help "display diary")
 (tool-bar-add-item "sort-descending" 'fleet/todo-visit 'visit :help "visit todo")
-(tool-bar-add-item "spell" 'glossary-visit 'glossary :help "visit glossary")
+(tool-bar-add-item "spell" 'glossary/revisit 'glossary :help "revisit glossary")
 (tool-bar-add-item "describe" 'newsticker-show-news 'news :help "News ticker")
 (tool-bar-add-item "separator" nil 'Nil)
 (tool-bar-add-item "sort-criteria" 'fleet/todo-org 'todo :help "new todo")
@@ -278,8 +297,8 @@
   '("EWW" . eww))
 ; dictionary
 (define-key global-map
-  [menu-bar my glossary-add-at-point]
-  '("Add to glossary" . glossary-add-at-point))
+  [menu-bar my glossary/add-at-point]
+  '("Add to glossary" . glossary/add-at-point))
 (define-key global-map
   [menu-bar my stardict-define]
   '("Define word" . stardict-define))
