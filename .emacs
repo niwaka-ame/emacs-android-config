@@ -212,7 +212,7 @@
                 (when (= i 0) (erase-buffer))
                 (goto-char (point-max))
                 (when (> i 0) (new-line))
-                (insert (stardict--lookup-and-return)))))))))
+                (insert (stardict--lookup-and-return word)))))))))
   (switch-to-buffer "*glossary-revisit*"))
 
 ;; tool bar
