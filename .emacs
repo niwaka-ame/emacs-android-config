@@ -201,7 +201,6 @@
   (interactive)
   (let ((word-number 5))
     (with-current-buffer (find-file-noselect (concat emacs-dir "glossary"))
-      (erase-buffer)
       (let ((total-word-number
              (count-lines (point-min) (point-max))))
         (dotimes (i word-number)
