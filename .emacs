@@ -160,17 +160,16 @@
          (end (cadr last-two))
          (buf (current-buffer))
          (url (and (string= (buffer-name) "*eww*") (plist-get eww-data :url))))
-    (when regionp
-      (fleet/todo-org 'no-switch)
-      (with-current-buffer "todo.org"
-        (when url
-          (insert url)
-          (next-line)
-          (newline))
-        (insert-buffer-substring-no-properties buf beg end)
-        (newline)
-        (goto-char (point-min))
-        (save-buffer)))))
+    (fleet/todo-org 'no-switch)
+    (with-current-buffer "todo.org"
+      (when url
+        (insert url)
+        (next-line)
+        (newline))
+      (insert-buffer-substring-no-properties buf beg end)
+      (newline)
+      (goto-char (point-min))
+      (save-buffer))))
 
 (defun fleet/add-url ()
   (interactive)
