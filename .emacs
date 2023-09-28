@@ -155,9 +155,9 @@
 
 (defun fleet/add-region ()
   (interactive)
-  (let* ((regionp (region-active-p))
-         (beg (and regionp (region-beginning)))
-         (end (and regionp (region-end)))
+  (let* ((last-two (nthcdr (- (length mark-ring) 2) mark-ring))
+         (beg (car last-two))
+         (end (cadr last-two))
          (buf (current-buffer))
          (url (and (string= (buffer-name) "*eww*") (plist-get eww-data :url))))
     (when regionp
