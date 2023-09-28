@@ -224,7 +224,7 @@
     (setq word (string-trim (downcase word)))
     (if (stardict-word-exist-p stardict-dict-hash word)
         (stardict--lookup-and-display word)
-      (message "No definition is found!")))
+      (message "No definition is found!"))
     (let ((str (read-string "Word: ")))
       (if (string= str "a") ; "a" means add to glossary
           (with-current-buffer (find-file-noselect (concat emacs-dir "glossary"))
@@ -233,7 +233,7 @@
             (save-buffer)
             (kill-buffer))
         ;; othewise update `WORD'
-        (setq word str))))
+        (setq word str)))))
 
 ;; tool bar
 (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
