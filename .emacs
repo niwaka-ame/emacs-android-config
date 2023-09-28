@@ -236,22 +236,23 @@
         (setq word str)))))
 
 ;; tool bar
-(tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
+;; (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
 (tool-bar-add-item "zoom-in" 'delete-other-windows 'max :help "maximise window")
 ;; utils
 (tool-bar-add-item "sort-column-ascending" 'diary 'diary :help "display diary")
 (tool-bar-add-item "sort-descending" 'fleet/todo-visit 'visit :help "visit todo")
 (tool-bar-add-item "spell" 'glossary/revisit 'glossary :help "revisit glossary")
+(tool-bar-add-item "lock-ok" 'org-agenda-list 'habit :help "habit")
+(tool-bar-add-item "separator" nil nil)
 (tool-bar-add-item "describe" 'newsticker-show-news 'news :help "News ticker")
-(tool-bar-add-item "separator" nil 'Nil)
+(tool-bar-add-item "next-page" 'eww-list-bookmarks 'eww-bookmark :help "EWW bookmark")
+(tool-bar-add-item "separator" nil nil)
 (tool-bar-add-item "sort-criteria" 'fleet/todo-org 'todo :help "new todo")
 (tool-bar-add-item "info" 'fleet/done-org 'done :help "done todo")
-;; directions
 (tool-bar-add-item "separator" nil nil)
-(tool-bar-add-item "left-arrow" 'backward-char 'bw :help "backward char")
-(tool-bar-add-item "up-arrow" 'previous-line 'up :help "previous line")
-(tool-bar-add-item "sort-ascending" 'next-line 'down :help "next line")
-(tool-bar-add-item "right-arrow" 'forward-char 'fw :help "forward char")
+(tool-bar-add-item "up-arrow" 'set-mark-command 'setmark :help "set mark")
+(tool-bar-add-item "sort-ascending" 'fleet/add-region 'add-region :help "add region to fleet")
+(tool-bar-add-item "jump-to" 'glossary/add-at-point 'add-to-glossary :help "add to glossary")
 
 ;; mode line
 (setq-default mode-line-format
@@ -259,9 +260,9 @@
   mode-line-end-spaces))
 
 ;; menu
-(define-key global-map
-  [menu-bar edit set-mark]
-  '("Set mark" . set-mark-command))
+;; (define-key global-map
+;;   [menu-bar edit set-mark]
+;;   '("Set mark" . set-mark-command))
 ; remove two menus
 (define-key global-map [menu-bar options] nil)
 (define-key global-map [menu-bar tools] nil)
@@ -315,9 +316,9 @@
   [menu-bar my eww]
   '("EWW" . eww))
 ; dictionary
-(define-key global-map
-  [menu-bar my glossary/add-at-point]
-  '("Add to glossary" . glossary/add-at-point))
+;; (define-key global-map
+;;   [menu-bar my glossary/add-at-point]
+;;   '("Add to glossary" . glossary/add-at-point))
 (define-key global-map
   [menu-bar my glossary/flow]
   '("Define word cont." . glossary/flow))
@@ -334,9 +335,9 @@
 (define-key global-map
   [menu-bar my habit/visit-habit-file]
   '("Visit habit file" . habit/visit-habit-file))
-(define-key global-map
-  [menu-bar my org-agenda-list]
-  '("List habit" . org-agenda-list))
+;; (define-key global-map
+;;   [menu-bar my org-agenda-list]
+;;   '("List habit" . org-agenda-list))
 
 
 ;; third-party packages
