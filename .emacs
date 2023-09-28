@@ -161,7 +161,7 @@
 
 (defun fleet/add-region ()
   (interactive)
-  (if (>= (length fleet/region 2))
+  (if (>= (length fleet/region) 2)
       (let* ((beg (nth (- (length fleet/region) 2) fleet/region))
              (end (nth (- (length fleet/region) 1) fleet/region))
              (buf (current-buffer))
