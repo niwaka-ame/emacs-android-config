@@ -178,7 +178,7 @@
           (newline)
           (goto-char (point-min))
           (save-buffer)))
-    (message "set region first!")))
+    (message "mark region first!")))
 
 (defun fleet/add-url ()
   (interactive)
@@ -270,10 +270,10 @@
 ;; menu
 (define-key global-map
   [menu-bar edit fleet/add-region]
-  '("copy region to fleet note" . fleet/add-region))
+  '("copy region to fleet" . fleet/add-region))
 (define-key global-map
   [menu-bar edit set-mark]
-  '("Set mark" . set-mark-command))
+  '("mark region" . fleet/mark-region))
 ; remove two menus
 (define-key global-map [menu-bar options] nil)
 (define-key global-map [menu-bar tools] nil)
