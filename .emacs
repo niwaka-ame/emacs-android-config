@@ -250,8 +250,8 @@
 (tool-bar-add-item "sort-criteria" 'fleet/todo-org 'todo :help "new todo")
 (tool-bar-add-item "info" 'fleet/done-org 'done :help "done todo")
 (tool-bar-add-item "separator" nil 'Nil3)
-(tool-bar-add-item "up-arrow" 'set-mark-command 'setmark :help "set mark")
-(tool-bar-add-item "sort-ascending" 'fleet/add-region 'add-region :help "add region to fleet")
+;; (tool-bar-add-item "up-arrow" 'set-mark-command 'setmark :help "set mark")
+;; (tool-bar-add-item "sort-ascending" 'fleet/add-region 'add-region :help "add region to fleet")
 (tool-bar-add-item "jump-to" 'glossary/add-at-point 'add-to-glossary :help "add to glossary")
 
 ;; mode line
@@ -260,9 +260,12 @@
   mode-line-end-spaces))
 
 ;; menu
-;; (define-key global-map
-;;   [menu-bar edit set-mark]
-;;   '("Set mark" . set-mark-command))
+(define-key global-map
+  [menu-bar edit set-mark]
+  '("Set mark" . set-mark-command))
+(define-key global-map
+  [menu-bar edit fleet/add-region]
+  '("copy region to fleet note" . fleet/add-region))
 ; remove two menus
 (define-key global-map [menu-bar options] nil)
 (define-key global-map [menu-bar tools] nil)
@@ -297,9 +300,9 @@
   [menu-bar my calendar]
   '("calendar" . calendar))
 ; EWW series
-(define-key global-map
-  [menu-bar my fleet/add-region]
-  '("copy region to fleet note" . fleet/add-region))
+;; (define-key global-map
+;;   [menu-bar my fleet/add-region]
+;;   '("copy region to fleet note" . fleet/add-region))
 (define-key global-map
   [menu-bar my fleet/add-url]
   '("copy URL to fleet note" . fleet/add-url))
