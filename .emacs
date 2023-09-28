@@ -262,11 +262,11 @@
 
 ;; menu
 (define-key global-map
-  [menu-bar edit set-mark]
-  '("Set mark" . set-mark-command))
-(define-key global-map
   [menu-bar edit fleet/add-region]
   '("copy region to fleet note" . fleet/add-region))
+(define-key global-map
+  [menu-bar edit set-mark]
+  '("Set mark" . set-mark-command))
 ; remove two menus
 (define-key global-map [menu-bar options] nil)
 (define-key global-map [menu-bar tools] nil)
