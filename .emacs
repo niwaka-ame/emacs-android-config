@@ -153,24 +153,32 @@
   (interactive)
   (switch-to-buffer (find-file-noselect (concat emacs-dir "todo.org"))))
 
+(defvar fleet/region nil)
+
+(defun fleet/mark-region ()
+  (interactive)
+  (push (point) fleet/region))
+
 (defun fleet/add-region ()
   (interactive)
-  (let* ((beg (nth (- (length mark-ring) 2) mark-ring))
-         (end (nth (- (length mark-ring) 1) mark-ring))
-         (buf (current-buffer))
-         (url (and (string= (buffer-name) "*eww*") (plist-get eww-data :url))))
-    (copy-region-as-kill beg end)
-    (setq mark-ring nil)
-    (fleet/todo-org 'no-switch)
-    (with-current-buffer "todo.org"
-      (when url
-        (insert url)
-        (forward-line)
-        (newline))
-      (yank)
-      (newline)
-      (goto-char (point-min))
-      (save-buffer))))
+  (if (>= (length fleet/region 2))
+      (let* ((beg (nth (- (length fleet/region) 2) fleet/region))
+             (end (nth (- (length fleet/region) 1) fleet/region))
+             (buf (current-buffer))
+             (url (and (string= (buffer-name) "*eww*") (plist-get eww-data :url))))
+        (copy-region-as-kill beg end)
+        (setq fleet/region nil)
+        (fleet/todo-org 'no-switch)
+        (with-current-buffer "todo.org"
+          (when url
+            (insert url)
+            (forward-line)
+            (newline))
+          (yank)
+          (newline)
+          (goto-char (point-min))
+          (save-buffer)))
+    (message "set region first!")))
 
 (defun fleet/add-url ()
   (interactive)
