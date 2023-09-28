@@ -216,6 +216,25 @@
                 (newline))))))))
   (switch-to-buffer "*glossary-revisit*"))
 
+(defun glossary/flow (word)
+  "Prompt for a word continuously."
+  (interactive "sWord: ")
+  (stardict--load-dict)
+  (while (not (string= word "q")) ; "q" means quit
+    (setq word (string-trim (downcase word)))
+    (if (stardict-word-exist-p stardict-dict-hash word)
+        (stardict--lookup-and-display word)
+      (message "No definition is found!")))
+    (let ((str (read-string "Word: ")))
+      (if (string= str "a") ; "a" means add to glossary
+          (with-current-buffer (find-file-noselect (concat emacs-dir "glossary"))
+            (goto-char (point-min))
+            (insert (concat word "\n"))
+            (save-buffer)
+            (kill-buffer))
+        ;; othewise update `WORD'
+        (setq word str))))
+
 ;; tool bar
 (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
 (tool-bar-add-item "zoom-in" 'delete-other-windows 'max :help "maximise window")
@@ -299,6 +318,9 @@
 (define-key global-map
   [menu-bar my glossary/add-at-point]
   '("Add to glossary" . glossary/add-at-point))
+(define-key global-map
+  [menu-bar my glossary/flow]
+  '("Define word cont." . glossary/flow))
 (define-key global-map
   [menu-bar my stardict-define]
   '("Define word" . stardict-define))
