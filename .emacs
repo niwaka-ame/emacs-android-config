@@ -161,6 +161,7 @@
          (buf (current-buffer))
          (url (and (string= (buffer-name) "*eww*") (plist-get eww-data :url))))
     (copy-region-as-kill beg end)
+    (setq mark-ring nil)
     (fleet/todo-org 'no-switch)
     (with-current-buffer "todo.org"
       (when url
