@@ -322,12 +322,12 @@
 (define-key global-map
   [menu-bar my webjump]
   '("web jump" . webjump))
-(define-key global-map
-  [menu-bar my eww-readable]
-  '("EWW readable" . eww-readable))
-(define-key global-map
-  [menu-bar my eww-list-bookmarks]
-  '("EWW bookmark" . eww-list-bookmarks))
+;; (define-key global-map
+;;   [menu-bar my eww-readable]
+;;   '("EWW readable" . eww-readable))
+;; (define-key global-map
+;;   [menu-bar my eww-list-bookmarks]
+;;   '("EWW bookmark" . eww-list-bookmarks))
 (define-key global-map
   [menu-bar my eww]
   '("EWW" . eww))
