@@ -265,7 +265,7 @@
 (tool-bar-local-item "up-arrow" 'fleet/mark-region 'fleet/mark-region eww-tool-bar-map)
 (tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region eww-tool-bar-map)
 (tool-bar-local-item "help" 'stardict-define-at-point 'stardict-define-at-point eww-tool-bar-map)
-(tool-bar-local-item "index" 'eww-readable 'eww-readable eww-tool-bar-map)
+(tool-bar-local-item "unchecked" 'eww-readable 'eww-readable eww-tool-bar-map)
 
 ;; mode line
 (setq-default mode-line-format
