@@ -262,8 +262,8 @@
 ;; (tool-bar-add-item "sort-ascending" 'fleet/add-region 'add-region :help "add region to fleet")
 (tool-bar-add-item "jump-to" 'glossary/add-at-point 'add-to-glossary :help "add to glossary")
 (tool-bar-local-item "next-page" 'eww-list-bookmarks 'eww-bookmark eww-tool-bar-map :help "EWW bookmark")
-(tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region eww-tool-bar-map)
 (tool-bar-local-item "up-arrow" 'fleet/mark-region 'fleet/mark-region eww-tool-bar-map)
+(tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region eww-tool-bar-map)
 (tool-bar-local-item "help" 'stardict-define-at-point 'stardict-define-at-point eww-tool-bar-map)
 
 ;; mode line
