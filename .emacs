@@ -400,7 +400,8 @@
                    'random-shi :help "random tangshi")
 (defun @300-visit-tangshi-file ()
   (interactive)
-  (switch-to-buffer (find-file-noselect (concat emacs-dir "tangshi.org"))))
+  (switch-to-buffer (find-file-noselect (concat emacs-dir "tangshi.org")))
+  (goto-char (point-max)))
 
 ;; finalise startup apperance
 (with-current-buffer "*scratch*"
