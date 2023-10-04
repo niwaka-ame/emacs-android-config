@@ -217,7 +217,8 @@
                 (when (> i 0) (newline))
                 (insert (stardict--lookup-and-return word))
                 (newline))))))))
-  (switch-to-buffer "*glossary-revisit*"))
+  (switch-to-buffer "*glossary-revisit*")
+  (goto-char (point-min)))
 
 (defun glossary/flow (word)
   "Prompt for a word continuously."
@@ -291,6 +292,9 @@
   [menu-bar my text-scale-decrease]
   '("zoom out" . text-scale-decrease))
 ; tools
+(define-key global-map
+  [menu-bar my @300-visit-tangshi-file]
+  '("visit tangshi file" . @300-visit-tangshi-file))
 (define-key global-map
   [menu-bar my visit-init]
   '("visit .emacs file" .
@@ -394,6 +398,9 @@
 (tool-bar-add-item "spell"
                    (lambda () (interactive) (@300-random) (switch-to-buffer "*唐诗三百首*") (delete-other-windows))
                    'random-shi :help "random tangshi")
+(defun @300-visit-tangshi-file ()
+  (interactive)
+  (switch-to-buffer (find-file-noselect (concat emacs-dir "tangshi.org"))))
 
 ;; finalise startup apperance
 (with-current-buffer "*scratch*"
