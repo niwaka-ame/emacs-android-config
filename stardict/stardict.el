@@ -41,9 +41,7 @@
 
 
 ;;; Code:
-(defconst stardict-dir (expand-file-name
-                        "300.json"
-                        (file-name-directory (or load-file-name buffer-file-name))))
+(defconst stardict-dir (file-name-directory (or load-file-name buffer-file-name)))
 (defconst stardict-name "langdao-ec-gb")
 (defvar stardict-dict-hash nil)
 
