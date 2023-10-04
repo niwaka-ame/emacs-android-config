@@ -41,6 +41,11 @@
 
 
 ;;; Code:
+(defconst stardict-dir (expand-file-name
+                        "300.json"
+                        (file-name-directory (or load-file-name buffer-file-name))))
+(defconst stardict-name "langdao-ec-gb")
+(defvar stardict-dict-hash nil)
 
 (defun stardict-str2int (str)
   "Convert string `STR' to integer.
@@ -154,11 +159,6 @@ The return is used as `DICT' argument in other functions."
 You should close the dict file yourself."
   (with-current-buffer (find-file-noselect (nth 2 dict))
     (setq buffer-read-only t)))
-
-;; added by myself
-(defvar stardict-dir nil)
-(defvar stardict-name nil)
-(defvar stardict-dict-hash nil)
 
 (defun stardict--load-dict ()
   "load dictionary when call for first time."

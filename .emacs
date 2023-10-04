@@ -1,6 +1,4 @@
 (defvar emacs-dir "/sdcard/emacs/kawa/")
-(when (= emacs-major-version 28)
-  (setq emacs-dir "/home/yu/emacs-android/"))
 
 ;; load theme
 (load-theme 'tango-dark t)
@@ -15,12 +13,9 @@
 (setq inhibit-startup-screen t
       initial-scratch-message nil)
 
-(unless (= emacs-major-version 28)
-  (add-to-list 'load-path "/sdcard/emacs/emacs-android-config/")
-  (require 'stardict)
-  (setq stardict-dir "/sdcard/emacs/langdao/"
-        stardict-name "langdao-ec-gb")
-  (load "init-packages.el"))
+(add-to-list 'load-path "/sdcard/emacs/emacs-android-config/")
+(let ((default-directory "/sdcard/emacs/emacs-android-config/"))
+  (normal-top-level-add-subdirs-to-load-path))
 
 ;; some useful builtin mode
 (require 'delsel)
@@ -89,7 +84,6 @@
 (add-hook 'org-mode-hook (lambda () (toggle-truncate-lines -1)))
 (add-hook 'org-mode-hook #'variable-pitch-mode)
 (add-hook 'org-mode-hook #'org-indent-mode)
-(setq org-cite-global-bibliography (list "/home/yu/denote/lib.bib"))
 
 ;; org-habit
 (add-to-list 'org-modules 'org-habit)
@@ -190,6 +184,7 @@
         (save-buffer)))))
 
 ;; glossary
+(require 'stardict)
 (defun glossary/add-at-point ()
   (interactive)
   (let ((word (thing-at-point 'word)))
@@ -355,31 +350,10 @@
 ;;   [menu-bar my org-agenda-list]
 ;;   '("List habit" . org-agenda-list))
 
-
 ;; third-party packages
-(unless (= emacs-major-version 28)
-  ;; pangu-spacing
-  (require 'pangu-spacing)
-  (add-hook 'org-mode-hook #'pangu-spacing-mode)
-  ;; denote
-  (require 'denote)
-  (setq denote-directory "/sdcard/emacs/denote/"
-        denote-backlinks-show-context t)
-  (setq denote-known-keywords
-        '(life philosophy gedanken biology cs maths physics economics politics history))
-  (defun visit-random-denote ()
-    (interactive)
-    (let* ((filelist (remove "lib.bib" (cddr (directory-files denote-directory))))
-           (numfiles (length filelist)))
-      (switch-to-buffer
-       (find-file-noselect
-        (concat denote-directory
-                (elt filelist (random numfiles)))))))
-  (define-key global-map
-    [menu-bar my random-denote]
-    '("visit random note" . visit-random-denote))
-  )
-
+(require 'pangu-spacing)
+(add-hook 'org-mode-hook #'pangu-spacing-mode)
+(require '@300)
 
 ;; finalise startup apperance
 (with-current-buffer "*scratch*"
