@@ -244,7 +244,6 @@
 ;; utils
 (tool-bar-add-item "sort-column-ascending" 'diary 'diary :help "display diary")
 (tool-bar-add-item "sort-descending" 'fleet/todo-visit 'visit :help "visit todo")
-(tool-bar-add-item "spell" 'glossary/revisit 'glossary :help "revisit glossary")
 (tool-bar-add-item "lock-ok" 'org-agenda-list 'habit :help "habit")
 (tool-bar-add-item "separator" nil 'Nil)
 (tool-bar-add-item "describe" 'newsticker-show-news 'news :help "News ticker")
@@ -256,11 +255,12 @@
 ;; (tool-bar-add-item "up-arrow" 'set-mark-command 'setmark :help "set mark")
 ;; (tool-bar-add-item "sort-ascending" 'fleet/add-region 'add-region :help "add region to fleet")
 (tool-bar-add-item "jump-to" 'glossary/add-at-point 'add-to-glossary :help "add to glossary")
+(tool-bar-add-item "spell" 'glossary/revisit 'glossary :help "revisit glossary")
 (tool-bar-local-item "next-page" 'eww-list-bookmarks 'eww-bookmark eww-tool-bar-map :help "EWW bookmark")
 (tool-bar-local-item "up-arrow" 'fleet/mark-region 'fleet/mark-region eww-tool-bar-map)
 (tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region eww-tool-bar-map)
 (tool-bar-local-item "help" 'stardict-define-at-point 'stardict-define-at-point eww-tool-bar-map)
-(tool-bar-local-item "unchecked" 'eww-readable 'eww-readable eww-tool-bar-map)
+(tool-bar-local-item "checked" 'eww-readable 'eww-readable eww-tool-bar-map)
 
 ;; mode line
 (setq-default mode-line-format
@@ -353,7 +353,47 @@
 ;; third-party packages
 (require 'pangu-spacing)
 (add-hook 'org-mode-hook #'pangu-spacing-mode)
+
 (require '@300)
+(defun @300-parse-to-json (file)
+  (with-current-buffer (find-file-noselect file)
+    (save-excursion
+      (goto-char (point-min))
+      (let ((poems nil)
+            (counter 0))
+        (while (< (point) (point-max))
+          (let ((poem (list `(id . ,counter) '(type . ""))))
+            ;; title
+            (push `(title . ,(buffer-substring (line-beginning-position) (line-end-position))) poem)
+            (forward-line 1)
+            ;; author
+            (push `(author . ,(buffer-substring (line-beginning-position) (line-end-position))) poem)
+            (forward-line 1)
+            ;; verses
+            (let ((verses nil))
+              (while-let ((line (buffer-substring (line-beginning-position) (line-end-position)))
+                          (empty-p (not (string= line ""))))
+                (push line verses)
+                (forward-line 1))
+              (push `(contents . ,(mapconcat #'identity verses "\n")) poem)
+              ;; skip the empty line
+              (forward-line 1))
+            (push poem poems)
+            (setq counter (1+ counter))))
+        (let ((output-str (json-encode poems))
+              (output-file (concat (buffer-file-name) ".json")))
+          (with-current-buffer (find-file-noselect output-file)
+            (erase-buffer)
+            (insert output-str)
+            (json-pretty-print-buffer)
+            (save-buffer)
+            (kill-buffer)))))
+    (kill-buffer)))
+(@300-parse-to-json (concat emacs-dir "tangshi"))
+(setq @300-json (concat emacs-dir "tangshi.json"))
+(tool-bar-add-item "spell"
+                   (lambda () (interactive) (@300-random) (switch-to-buffer "*唐诗三百首*") (delete-other-windows))
+                   'random-shi :help "random tangshi")
 
 ;; finalise startup apperance
 (with-current-buffer "*scratch*"
