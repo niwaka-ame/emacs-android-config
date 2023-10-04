@@ -375,7 +375,7 @@
                           (empty-p (not (string= line ""))))
                 (push line verses)
                 (forward-line 1))
-              (push `(contents . ,(mapconcat #'identity verses "\n")) poem)
+              (push `(contents . ,(mapconcat #'identity (reverse verses) "\n")) poem)
               ;; skip the empty line
               (forward-line 1))
             (push poem poems)
