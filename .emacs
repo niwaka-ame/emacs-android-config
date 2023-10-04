@@ -390,7 +390,7 @@
             (kill-buffer)))))
     (kill-buffer)))
 (@300-parse-to-json (concat emacs-dir "tangshi.org"))
-(setq @300-json (concat emacs-dir "tangshi.json"))
+(setq @300-json (concat emacs-dir "tangshi.org.json"))
 (tool-bar-add-item "spell"
                    (lambda () (interactive) (@300-random) (switch-to-buffer "*唐诗三百首*") (delete-other-windows))
                    'random-shi :help "random tangshi")
