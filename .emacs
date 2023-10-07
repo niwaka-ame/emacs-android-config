@@ -178,7 +178,8 @@
   (interactive)
   (let* ((beg (nth (- (length fleet/region) 2) fleet/region))
          (end (nth (- (length fleet/region) 1) fleet/region)))
-    (copy-region-as-kill beg end)))
+    (copy-region-as-kill beg end)
+    (setq fleet/region nil)))
 
 (defun fleet/add-url ()
   (interactive)
@@ -282,7 +283,7 @@
   [menu-bar edit fleet/copy-region]
   '("copy region" . fleet/copy-region))
 (define-key global-map
-  [menu-bar edit set-mark]
+  [menu-bar edit fleet/mark-region]
   '("mark region" . fleet/mark-region))
 ; remove two menus
 (define-key global-map [menu-bar options] nil)
