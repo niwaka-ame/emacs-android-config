@@ -2,6 +2,7 @@
 
 ;; load theme
 (load-theme 'tango-dark t)
+(setopt tool-bar-position 'bottom)
 
 ;;; larger font on phone
 (set-face-attribute 'default nil :height 220)
