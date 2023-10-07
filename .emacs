@@ -174,6 +174,12 @@
           (save-buffer)))
     (message "mark region first!")))
 
+(defun fleet/copy-region ()
+  (interactive)
+  (let* ((beg (nth (- (length fleet/region) 2) fleet/region))
+         (end (nth (- (length fleet/region) 1) fleet/region)))
+    (copy-region-as-kill beg end)))
+
 (defun fleet/add-url ()
   (interactive)
   (let ((url (plist-get eww-data :url)))
@@ -272,6 +278,9 @@
 (define-key global-map
   [menu-bar edit fleet/add-region]
   '("copy region to fleet" . fleet/add-region))
+(define-key global-map
+  [menu-bar edit fleet/copy-region]
+  '("copy region" . fleet/copy-region))
 (define-key global-map
   [menu-bar edit set-mark]
   '("mark region" . fleet/mark-region))
