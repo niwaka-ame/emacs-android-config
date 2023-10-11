@@ -364,8 +364,8 @@
 ;; (define-key global-map
 ;;   [menu-bar my org-agenda-list]
 ;;   '("List habit" . org-agenda-list))
-(global-set-key (kbd "<volume-up>") 'scroll-up-command)
-(global-set-key (kbd "<volume-down>") 'scroll-down-command)
+(global-set-key (kbd "<volume-up>") 'scroll-down-command)
+(global-set-key (kbd "<volume-down>") 'scroll-up-command)
 
 ;; third-party packages
 (require 'pangu-spacing)
