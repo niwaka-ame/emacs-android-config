@@ -1,7 +1,8 @@
 (defvar emacs-dir "/sdcard/emacs/kawa/")
 
 ;; load theme
-(load-theme 'tango-dark t)
+;; (add-to-list 'custom-theme-load-path "/sdcard/emacs/emacs-android-config/eink-emacs/")
+;; (load-theme 'eink t)
 (setopt tool-bar-position 'bottom)
 
 ;;; larger font on phone
