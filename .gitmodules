@@ -4,3 +4,9 @@
 [submodule "300"]
 	path = 300
 	url = https://github.com/xuchunyang/300.git
+[submodule "nov.el"]
+	path = nov.el
+	url = https://depp.brause.cc/nov.el.git
+[submodule "esxml"]
+	path = esxml
+	url = https://github.com/tali713/esxml.git

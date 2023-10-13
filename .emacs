@@ -372,6 +372,22 @@
 (require 'pangu-spacing)
 (add-hook 'org-mode-hook #'pangu-spacing-mode)
 
+(require 'nov)
+(add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+(define-key nov-mode-map (kbd "<volume-up>") 'nov-scroll-up)
+(define-key nov-mode-map (kbd "<volume-down>") 'nov-scroll-down)
+(defvar nov-tool-bar-map
+  (let ((tool-bar-map (make-sparse-keymap)))
+    (tool-bar-add-item "open" (lambda () (interactive) (find-file "/sdcard/emacs/books/")) 'nov-open)
+    (tool-bar-add-item "home" 'nov-goto-toc 'nov-goto-toc)
+    (tool-bar-add-item "left-arrow" 'nov-previous-document 'nov-previous-document)
+    (tool-bar-add-item "right-arrow" 'nov-next-document 'nov-next-document)
+    (tool-bar-add-item "up-arrow" 'fleet/mark-region 'fleet/mark-region)
+    (tool-bar-add-item "sort-ascending" 'fleet/add-region 'fleet/add-region)
+    (tool-bar-add-item "help" 'stardict-define-at-point 'stardict-define-at-point)
+    tool-bar-map))
+(add-hook 'nov-mode-hook (lambda () (setq-local tool-bar-map nov-tool-bar-map)))
+
 (require '@300)
 (defun @300-parse-to-json (file)
   (with-current-buffer (find-file-noselect file)
