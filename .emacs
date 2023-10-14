@@ -414,7 +414,7 @@
 (define-key nov-mode-map (kbd "<volume-down>") 'nov-scroll-up)
 (defvar nov-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
-    (tool-bar-add-item "open" (lambda () (interactive) (find-file-noselect "/sdcard/emacs/books/")) 'nov-open)
+    (tool-bar-add-item "open" (lambda () (interactive) (switch-to-buffer (find-file-noselect "/sdcard/emacs/books/"))) 'nov-open)
     (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
     (tool-bar-add-item "home" 'nov-goto-toc 'nov-goto-toc)
     (tool-bar-add-item "left-arrow" 'nov-previous-document 'nov-previous-document)
