@@ -193,7 +193,7 @@
             (find-file-noselect (concat emacs-dir "bib-notes/" buf-name ".org"))
           (goto-char (point-max))
           (org-insert-heading)
-          (yank)
+          (insert (replace-regexp-in-string "\n" "" (car kill-ring)))
           (newline)
           (save-buffer)))
     (message "mark region first!")))
