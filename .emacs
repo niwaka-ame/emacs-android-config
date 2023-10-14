@@ -217,6 +217,12 @@
         (insert url)
         (save-buffer)))))
 
+(defun visit-books ()
+  (interactive)
+  (find-file-noselect "/sdcard/emacs/books/")
+  (switch-to-buffer "books")
+  (dired-revert))
+
 ;; glossary
 (require 'stardict)
 (defun glossary/add-at-point ()
@@ -348,11 +354,8 @@
       (switch-to-buffer "emacs-android-config"))))
 (define-key global-map
   [menu-bar my visit-books]
-  '("visit book dir" .
-    (lambda ()
-      (interactive)
-      (find-file-noselect "/sdcard/emacs/books/")
-      (switch-to-buffer "books"))))
+  '("visit book dir" . visit-books
+    ))
 (define-key global-map
   [menu-bar my ielm]
   '("ielm" . ielm))
@@ -417,7 +420,7 @@
 (define-key nov-mode-map (kbd "<volume-down>") 'nov-scroll-up)
 (defvar nov-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
-    (tool-bar-add-item "open" (lambda () (interactive) (switch-to-buffer (find-file-noselect "/sdcard/emacs/books/"))) 'nov-open)
+    (tool-bar-add-item "open" 'visit-books 'nov-open)
     (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
     (tool-bar-add-item "home" 'nov-goto-toc 'nov-goto-toc)
     (tool-bar-add-item "left-arrow" 'nov-previous-document 'nov-previous-document)
