@@ -297,7 +297,7 @@
 (define-key-after
   (lookup-key global-map [menu-bar])
   [my]
-  (cons "my magic" (make-sparse-keymap "My-magic"))
+  (cons "My-magic" (make-sparse-keymap "My-magic"))
   'buffers)
 ; zoom in and out
 (define-key global-map
@@ -391,11 +391,12 @@
 
 (require 'nov)
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
-(define-key nov-mode-map (kbd "<volume-up>") 'nov-scroll-up)
-(define-key nov-mode-map (kbd "<volume-down>") 'nov-scroll-down)
+(define-key nov-mode-map (kbd "<volume-up>") 'nov-scroll-down)
+(define-key nov-mode-map (kbd "<volume-down>") 'nov-scroll-up)
 (defvar nov-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
     (tool-bar-add-item "open" (lambda () (interactive) (find-file-noselect "/sdcard/emacs/books/")) 'nov-open)
+    (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
     (tool-bar-add-item "home" 'nov-goto-toc 'nov-goto-toc)
     (tool-bar-add-item "left-arrow" 'nov-previous-document 'nov-previous-document)
     (tool-bar-add-item "right-arrow" 'nov-next-document 'nov-next-document)
