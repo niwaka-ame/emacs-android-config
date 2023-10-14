@@ -6,7 +6,7 @@
 (setopt tool-bar-position 'bottom)
 
 ;;; larger font on phone
-(set-face-attribute 'default nil :height 220)
+(set-face-attribute 'default nil :height 230)
 (require 'face-remap)
 (setq text-scale-mode-step 1.1)
 
@@ -20,6 +20,9 @@
   (normal-top-level-add-subdirs-to-load-path))
 
 ;; some useful builtin mode
+(add-hook 'dired-mode-hook #'dired-hide-details-mode)
+(setq dired-kill-when-opening-new-dired-buffer t)
+
 (require 'delsel)
 (delete-selection-mode)
 
@@ -294,7 +297,7 @@
 (define-key-after
   (lookup-key global-map [menu-bar])
   [my]
-  (cons "My" (make-sparse-keymap "My"))
+  (cons "my magic" (make-sparse-keymap "My-magic"))
   'buffers)
 ; zoom in and out
 (define-key global-map
@@ -308,12 +311,26 @@
   [menu-bar my @300-visit-tangshi-file]
   '("visit tangshi file" . @300-visit-tangshi-file))
 (define-key global-map
-  [menu-bar my visit-init]
-  '("visit .emacs file" .
+  [menu-bar my visit-kawa]
+  '("visit kawa dir" .
     (lambda ()
       (interactive)
-      (find-file-noselect "~/.emacs")
-      (switch-to-buffer ".emacs"))))
+      (find-file-noselect emacs-dir)
+      (switch-to-buffer "kawa"))))
+(define-key global-map
+  [menu-bar my visit-config]
+  '("visit config dir" .
+    (lambda ()
+      (interactive)
+      (find-file-noselect "/sdcard/emacs/emacs-android-config/")
+      (switch-to-buffer "emacs-android-config"))))
+(define-key global-map
+  [menu-bar my visit-books]
+  '("visit book dir" .
+    (lambda ()
+      (interactive)
+      (find-file-noselect "/sdcard/emacs/books/")
+      (switch-to-buffer "books"))))
 (define-key global-map
   [menu-bar my ielm]
   '("ielm" . ielm))
@@ -378,13 +395,14 @@
 (define-key nov-mode-map (kbd "<volume-down>") 'nov-scroll-down)
 (defvar nov-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
-    (tool-bar-add-item "open" (lambda () (interactive) (find-file "/sdcard/emacs/books/")) 'nov-open)
+    (tool-bar-add-item "open" (lambda () (interactive) (find-file-noselect "/sdcard/emacs/books/")) 'nov-open)
     (tool-bar-add-item "home" 'nov-goto-toc 'nov-goto-toc)
     (tool-bar-add-item "left-arrow" 'nov-previous-document 'nov-previous-document)
     (tool-bar-add-item "right-arrow" 'nov-next-document 'nov-next-document)
     (tool-bar-add-item "up-arrow" 'fleet/mark-region 'fleet/mark-region)
     (tool-bar-add-item "sort-ascending" 'fleet/add-region 'fleet/add-region)
     (tool-bar-add-item "help" 'stardict-define-at-point 'stardict-define-at-point)
+    (tool-bar-add-item "zoom-in" 'delete-other-windows 'max)
     tool-bar-map))
 (add-hook 'nov-mode-hook (lambda () (setq-local tool-bar-map nov-tool-bar-map)))
 
