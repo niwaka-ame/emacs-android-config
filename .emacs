@@ -156,7 +156,8 @@
 
 (defun fleet/mark-region ()
   (interactive)
-  (push (point) fleet/region))
+  (push (point) fleet/region)
+  (message "pushed point successfully!"))
 
 (defun fleet/add-region ()
   (interactive)
@@ -193,7 +194,9 @@
             (find-file-noselect (concat emacs-dir "bib-notes/" buf-name ".org"))
           (goto-char (point-max))
           (org-insert-heading)
-          (insert (replace-regexp-in-string "\n" "" (car kill-ring)))
+          (if (string-match-p "[\u4e00-\u9fff]" (car kill-ring))
+              (insert (replace-regexp-in-string "\n" "" (car kill-ring)))
+            (insert (replace-regexp-in-string "\n" " " (car kill-ring))))
           (newline)
           (save-buffer)))
     (message "mark region first!")))
