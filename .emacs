@@ -305,7 +305,7 @@
 
 ;; mode line
 (setq-default mode-line-format
-      '("%e" mode-line-front-space mode-line-modes " " mode-line-buffer-identification " " mode-line-misc-info " " mode-line-position
+      '("%e" mode-line-front-space mode-line-modes " " mode-line-position " " mode-line-buffer-identification " " mode-line-misc-info
   mode-line-end-spaces))
 
 ;; menu
