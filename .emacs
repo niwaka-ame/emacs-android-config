@@ -307,6 +307,7 @@
 (setq-default mode-line-format
       '("%e" mode-line-front-space mode-line-modes " " mode-line-position " " mode-line-buffer-identification " " mode-line-misc-info
   mode-line-end-spaces))
+(setq-default line-number-mode nil)
 
 ;; menu
 (define-key global-map
