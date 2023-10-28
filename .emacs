@@ -152,18 +152,11 @@
   (interactive)
   (switch-to-buffer (find-file-noselect (concat emacs-dir "todo.org"))))
 
-(defvar fleet/region nil)
-
-(defun fleet/mark-region ()
-  (interactive)
-  (push (point) fleet/region)
-  (message "pushed point successfully!"))
-
 (defun fleet/add-region ()
   (interactive)
-  (if (>= (length fleet/region) 2)
-      (let* ((beg (cadr fleet/region))
-             (end (car fleet/region))
+  (if (region-active-p)
+      (let* ((beg (region-beginning))
+             (end (region-end))
              (buf (current-buffer))
              (url (and (string= (buffer-name) "*eww*") (plist-get eww-data :url))))
         (copy-region-as-kill beg (1+ end))
@@ -182,9 +175,9 @@
 
 (defun fleet/add-region-bib ()
   (interactive)
-  (if (>= (length fleet/region) 2)
-      (let* ((beg (cadr fleet/region))
-             (end (car fleet/region))
+  (if (region-active-p)
+      (let* ((beg (region-beginning))
+             (end (region-end))
              (buf (current-buffer))
              (buf-name (substring (buffer-name) 0 (- (length (buffer-name)) 5))))
         (copy-region-as-kill beg (1+ end))
@@ -200,13 +193,6 @@
           (newline)
           (save-buffer)))
     (message "mark region first!")))
-
-(defun fleet/copy-region ()
-  (interactive)
-  (let* ((beg (cadr fleet/region))
-         (end (car fleet/region)))
-    (copy-region-as-kill beg (1+ end))
-    (setq fleet/region nil)))
 
 (defun fleet/add-url ()
   (interactive)
@@ -242,7 +228,7 @@
 
 (defun glossary/revisit ()
   (interactive)
-  (let ((word-number 5))
+  (let ((word-number 40))
     (with-current-buffer (find-file-noselect (concat emacs-dir "glossary"))
       (let ((total-word-number
              (count-lines (point-min) (point-max))))
@@ -279,138 +265,6 @@
         ;; othewise update `WORD'
         (setq word str)))))
 
-;; tool bar
-;; (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
-(tool-bar-add-item "zoom-in" 'delete-other-windows 'max :help "maximise window")
-;; utils
-(tool-bar-add-item "sort-column-ascending" 'diary 'diary :help "display diary")
-(tool-bar-add-item "sort-descending" 'fleet/todo-visit 'visit :help "visit todo")
-(tool-bar-add-item "lock-ok" 'org-agenda-list 'habit :help "habit")
-(tool-bar-add-item "separator" nil 'Nil)
-(tool-bar-add-item "describe" 'newsticker-show-news 'news :help "News ticker")
-(tool-bar-add-item "next-page" 'eww-list-bookmarks 'eww-bookmark :help "EWW bookmark")
-(tool-bar-add-item "separator" nil 'Nil2)
-(tool-bar-add-item "sort-criteria" 'fleet/todo-org 'todo :help "new todo")
-(tool-bar-add-item "info" 'fleet/done-org 'done :help "done todo")
-(tool-bar-add-item "separator" nil 'Nil3)
-;; (tool-bar-add-item "up-arrow" 'set-mark-command 'setmark :help "set mark")
-;; (tool-bar-add-item "sort-ascending" 'fleet/add-region 'add-region :help "add region to fleet")
-(tool-bar-add-item "jump-to" 'glossary/add-at-point 'add-to-glossary :help "add to glossary")
-(tool-bar-add-item "spell" 'glossary/revisit 'glossary :help "revisit glossary")
-(tool-bar-local-item "next-page" 'eww-list-bookmarks 'eww-bookmark eww-tool-bar-map :help "EWW bookmark")
-(tool-bar-local-item "up-arrow" 'fleet/mark-region 'fleet/mark-region eww-tool-bar-map)
-(tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region eww-tool-bar-map)
-(tool-bar-local-item "help" 'stardict-define-at-point 'stardict-define-at-point eww-tool-bar-map)
-(tool-bar-local-item "checked" 'eww-readable 'eww-readable eww-tool-bar-map)
-
-;; mode line
-(setq-default mode-line-format
-      '("%e" mode-line-front-space mode-line-modes " " mode-line-position " " mode-line-buffer-identification " " mode-line-misc-info
-  mode-line-end-spaces))
-(setq-default line-number-mode nil)
-
-;; menu
-(define-key global-map
-  [menu-bar edit fleet/add-region]
-  '("copy region to fleet" . fleet/add-region))
-(define-key global-map
-  [menu-bar edit fleet/copy-region]
-  '("copy region" . fleet/copy-region))
-(define-key global-map
-  [menu-bar edit fleet/mark-region]
-  '("mark region" . fleet/mark-region))
-; remove two menus
-(define-key global-map [menu-bar options] nil)
-(define-key global-map [menu-bar tools] nil)
-; add my own menu
-(define-key-after
-  (lookup-key global-map [menu-bar])
-  [my]
-  (cons "My-magic" (make-sparse-keymap "My-magic"))
-  'buffers)
-; zoom in and out
-(define-key global-map
-  [menu-bar my text-scale-increase]
-  '("zoom in" . text-scale-increase))
-(define-key global-map
-  [menu-bar my text-scale-decrease]
-  '("zoom out" . text-scale-decrease))
-; tools
-(define-key global-map
-  [menu-bar my @300-visit-tangshi-file]
-  '("visit tangshi file" . @300-visit-tangshi-file))
-(define-key global-map
-  [menu-bar my visit-kawa]
-  '("visit kawa dir" .
-    (lambda ()
-      (interactive)
-      (find-file-noselect emacs-dir)
-      (switch-to-buffer "kawa"))))
-(define-key global-map
-  [menu-bar my visit-config]
-  '("visit config dir" .
-    (lambda ()
-      (interactive)
-      (find-file-noselect "/sdcard/emacs/emacs-android-config/")
-      (switch-to-buffer "emacs-android-config"))))
-(define-key global-map
-  [menu-bar my visit-books]
-  '("visit book dir" . visit-books
-    ))
-(define-key global-map
-  [menu-bar my ielm]
-  '("ielm" . ielm))
-(define-key global-map
-  [menu-bar my eshell]
-  '("eshell" . eshell))
-(define-key global-map
-  [menu-bar my calendar]
-  '("calendar" . calendar))
-; EWW series
-;; (define-key global-map
-;;   [menu-bar my fleet/add-region]
-;;   '("copy region to fleet note" . fleet/add-region))
-(define-key global-map
-  [menu-bar my fleet/add-url]
-  '("copy URL to fleet note" . fleet/add-url))
-(define-key global-map
-  [menu-bar my webjump]
-  '("web jump" . webjump))
-;; (define-key global-map
-;;   [menu-bar my eww-readable]
-;;   '("EWW readable" . eww-readable))
-;; (define-key global-map
-;;   [menu-bar my eww-list-bookmarks]
-;;   '("EWW bookmark" . eww-list-bookmarks))
-(define-key global-map
-  [menu-bar my eww]
-  '("EWW" . eww))
-; dictionary
-;; (define-key global-map
-;;   [menu-bar my glossary/add-at-point]
-;;   '("Add to glossary" . glossary/add-at-point))
-(define-key global-map
-  [menu-bar my glossary/flow]
-  '("Define word cont." . glossary/flow))
-(define-key global-map
-  [menu-bar my stardict-define]
-  '("Define word" . stardict-define))
-(define-key global-map
-  [menu-bar my stardict-define-at-point]
-  '("Define at point" . stardict-define-at-point))
-;; habit
-(define-key global-map
-  [menu-bar my habit/org-habit-done]
-  '("Complete habit" . habit/org-habit-done))
-(define-key global-map
-  [menu-bar my habit/visit-habit-file]
-  '("Visit habit file" . habit/visit-habit-file))
-;; (define-key global-map
-;;   [menu-bar my org-agenda-list]
-;;   '("List habit" . org-agenda-list))
-(global-set-key (kbd "<volume-up>") 'scroll-down-command)
-(global-set-key (kbd "<volume-down>") 'scroll-up-command)
-
 ;; third-party packages
 (require 'pangu-spacing)
 (add-hook 'org-mode-hook #'pangu-spacing-mode)
@@ -426,8 +280,8 @@
     (tool-bar-add-item "home" 'nov-goto-toc 'nov-goto-toc)
     (tool-bar-add-item "left-arrow" 'nov-previous-document 'nov-previous-document)
     (tool-bar-add-item "right-arrow" 'nov-next-document 'nov-next-document)
-    (tool-bar-add-item "up-arrow" 'fleet/mark-region 'fleet/mark-region)
     (tool-bar-add-item "sort-ascending" 'fleet/add-region-bib 'fleet/add-region-bib)
+    (tool-bar-add-item "copy" 'copy-region-as-kill 'copy-region-as-kill)
     (tool-bar-add-item "help" 'stardict-define-at-point 'stardict-define-at-point)
     (tool-bar-add-item "zoom-in" 'delete-other-windows 'max)
     (tool-bar-add-item "exit"
@@ -475,13 +329,142 @@
     (kill-buffer)))
 (@300-parse-to-json (concat emacs-dir "tangshi.org"))
 (setq @300-json (concat emacs-dir "tangshi.org.json"))
-(tool-bar-add-item "spell"
-                   (lambda () (interactive) (@300-random) (switch-to-buffer "*唐诗三百首*") (delete-other-windows))
-                   'random-shi :help "random tangshi")
 (defun @300-visit-tangshi-file ()
   (interactive)
   (switch-to-buffer (find-file-noselect (concat emacs-dir "tangshi.org")))
   (goto-char (point-max)))
+
+;; tool bar
+;; (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
+(tool-bar-add-item "zoom-in" 'delete-other-windows 'max)
+;; utils
+(tool-bar-add-item "sort-column-ascending" 'diary 'diary)
+(tool-bar-add-item "sort-descending" 'fleet/todo-visit 'visit)
+(tool-bar-add-item "lock-ok" 'org-agenda-list 'habit)
+(tool-bar-add-item "separator" nil 'Nil)
+(tool-bar-add-item "describe" 'newsticker-show-news 'news)
+(tool-bar-add-item "next-page" 'eww-list-bookmarks 'eww-bookmark)
+(tool-bar-add-item "separator" nil 'Nil2)
+(tool-bar-add-item "sort-criteria" 'fleet/todo-org 'todo)
+(tool-bar-add-item "info" 'fleet/done-org 'done)
+(tool-bar-add-item "separator" nil 'Nil3)
+(tool-bar-add-item "jump-to" 'glossary/add-at-point 'add-to-glossary)
+(tool-bar-add-item "spell" 'glossary/revisit 'glossary)
+(tool-bar-add-item "spell"
+                   (lambda () (interactive) (@300-random) (switch-to-buffer "*唐诗三百首*") (delete-other-windows))
+                   'random-shi :help "random tangshi")
+(tool-bar-add-item "checked" 'visit-books 'visit-books)
+(tool-bar-local-item "next-page" 'eww-list-bookmarks 'eww-bookmark eww-tool-bar-map)
+(tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region eww-tool-bar-map)
+(tool-bar-local-item "copy" 'copy-region-as-kill 'copy-region-as-kill eww-tool-bar-map)
+(tool-bar-local-item "help" 'stardict-define-at-point 'stardict-define-at-point eww-tool-bar-map)
+(tool-bar-local-item "checked" 'eww-readable 'eww-readable eww-tool-bar-map)
+
+;; mode line
+(setq-default mode-line-format
+      '("%e" mode-line-front-space mode-line-modes " " mode-line-position " " mode-line-buffer-identification " " mode-line-misc-info
+  mode-line-end-spaces))
+(setq-default line-number-mode nil)
+
+;; menu
+(define-key global-map
+  [menu-bar edit fleet/add-region]
+  '("copy region to fleet" . fleet/add-region))
+(define-key global-map
+  [menu-bar edit copy-region-as-kill]
+  '("copy region" . copy-region-as-kill))
+; remove two menus
+(define-key global-map [menu-bar options] nil)
+(define-key global-map [menu-bar tools] nil)
+; add my own menu
+(define-key-after
+  (lookup-key global-map [menu-bar])
+  [my]
+  (cons "My-magic" (make-sparse-keymap "My-magic"))
+  'buffers)
+; zoom in and out
+(define-key global-map
+  [menu-bar my text-scale-increase]
+  '("zoom in" . text-scale-increase))
+(define-key global-map
+  [menu-bar my text-scale-decrease]
+  '("zoom out" . text-scale-decrease))
+; tools
+(define-key global-map
+  [menu-bar my @300-visit-tangshi-file]
+  '("visit tangshi file" . @300-visit-tangshi-file))
+(define-key global-map
+  [menu-bar my visit-kawa]
+  '("visit kawa dir" .
+    (lambda ()
+      (interactive)
+      (find-file-noselect emacs-dir)
+      (switch-to-buffer "kawa"))))
+(define-key global-map
+  [menu-bar my visit-config]
+  '("visit config dir" .
+    (lambda ()
+      (interactive)
+      (find-file-noselect "/sdcard/emacs/emacs-android-config/")
+      (switch-to-buffer "emacs-android-config"))))
+;; (define-key global-map
+;;   [menu-bar my visit-books]
+;;   '("visit book dir" . visit-books
+;;     ))
+;; (define-key global-map
+;;   [menu-bar my ielm]
+;;   '("ielm" . ielm))
+;; (define-key global-map
+;;   [menu-bar my eshell]
+;;   '("eshell" . eshell))
+;; (define-key global-map
+;;   [menu-bar my calendar]
+;;   '("calendar" . calendar))
+; EWW series
+;; (define-key global-map
+;;   [menu-bar my fleet/add-region]
+;;   '("copy region to fleet note" . fleet/add-region))
+(define-key global-map
+  [menu-bar my fleet/add-url]
+  '("copy URL to fleet note" . fleet/add-url))
+;; (define-key global-map
+;;   [menu-bar my webjump]
+;;   '("web jump" . webjump))
+;; (define-key global-map
+;;   [menu-bar my eww-readable]
+;;   '("EWW readable" . eww-readable))
+;; (define-key global-map
+;;   [menu-bar my eww-list-bookmarks]
+;;   '("EWW bookmark" . eww-list-bookmarks))
+(define-key global-map
+  [menu-bar my eww]
+  '("EWW" . eww))
+; dictionary
+;; (define-key global-map
+;;   [menu-bar my glossary/add-at-point]
+;;   '("Add to glossary" . glossary/add-at-point))
+(define-key global-map
+  [menu-bar my glossary/flow]
+  '("Define word cont." . glossary/flow))
+(define-key global-map
+  [menu-bar my stardict-define]
+  '("Define word" . stardict-define))
+(define-key global-map
+  [menu-bar my stardict-define-at-point]
+  '("Define at point" . stardict-define-at-point))
+;; habit
+(define-key global-map
+  [menu-bar my habit/org-habit-done]
+  '("Complete habit" . habit/org-habit-done))
+(define-key global-map
+  [menu-bar my habit/visit-habit-file]
+  '("Visit habit file" . habit/visit-habit-file))
+;; (define-key global-map
+;;   [menu-bar my org-agenda-list]
+;;   '("List habit" . org-agenda-list))
+(global-set-key (kbd "<volume-up>") 'scroll-down-command)
+(global-set-key (kbd "<volume-down>") 'scroll-up-command)
+
 
 ;; finalise startup apperance
 (with-current-buffer "*scratch*"
