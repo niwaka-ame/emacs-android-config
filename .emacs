@@ -63,12 +63,12 @@
 
 ;; internet
 (require 'browse-url)
-(require 'webjump)
+;; (require 'webjump)
 (require 'eww)
 (setq browse-url-browser-function 'eww)
-(setq webjump-sites
-      '(("ddg" . [simple-query "duckduckgo.com" "duckduckgo.com/?q=" ""])
-        ("gsc" . [simple-query "scholar.google.com" "scholar.google.com/scholar?q=" ""])))
+;; (setq webjump-sites
+;;       '(("ddg" . [simple-query "duckduckgo.com" "duckduckgo.com/?q=" ""])
+;;         ("gsc" . [simple-query "scholar.google.com" "scholar.google.com/scholar?q=" ""])))
 (setq eww-bookmarks-directory emacs-dir
       shr-inhibit-images t)
 
@@ -89,6 +89,8 @@
 (add-hook 'org-mode-hook (lambda () (toggle-truncate-lines -1)))
 (add-hook 'org-mode-hook #'variable-pitch-mode)
 (add-hook 'org-mode-hook #'org-indent-mode)
+;; larger font size
+(add-hook 'org-mode-hook (lambda () (text-scale-increase 1)))
 
 ;; org-habit
 (add-to-list 'org-modules 'org-habit)
