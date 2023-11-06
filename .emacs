@@ -336,6 +336,16 @@
   (switch-to-buffer (find-file-noselect (concat emacs-dir "tangshi.org")))
   (goto-char (point-max)))
 
+(require 'elfeed)
+(setq elfeed-feeds
+      '(("http://nullprogram.com/feed/" blog emacs)
+        "https://planet.emacslife.com/atom.xml"))
+(setq elfeed-show-entry-switch 'pop-to-buffer)
+(setq elfeed-search-date-format (list "%y%m%d" 6 :left))
+(define-key elfeed-search-mode-map [mouse-1] 'elfeed-search-show-entry)
+(define-key elfeed-show-mode-map (kbd "<volume-up>") 'elfeed-show-prev)
+(define-key elfeed-show-mode-map (kbd "<volume-down>") 'elfeed-show-next)
+
 ;; tool bar
 ;; (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
 (tool-bar-add-item "zoom-in" 'delete-other-windows 'max)
