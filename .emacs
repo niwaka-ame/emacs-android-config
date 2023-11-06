@@ -337,10 +337,10 @@
   (goto-char (point-max)))
 
 (require 'elfeed)
-(setq elfeed-feeds
-      '(("http://nullprogram.com/feed/" blog emacs)
-        "https://planet.emacslife.com/atom.xml"))
-(setq elfeed-show-entry-switch 'pop-to-buffer)
+(require 'elfeed-org)
+(elfeed-org)
+(setq rmh-elfeed-org-files (list (concat emacs-dir "elfeed.org")))
+(setq elfeed-show-entry-switch 'switch-to-buffer)
 (setq elfeed-search-date-format (list "%y%m%d" 6 :left))
 (define-key elfeed-search-mode-map [mouse-1] 'elfeed-search-show-entry)
 (define-key elfeed-show-mode-map (kbd "<volume-up>") 'elfeed-show-prev)
@@ -471,6 +471,12 @@
 (define-key global-map
   [menu-bar my habit/visit-habit-file]
   '("Visit habit file" . habit/visit-habit-file))
+(define-key global-map
+  [menu-bar my elfeed-update]
+  '("Elfeed update" . elfeed-update))
+(define-key global-map
+  [menu-bar my elfeed]
+  '("Elfeed" . elfeed))
 ;; (define-key global-map
 ;;   [menu-bar my org-agenda-list]
 ;;   '("List habit" . org-agenda-list))

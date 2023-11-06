@@ -13,3 +13,6 @@
 [submodule "elfeed"]
 	path = elfeed
 	url = https://github.com/skeeto/elfeed.git
+[submodule "elfeed-org"]
+	path = elfeed-org
+	url = https://github.com/remyhonig/elfeed-org.git
