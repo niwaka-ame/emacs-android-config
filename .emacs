@@ -110,7 +110,8 @@
 
 (defun habit/visit-habit-file ()
   (interactive)
-  (switch-to-buffer (find-file-noselect (concat emacs-dir "habits.org"))))
+  (switch-to-buffer (find-file-noselect (concat emacs-dir "habits.org")))
+  (org-cycle-content))
 
 (defun habit/add-habit (habit freq)
   (interactive "sHabit: \nsFrequency: ")
