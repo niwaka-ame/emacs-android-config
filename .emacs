@@ -110,8 +110,11 @@
 
 (defun habit/visit-habit-file ()
   (interactive)
-  (switch-to-buffer (find-file-noselect (concat emacs-dir "habits.org")))
-  (org-cycle-content))
+  (if (string= (buffer-name) "habits.org")
+      (org-agenda-list)
+    (progn
+      (switch-to-buffer (find-file-noselect (concat emacs-dir "habits.org")))
+      (org-cycle-content))))
 
 (defun habit/add-habit (habit freq)
   (interactive "sHabit: \nsFrequency: ")
@@ -353,7 +356,7 @@
 ;; utils
 (tool-bar-add-item "sort-column-ascending" 'diary 'diary)
 (tool-bar-add-item "sort-descending" 'fleet/todo-visit 'visit)
-(tool-bar-add-item "lock-ok" 'org-agenda-list 'habit)
+(tool-bar-add-item "lock-ok" 'habit/visit-habit-file 'habit)
 (tool-bar-add-item "separator" nil 'Nil)
 (tool-bar-add-item "describe" 'newsticker-show-news 'news)
 (tool-bar-add-item "next-page" 'eww-list-bookmarks 'eww-bookmark)
@@ -469,9 +472,9 @@
 (define-key global-map
   [menu-bar my habit/org-habit-done]
   '("Complete habit" . habit/org-habit-done))
-(define-key global-map
-  [menu-bar my habit/visit-habit-file]
-  '("Visit habit file" . habit/visit-habit-file))
+;; (define-key global-map
+;;   [menu-bar my habit/visit-habit-file]
+;;   '("Visit habit file" . habit/visit-habit-file))
 (define-key global-map
   [menu-bar my elfeed-update]
   '("Elfeed update" . elfeed-update))
