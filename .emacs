@@ -93,6 +93,19 @@
 (add-hook 'org-mode-hook (lambda () (text-scale-increase 1)))
 
 ;; org-habit
+(define-derived-mode habit-mode org-mode "habit")
+
+(defvar habit-tool-bar-map
+  (let ((tool-bar-map (make-sparse-keymap)))
+    (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
+    (tool-bar-add-item "undo" 'undo 'undo)
+    (tool-bar-add-item "save" 'save-buffer 'save)
+    (tool-bar-add-item "info" 'habit/org-habit-done 'complete)
+    (tool-bar-add-item "lock-ok" 'habit/visit-habit-file 'habit)
+    tool-bar-map))
+
+(add-hook 'habit-mode-hook (lambda () (setq-local tool-bar-map habit-tool-bar-map)))
+
 (add-to-list 'org-modules 'org-habit)
 (setq org-agenda-files (list (concat emacs-dir "habits.org"))
       org-habit-show-all-today t
@@ -114,6 +127,7 @@
       (org-agenda-list)
     (progn
       (switch-to-buffer (find-file-noselect (concat emacs-dir "habits.org")))
+      (habit-mode)
       (org-cycle-content))))
 
 (defun habit/add-habit (habit freq)
