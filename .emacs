@@ -374,12 +374,11 @@
 (tool-bar-add-item "sort-criteria" 'fleet/todo-org 'todo)
 (tool-bar-add-item "info" 'fleet/done-org 'done)
 (tool-bar-add-item "separator" nil 'Nil3)
-(tool-bar-add-item "jump-to" 'glossary/add-at-point 'add-to-glossary)
 (tool-bar-add-item "spell" 'glossary/revisit 'glossary)
 (tool-bar-add-item "spell"
                    (lambda () (interactive) (@300-random) (switch-to-buffer "*唐诗三百首*") (delete-other-windows))
                    'random-shi :help "random tangshi")
-(tool-bar-add-item "checked" 'visit-books 'visit-books)
+(tool-bar-add-item "next-page" 'visit-books 'visit-books)
 (tool-bar-local-item "next-page" 'eww-list-bookmarks 'eww-bookmark eww-tool-bar-map)
 (tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region eww-tool-bar-map)
 (tool-bar-local-item "copy" 'copy-region-as-kill 'copy-region-as-kill eww-tool-bar-map)
