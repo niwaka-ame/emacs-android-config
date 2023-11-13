@@ -321,8 +321,8 @@
 (define-key nov-mode-map (kbd "<volume-down>") 'nov-scroll-up)
 (defvar nov-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
-    (tool-bar-add-item "open" 'visit-books 'nov-open)
     (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
+    (tool-bar-add-item "open" 'visit-books 'nov-open)
     (tool-bar-add-item "home" 'nov-goto-toc 'nov-goto-toc)
     (tool-bar-add-item "left-arrow" 'nov-previous-document 'nov-previous-document)
     (tool-bar-add-item "right-arrow" 'nov-next-document 'nov-next-document)
@@ -390,6 +390,15 @@
 (define-key elfeed-show-mode-map (kbd "<volume-up>") 'elfeed-show-prev)
 (define-key elfeed-show-mode-map (kbd "<volume-down>") 'elfeed-show-next)
 
+(defvar elfeed-tool-bar-map
+  (let ((tool-bar-map (make-sparse-keymap)))
+    (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
+    (tool-bar-add-item "refresh" 'elfeed-update 'elfeed-update)
+    (tool-bar-add-item "help" 'stardict-define-at-point 'stardict-define-at-point)
+    tool-bar-map))
+(add-hook 'elfeed-search-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
+(add-hook 'elfeed-show-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
+
 ;; tool bar
 ;; (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
 (tool-bar-add-item "zoom-in" 'delete-other-windows 'max)
@@ -397,18 +406,19 @@
 (tool-bar-add-item "sort-column-ascending" 'diary 'diary)
 (tool-bar-add-item "sort-descending" 'fleet/todo-visit 'visit)
 (tool-bar-add-item "lock-ok" 'habit/visit-habit-file 'habit)
-(tool-bar-add-item "separator" nil 'Nil)
+;; (tool-bar-add-item "separator" nil 'Nil)
 (tool-bar-add-item "describe" 'newsticker-show-news 'news)
 (tool-bar-add-item "next-page" 'eww-list-bookmarks 'eww-bookmark)
-(tool-bar-add-item "separator" nil 'Nil2)
+;; (tool-bar-add-item "separator" nil 'Nil2)
 ;; (tool-bar-add-item "sort-criteria" 'fleet/todo-org 'todo)
 ;; (tool-bar-add-item "info" 'fleet/done-org 'done)
-(tool-bar-add-item "separator" nil 'Nil3)
+;; (tool-bar-add-item "separator" nil 'Nil3)
 (tool-bar-add-item "spell" 'glossary/revisit 'glossary)
 (tool-bar-add-item "spell"
                    (lambda () (interactive) (@300-random) (switch-to-buffer "*唐诗三百首*") (delete-other-windows))
                    'random-shi :help "random tangshi")
 (tool-bar-add-item "next-page" 'visit-books 'visit-books)
+(tool-bar-add-item "describe" 'elfeed 'elfeed)
 (tool-bar-local-item "next-page" 'eww-list-bookmarks 'eww-bookmark eww-tool-bar-map)
 (tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region eww-tool-bar-map)
 (tool-bar-local-item "copy" 'copy-region-as-kill 'copy-region-as-kill eww-tool-bar-map)
@@ -514,12 +524,12 @@
 ;; (define-key global-map
 ;;   [menu-bar my habit/visit-habit-file]
 ;;   '("Visit habit file" . habit/visit-habit-file))
-(define-key global-map
-  [menu-bar my elfeed-update]
-  '("Elfeed update" . elfeed-update))
-(define-key global-map
-  [menu-bar my elfeed]
-  '("Elfeed" . elfeed))
+;; (define-key global-map
+;;   [menu-bar my elfeed-update]
+;;   '("Elfeed update" . elfeed-update))
+;; (define-key global-map
+;;   [menu-bar my elfeed]
+;;   '("Elfeed" . elfeed))
 ;; (define-key global-map
 ;;   [menu-bar my org-agenda-list]
 ;;   '("List habit" . org-agenda-list))
