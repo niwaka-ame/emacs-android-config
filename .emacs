@@ -100,6 +100,7 @@
     (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
     (tool-bar-add-item "undo" 'undo 'undo)
     (tool-bar-add-item "save" 'save-buffer 'save)
+    (tool-bar-add-item "sort-criteria" 'habit/add-habit 'add)
     (tool-bar-add-item "info" 'habit/org-habit-done 'complete)
     (tool-bar-add-item "lock-ok" 'habit/visit-habit-file 'habit)
     tool-bar-map))
@@ -132,8 +133,7 @@
 
 (defun habit/add-habit (habit freq)
   (interactive "sHabit: \nsFrequency: ")
-  (with-current-buffer (find-file-noselect (concat emacs-dir "habits.org"))
-    (org-mode)
+  (with-current-buffer "habits.org"
     (goto-char (point-max))
     (newline)
     (org-insert-heading)
@@ -492,9 +492,9 @@
   [menu-bar my stardict-define-at-point]
   '("Define at point" . stardict-define-at-point))
 ;; habit
-(define-key global-map
-  [menu-bar my habit/org-habit-done]
-  '("Complete habit" . habit/org-habit-done))
+;; (define-key global-map
+;;   [menu-bar my habit/org-habit-done]
+;;   '("Complete habit" . habit/org-habit-done))
 ;; (define-key global-map
 ;;   [menu-bar my habit/visit-habit-file]
 ;;   '("Visit habit file" . habit/visit-habit-file))
