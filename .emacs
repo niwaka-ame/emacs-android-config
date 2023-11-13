@@ -271,6 +271,16 @@
         ;; othewise update `WORD'
         (setq word str)))))
 
+;; define a local tool bar for stardict
+(defvar stardict-tool-bar-map
+  (let ((tool-bar-map (make-sparse-keymap)))
+    (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
+    (tool-bar-add-item "jump-to" 'glossary/add-at-point 'add-to-glossary)
+    (tool-bar-add-item "help" 'stardict-define-at-point 'stardict-define-at-point)
+    tool-bar-map))
+
+(add-hook 'stardict-mode-hook (lambda () (setq-local tool-bar-map stardict-tool-bar-map)))
+
 ;; third-party packages
 (require 'pangu-spacing)
 (add-hook 'org-mode-hook #'pangu-spacing-mode)

@@ -158,6 +158,8 @@ You should close the dict file yourself."
   (with-current-buffer (find-file-noselect (nth 2 dict))
     (setq buffer-read-only t)))
 
+(define-derived-mode stardict-mode fundamental-mode "stardict")
+
 (defun stardict--load-dict ()
   "load dictionary when call for first time."
   (unless stardict-dict-hash
@@ -170,6 +172,7 @@ You should close the dict file yourself."
     (insert (concat word "\n"))
     (insert (stardict-lookup stardict-dict-hash word))
     (goto-char (point-min))
+    (stardict-mode)
     (switch-to-buffer (current-buffer))))
 
 (defun stardict--lookup-and-return (word)
