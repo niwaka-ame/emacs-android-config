@@ -152,9 +152,21 @@
     (switch-to-buffer (current-buffer))))
 
 ;; use org files for fleeting notes
+(define-derived-mode fleet-mode org-mode "fleet")
+
+(defvar fleet-tool-bar-map
+  (let ((tool-bar-map (make-sparse-keymap)))
+    (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
+    (tool-bar-add-item "undo" 'undo 'undo)
+    (tool-bar-add-item "save" 'save-buffer 'save)
+    (tool-bar-add-item "sort-criteria" 'fleet/todo-org 'todo)
+    (tool-bar-add-item "info" 'fleet/done-org 'done)
+    tool-bar-map))
+(add-hook 'fleet-mode-hook (lambda () (setq-local tool-bar-map fleet-tool-bar-map)))
+
 (defun fleet/todo-org (&optional no-switch)
   (interactive)
-  (with-current-buffer (find-file-noselect (concat emacs-dir "todo.org"))
+  (with-current-buffer "todo.org"
     (goto-char (point-min))
     (org-insert-heading)
     (save-excursion
@@ -173,7 +185,8 @@
 
 (defun fleet/todo-visit ()
   (interactive)
-  (switch-to-buffer (find-file-noselect (concat emacs-dir "todo.org"))))
+  (switch-to-buffer (find-file-noselect (concat emacs-dir "todo.org")))
+  (fleet-mode))
 
 (defun fleet/add-region ()
   (interactive)
@@ -388,8 +401,8 @@
 (tool-bar-add-item "describe" 'newsticker-show-news 'news)
 (tool-bar-add-item "next-page" 'eww-list-bookmarks 'eww-bookmark)
 (tool-bar-add-item "separator" nil 'Nil2)
-(tool-bar-add-item "sort-criteria" 'fleet/todo-org 'todo)
-(tool-bar-add-item "info" 'fleet/done-org 'done)
+;; (tool-bar-add-item "sort-criteria" 'fleet/todo-org 'todo)
+;; (tool-bar-add-item "info" 'fleet/done-org 'done)
 (tool-bar-add-item "separator" nil 'Nil3)
 (tool-bar-add-item "spell" 'glossary/revisit 'glossary)
 (tool-bar-add-item "spell"
