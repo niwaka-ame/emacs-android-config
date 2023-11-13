@@ -9,6 +9,7 @@
 (set-face-attribute 'default nil :height 230)
 (require 'face-remap)
 (setq text-scale-mode-step 1.1)
+(setq pop-up-windows nil)
 
 ;;; set up a splash screen for diary
 
@@ -20,8 +21,10 @@
   (normal-top-level-add-subdirs-to-load-path))
 
 ;; some useful builtin mode
+(require 'dired)
 (add-hook 'dired-mode-hook #'dired-hide-details-mode)
 (setq dired-kill-when-opening-new-dired-buffer t)
+(advice-add 'dired-mouse-find-file-other-window :override 'dired-mouse-find-file)
 
 (require 'delsel)
 (delete-selection-mode)
@@ -313,7 +316,7 @@
     (tool-bar-add-item "sort-ascending" 'fleet/add-region-bib 'fleet/add-region-bib)
     (tool-bar-add-item "copy" 'copy-region-as-kill 'copy-region-as-kill)
     (tool-bar-add-item "help" 'stardict-define-at-point 'stardict-define-at-point)
-    (tool-bar-add-item "zoom-in" 'delete-other-windows 'max)
+    ;; (tool-bar-add-item "zoom-in" 'delete-other-windows 'max)
     (tool-bar-add-item "exit"
                        (lambda ()
                          (interactive)
