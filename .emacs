@@ -343,7 +343,7 @@
 (add-hook 'nov-mode-hook (lambda () (setq-local tool-bar-map nov-tool-bar-map)))
 
 (require '@300)
-(defun @300-parse-to-json (file)
+(defun @300/parse-to-json (file)
   (with-current-buffer (find-file-noselect file)
     (save-excursion
       (goto-char (point-min))
@@ -377,9 +377,9 @@
             (save-buffer)
             (kill-buffer)))))
     (kill-buffer)))
-(@300-parse-to-json (concat emacs-dir "tangshi.org"))
+(@300/parse-to-json (concat emacs-dir "tangshi.org"))
 (setq @300-json (concat emacs-dir "tangshi.org.json"))
-(defun @300-visit-tangshi-file ()
+(defun @300/visit-tangshi-file ()
   (interactive)
   (switch-to-buffer (find-file-noselect (concat emacs-dir "tangshi.org")))
   (goto-char (point-max)))
@@ -460,8 +460,8 @@
   '("zoom out" . text-scale-decrease))
 ; tools
 (define-key global-map
-  [menu-bar my @300-visit-tangshi-file]
-  '("visit tangshi file" . @300-visit-tangshi-file))
+  [menu-bar my @300/visit-tangshi-file]
+  '("visit tangshi file" . @300/visit-tangshi-file))
 (define-key global-map
   [menu-bar my visit-kawa]
   '("visit kawa dir" .
