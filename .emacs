@@ -166,7 +166,8 @@
 
 (defun fleet/todo-org (&optional no-switch)
   (interactive)
-  (with-current-buffer "todo.org"
+  (with-current-buffer (find-file-noselect (concat emacs-dir "todo.org"))
+    (fleet-mode)
     (goto-char (point-min))
     (org-insert-heading)
     (save-excursion
@@ -199,11 +200,14 @@
         (setq fleet/region nil)
         (fleet/todo-org 'no-switch)
         (with-current-buffer "todo.org"
-          (when url
-            (insert url)
-            (forward-line)
-            (newline))
-          (yank)
+          (if url (progn
+                    (insert url)
+                    (forward-line)
+                    (newline)
+                    (if (string-match-p "[\u4e00-\u9fff]" (car kill-ring))
+                        (insert (replace-regexp-in-string "\n" "" (car kill-ring)))
+                      (insert (replace-regexp-in-string "\n" " " (car kill-ring)))))
+            (yank))
           (newline)
           (goto-char (point-min))
           (save-buffer)))
