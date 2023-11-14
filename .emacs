@@ -405,18 +405,13 @@
 
 ;; tool bar
 ;; (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
-(tool-bar-add-item "zoom-in" 'delete-other-windows 'max)
+(tool-bar-add-item "zoom-in" 'text-scale-increase 'zoom-in)
 ;; utils
 (tool-bar-add-item "sort-column-ascending" 'diary 'diary)
 (tool-bar-add-item "sort-descending" 'fleet/todo-visit 'visit)
 (tool-bar-add-item "lock-ok" 'habit/visit-habit-file 'habit)
-;; (tool-bar-add-item "separator" nil 'Nil)
 (tool-bar-add-item "describe" 'newsticker-show-news 'news)
 (tool-bar-add-item "next-page" 'eww-list-bookmarks 'eww-bookmark)
-;; (tool-bar-add-item "separator" nil 'Nil2)
-;; (tool-bar-add-item "sort-criteria" 'fleet/todo-org 'todo)
-;; (tool-bar-add-item "info" 'fleet/done-org 'done)
-;; (tool-bar-add-item "separator" nil 'Nil3)
 (tool-bar-add-item "spell" 'glossary/revisit 'glossary)
 (tool-bar-add-item "spell"
                    (lambda () (interactive) (@300-random) (switch-to-buffer "*唐诗三百首*") (delete-other-windows))
@@ -476,42 +471,15 @@
       (interactive)
       (find-file-noselect "/sdcard/emacs/emacs-android-config/")
       (switch-to-buffer "emacs-android-config"))))
-;; (define-key global-map
-;;   [menu-bar my visit-books]
-;;   '("visit book dir" . visit-books
-;;     ))
-;; (define-key global-map
-;;   [menu-bar my ielm]
-;;   '("ielm" . ielm))
-;; (define-key global-map
-;;   [menu-bar my eshell]
-;;   '("eshell" . eshell))
-;; (define-key global-map
-;;   [menu-bar my calendar]
-;;   '("calendar" . calendar))
-; EWW series
-;; (define-key global-map
-;;   [menu-bar my fleet/add-region]
-;;   '("copy region to fleet note" . fleet/add-region))
 (define-key global-map
   [menu-bar my fleet/add-url]
   '("copy URL to fleet note" . fleet/add-url))
 ;; (define-key global-map
 ;;   [menu-bar my webjump]
 ;;   '("web jump" . webjump))
-;; (define-key global-map
-;;   [menu-bar my eww-readable]
-;;   '("EWW readable" . eww-readable))
-;; (define-key global-map
-;;   [menu-bar my eww-list-bookmarks]
-;;   '("EWW bookmark" . eww-list-bookmarks))
 (define-key global-map
   [menu-bar my eww]
   '("EWW" . eww))
-; dictionary
-;; (define-key global-map
-;;   [menu-bar my glossary/add-at-point]
-;;   '("Add to glossary" . glossary/add-at-point))
 (define-key global-map
   [menu-bar my glossary/flow]
   '("Define word cont." . glossary/flow))
@@ -521,22 +489,6 @@
 (define-key global-map
   [menu-bar my stardict-define-at-point]
   '("Define at point" . stardict-define-at-point))
-;; habit
-;; (define-key global-map
-;;   [menu-bar my habit/org-habit-done]
-;;   '("Complete habit" . habit/org-habit-done))
-;; (define-key global-map
-;;   [menu-bar my habit/visit-habit-file]
-;;   '("Visit habit file" . habit/visit-habit-file))
-;; (define-key global-map
-;;   [menu-bar my elfeed-update]
-;;   '("Elfeed update" . elfeed-update))
-;; (define-key global-map
-;;   [menu-bar my elfeed]
-;;   '("Elfeed" . elfeed))
-;; (define-key global-map
-;;   [menu-bar my org-agenda-list]
-;;   '("List habit" . org-agenda-list))
 (global-set-key (kbd "<volume-up>") 'scroll-down-command)
 (global-set-key (kbd "<volume-down>") 'scroll-up-command)
 
