@@ -412,15 +412,18 @@
       org-journal-file-type 'weekly
       org-journal-encrypt-journal t)
 
-;; org-crypt settings
-(require 'org-crypt)
+;; encrypting journals
 (require 'epa-file)
 (epa-file-enable)
-(org-crypt-use-before-save-magic)
-(setq org-crypt-key
-      (with-current-buffer (find-file-noselect (concat emacs-dir "key"))
-        (string-trim (buffer-string))))
-(setq epa-file-encrypt-to `(,org-crypt-key))
+(defun org-journal/get-key ()
+  (with-current-buffer (find-file-noselect (concat emacs-dir "key"))
+    (string-trim (buffer-string))))
+
+(defun org-journal/auto-encrypt ()
+  (when (eq major-mode 'org-journal-mode)
+    (epa-encrypt-file (buffer-file-name) `(,(org-journal/get-key)))))
+
+(add-hook 'before-save-hook 'org-journal/auto-encrypt)
 
 ;; tool bar
 ;; (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
