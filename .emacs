@@ -10,6 +10,7 @@
 (require 'face-remap)
 (setq text-scale-mode-step 1.1)
 (setq pop-up-windows nil)
+(setq auto-save-default nil)
 
 ;;; set up a splash screen for diary
 
@@ -403,6 +404,21 @@
 (add-hook 'elfeed-search-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
 (add-hook 'elfeed-show-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
 
+(require 'org-journal)
+(setq org-journal-dir (concat emacs-dir "journal/")
+      org-journal-date-format "%Y-%m-%d, %A"
+      org-journal-file-format "%Y-%V-%b.org"
+      org-journal-carryover-items ""
+      org-journal-file-type 'weekly
+      org-journal-encrypt-journal t)
+
+;; org-crypt settings
+(require 'org-crypt)
+(org-crypt-use-before-save-magic)
+(setq org-crypt-key
+      (with-temp-buffer (find-file-noselect (concat emacs-dir "key"))
+                        (buffer-string)))
+
 ;; tool bar
 ;; (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
 (tool-bar-add-item "zoom-in" 'text-scale-increase 'zoom-in)
@@ -496,5 +512,4 @@
 ;; finalise startup apperance
 (add-hook 'emacs-startup-hook
           (lambda ()
-            (switch-to-buffer "*Fancy Diary Entries*")
-            (delete-other-windows)))
+            (switch-to-buffer "*Fancy Diary Entries*")))

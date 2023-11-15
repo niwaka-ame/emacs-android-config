@@ -16,3 +16,6 @@
 [submodule "elfeed-org"]
 	path = elfeed-org
 	url = https://github.com/remyhonig/elfeed-org.git
+[submodule "org-journal"]
+	path = org-journal
+	url = https://github.com/bastibe/org-journal.git
