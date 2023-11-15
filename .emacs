@@ -414,10 +414,13 @@
 
 ;; org-crypt settings
 (require 'org-crypt)
+(require 'epa-file)
+(epa-file-enable)
 (org-crypt-use-before-save-magic)
 (setq org-crypt-key
       (with-current-buffer (find-file-noselect (concat emacs-dir "key"))
         (string-trim (buffer-string))))
+(setq epa-file-encrypt-to `(,org-crypt-key))
 
 ;; tool bar
 ;; (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
