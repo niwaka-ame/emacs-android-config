@@ -416,8 +416,8 @@
 (require 'org-crypt)
 (org-crypt-use-before-save-magic)
 (setq org-crypt-key
-      (with-temp-buffer (find-file-noselect (concat emacs-dir "key"))
-                        (buffer-string)))
+      (with-current-buffer (find-file-noselect (concat emacs-dir "key"))
+        (string-trim (buffer-string))))
 
 ;; tool bar
 ;; (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
