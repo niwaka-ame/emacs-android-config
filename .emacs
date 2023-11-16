@@ -410,20 +410,7 @@
       org-journal-file-format "%Y-%V-%b.org"
       org-journal-carryover-items ""
       org-journal-file-type 'weekly
-      org-journal-encrypt-journal t)
-
-;; encrypting journals
-(require 'epa-file)
-(epa-file-enable)
-(defun org-journal/get-key ()
-  (with-current-buffer (find-file-noselect (concat emacs-dir "key"))
-    (string-trim (buffer-string))))
-
-(defun org-journal/auto-encrypt ()
-  (when (eq major-mode 'org-journal-mode)
-    (epa-encrypt-file (buffer-file-name) `(,(org-journal/get-key)))))
-
-(add-hook 'before-save-hook 'org-journal/auto-encrypt)
+      org-journal-encrypt-journal nil)
 
 ;; tool bar
 ;; (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
