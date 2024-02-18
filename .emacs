@@ -388,6 +388,7 @@
 (require 'elfeed)
 (require 'elfeed-org)
 (elfeed-org)
+(setq elfeed-db-directory (concat emacs-dir ".elfeed-data"))
 (setq rmh-elfeed-org-files (list (concat emacs-dir "elfeed.org")))
 (setq elfeed-show-entry-switch 'switch-to-buffer)
 (setq elfeed-search-date-format (list "%y%m%d" 6 :left))
