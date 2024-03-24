@@ -96,6 +96,13 @@
 (add-hook 'org-mode-hook #'delete-other-windows)
 ;; larger font size
 (add-hook 'org-mode-hook (lambda () (text-scale-increase 1)))
+(setq org-link-frame-setup
+      '((vm . vm-visit-folder-other-frame)
+        (vm-imap . vm-visit-imap-folder-other-frame)
+        (gnus . org-gnus-no-new-news)
+        (file . find-file)
+        (wl . wl-other-frame)))
+
 
 ;; org-habit
 (define-derived-mode habit-mode org-mode "habit")
@@ -439,7 +446,7 @@
                    'random-shi :help "random tangshi")
 (tool-bar-add-item "next-page" 'visit-books 'visit-books)
 (tool-bar-add-item "describe" 'elfeed 'elfeed)
-(tool-bar-add-item "checked" 'denote/visit-denote-dir 'denote)
+(tool-bar-add-item "spell" 'denote/visit-denote-dir 'denote)
 (tool-bar-local-item "next-page" 'eww-list-bookmarks 'eww-bookmark eww-tool-bar-map)
 (tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region eww-tool-bar-map)
 (tool-bar-local-item "copy" 'copy-region-as-kill 'copy-region-as-kill eww-tool-bar-map)
