@@ -433,7 +433,8 @@
 
 ;; tool bar
 ;; (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
-(tool-bar-add-item "zoom-in" 'text-scale-increase 'zoom-in)
+;; (tool-bar-add-item "zoom-in" 'text-scale-increase 'zoom-in)
+(tool-bar-add-item "close" 'delete-window 'delete-window)
 ;; utils
 (tool-bar-add-item "sort-column-ascending" 'diary 'diary)
 (tool-bar-add-item "sort-descending" 'fleet/todo-visit 'visit)
