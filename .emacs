@@ -525,6 +525,12 @@
 (global-set-key (kbd "<volume-up>") 'scroll-down-command)
 (global-set-key (kbd "<volume-down>") 'scroll-up-command)
 
+;; TAB for minibuffer
+(define-key minibuffer-local-map (kbd "<volume-down>") 'minibuffer-complete)
+(define-key minibuffer-local-completion-map (kbd "<volume-down>") 'minibuffer-complete)
+(define-key minibuffer-local-completion-map (kbd "<volume-down>") 'minibuffer-complete)
+(define-key minibuffer-local-filename-completion-map (kbd "<volume-down>") 'minibuffer-complete)
+(define-key minibuffer-local-must-match-map (kbd "<volume-down>") 'minibuffer-complete)
 
 ;; finalise startup apperance
 (add-hook 'emacs-startup-hook
