@@ -21,6 +21,8 @@
 (let ((default-directory "/sdcard/emacs/emacs-android-config/"))
   (normal-top-level-add-subdirs-to-load-path))
 
+(setq make-backup-files nil)
+
 ;; some useful builtin mode
 (require 'dired)
 (add-hook 'dired-mode-hook #'dired-hide-details-mode)
