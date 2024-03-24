@@ -19,3 +19,6 @@
 [submodule "org-journal"]
 	path = org-journal
 	url = https://github.com/bastibe/org-journal.git
+[submodule "denote"]
+	path = denote
+	url = https://git.sr.ht/~protesilaos/denote

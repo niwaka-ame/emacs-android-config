@@ -93,6 +93,7 @@
 (add-hook 'org-mode-hook (lambda () (toggle-truncate-lines -1)))
 (add-hook 'org-mode-hook #'variable-pitch-mode)
 (add-hook 'org-mode-hook #'org-indent-mode)
+(add-hook 'org-mode-hook #'delete-other-windows)
 ;; larger font size
 (add-hook 'org-mode-hook (lambda () (text-scale-increase 1)))
 
@@ -413,6 +414,16 @@
       org-journal-file-type 'weekly
       org-journal-encrypt-journal nil)
 
+(require 'denote)
+(setq denote-directory (concat emacs-dir "notes/")
+      denote-backlinks-show-context t)
+(setq denote-known-keywords
+      '(meta idea nonfiction fiction film documentary other))
+(defun denote/visit-denote-dir ()
+  (interactive)
+  (with-current-buffer (find-file-noselect denote-directory)
+    (switch-to-buffer (current-buffer))))
+
 ;; tool bar
 ;; (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
 (tool-bar-add-item "zoom-in" 'text-scale-increase 'zoom-in)
@@ -428,6 +439,7 @@
                    'random-shi :help "random tangshi")
 (tool-bar-add-item "next-page" 'visit-books 'visit-books)
 (tool-bar-add-item "describe" 'elfeed 'elfeed)
+(tool-bar-add-item "checked" 'denote/visit-denote-dir 'denote)
 (tool-bar-local-item "next-page" 'eww-list-bookmarks 'eww-bookmark eww-tool-bar-map)
 (tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region eww-tool-bar-map)
 (tool-bar-local-item "copy" 'copy-region-as-kill 'copy-region-as-kill eww-tool-bar-map)
@@ -499,6 +511,9 @@
 (define-key global-map
   [menu-bar my stardict-define-at-point]
   '("Define at point" . stardict-define-at-point))
+(define-key global-map
+  [menu-bar my denote-backlinks]
+  '("Denote backlinks" . denote-backlinks))
 (global-set-key (kbd "<volume-up>") 'scroll-down-command)
 (global-set-key (kbd "<volume-down>") 'scroll-up-command)
 
