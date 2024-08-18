@@ -97,7 +97,7 @@
 (add-hook 'org-mode-hook #'org-indent-mode)
 (add-hook 'org-mode-hook #'delete-other-windows)
 ;; larger font size
-(add-hook 'org-mode-hook (lambda () (text-scale-increase 1)))
+(add-hook 'org-mode-hook (lambda () (text-scale-set 1)))
 (setq org-link-frame-setup
       '((vm . vm-visit-folder-other-frame)
         (vm-imap . vm-visit-imap-folder-other-frame)
@@ -353,6 +353,13 @@
     tool-bar-map))
 (add-hook 'nov-mode-hook (lambda () (setq-local tool-bar-map nov-tool-bar-map)))
 
+(defvar eww-bookmark-tool-bar-map
+  (let ((tool-bar-map (make-sparse-keymap)))
+    (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
+    (tool-bar-add-item "open" 'eww-bookmark-browse 'browse)
+    tool-bar-map))
+(add-hook 'eww-bookmark-mode-hook (lambda () (setq-local tool-bar-map eww-bookmark-tool-bar-map)))
+
 (require '@300)
 (defun @300/parse-to-json (file)
   (with-current-buffer (find-file-noselect file)
@@ -390,10 +397,49 @@
     (kill-buffer)))
 (@300/parse-to-json (concat emacs-dir "tangshi.org"))
 (setq @300-json (concat emacs-dir "tangshi.org.json"))
+(defvar @300/prose-hidden 0)
+
 (defun @300/visit-tangshi-file ()
   (interactive)
   (switch-to-buffer (find-file-noselect (concat emacs-dir "tangshi.org")))
   (goto-char (point-max)))
+
+(defun @300/random-shi ()
+  (interactive)
+  (if (= @300/prose-hidden 0)
+      (progn
+        (@300-random)
+        (switch-to-buffer "*唐诗三百首*")
+        (text-scale-set 2)
+        (@300/hide-prose))
+    (@300/show-prose))
+  (delete-other-windows)
+  )
+
+(defun @300/hide-prose ()
+  (with-current-buffer "*唐诗三百首*"
+    (save-excursion
+      (goto-line 4)
+      (while (< (point) (point-max))
+        (beginning-of-line)
+        (let* ((rand (random 3))
+               (line-end (line-end-position))
+               (line-beg (line-beginning-position))
+               (comma-pos (re-search-forward "[，？。！]" line-end t)))
+          (when comma-pos
+            (if (= rand 1)
+                (put-text-property comma-pos line-end 'face '(:foreground "white"))
+              (put-text-property line-beg comma-pos 'face '(:foreground "white"))))
+          (forward-line 1)
+          ))))
+  (setq @300/prose-hidden 1))
+
+
+(defun @300/show-prose ()
+  (with-current-buffer "*唐诗三百首*"
+    (remove-text-properties (point-min) (point-max) '(face nil))
+    (setq @300/prose-hidden 0)))
+
 
 (require 'elfeed)
 (require 'elfeed-org)
@@ -445,7 +491,7 @@
 (tool-bar-add-item "next-page" 'eww-list-bookmarks 'eww-bookmark)
 (tool-bar-add-item "spell" 'glossary/revisit 'glossary)
 (tool-bar-add-item "spell"
-                   (lambda () (interactive) (@300-random) (switch-to-buffer "*唐诗三百首*") (delete-other-windows))
+                   '@300/random-shi
                    'random-shi :help "random tangshi")
 (tool-bar-add-item "next-page" 'visit-books 'visit-books)
 (tool-bar-add-item "describe" 'elfeed 'elfeed)
