@@ -81,9 +81,6 @@
       (recenter-top-bottom)
       (setq search-string (car counsel-git-grep-history))
       (setq case-fold-search (ivy--case-fold-p search-string))
-      ;; fix issue with searching chinese in nov-mode
-      (when (string-match-p "[\u4e00-\u9fff]" search-string)
-        (setq search-string (substring search-string 0 1)))
       (setq list-words (delete "" (split-string search-string)))
       (search-forward-regexp
        (replace-regexp-in-string "\"" "[\"“”]" (replace-regexp-in-string "'" "['’]" (car list-words))))
