@@ -269,6 +269,8 @@
 (defvar lit-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
     (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
+    (tool-bar-add-item "undo" 'undo 'undo)
+    (tool-bar-add-item "save" 'save-buffer 'save)
     (tool-bar-add-item "search" 'lit/visit-epub 'lit/visit-epub)
     tool-bar-map))
 (add-hook 'lit-mode-hook (lambda () (setq-local tool-bar-map lit-tool-bar-map)))
