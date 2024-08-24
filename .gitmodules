@@ -22,3 +22,6 @@
 [submodule "denote"]
 	path = denote
 	url = https://git.sr.ht/~protesilaos/denote
+[submodule "swiper"]
+	path = swiper
+	url = https://github.com/abo-abo/swiper.git

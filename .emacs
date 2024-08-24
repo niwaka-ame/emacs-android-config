@@ -331,6 +331,7 @@
 (add-hook 'org-mode-hook #'pangu-spacing-mode)
 
 (require 'nov)
+(require 'nov-grep)
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 (define-key nov-mode-map (kbd "<volume-up>") 'nov-scroll-down)
 (define-key nov-mode-map (kbd "<volume-down>") 'nov-scroll-up)
