@@ -224,7 +224,7 @@
           (save-buffer)))
     (message "mark region first!")))
 
-(defun fleet/add-region-bib ()
+(defun lit/add-region ()
   (interactive)
   (if (region-active-p)
       (let* ((beg (region-beginning))
@@ -233,17 +233,45 @@
              (buf-name (substring (buffer-name) 0 (- (length (buffer-name)) 5))))
         (copy-region-as-kill beg (1+ end))
         (setq fleet/region nil)
-        (fleet/todo-org 'no-switch)
         (with-current-buffer
             (find-file-noselect (concat emacs-dir "bib-notes/" buf-name ".org"))
           (goto-char (point-max))
           (org-insert-heading)
-          (if (string-match-p "[\u4e00-\u9fff]" (car kill-ring))
-              (insert (replace-regexp-in-string "\n" "" (car kill-ring)))
-            (insert (replace-regexp-in-string "\n" " " (car kill-ring))))
+          (let ((string-to-add (replace-regexp-in-string "\n\n" "\t" (car kill-ring))))
+            ;; use \\t to represent new paragraph
+            (if (string-match-p "[\u4e00-\u9fff]" string-to-add)
+                (progn
+                  (insert (replace-regexp-in-string "\n" "" string-to-add)))
+              (progn
+                (insert (replace-regexp-in-string "\n" " " string-to-add)))))
           (newline)
           (save-buffer)))
     (message "mark region first!")))
+
+(defun lit/visit-note ()
+  (interactive)
+  (switch-to-buffer
+   (find-file-noselect
+    (concat emacs-dir "bib-notes/" (substring (buffer-name) 0 (- (length (buffer-name)) 5)) ".org")))
+  (lit-mode))
+
+(require 'nov-grep)
+(defun lit/visit-epub ()
+  (interactive)
+  (let* ((heading (org-get-heading t t t t))
+         (first-line (car (split-string heading "\t")))
+         (epub-buffer (concat (substring (buffer-name) 0 (- (length (buffer-name)) 3)) "epub")))
+    (switch-to-buffer epub-buffer)
+    (my-nov-grep first-line)))
+
+;; use org files for literature notes
+(define-derived-mode lit-mode org-mode "lit")
+(defvar lit-tool-bar-map
+  (let ((tool-bar-map (make-sparse-keymap)))
+    (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
+    (tool-bar-add-item "search" 'lit/visit-epub 'lit/visit-epub)
+    tool-bar-map))
+(add-hook 'lit-mode-hook (lambda () (setq-local tool-bar-map lit-tool-bar-map)))
 
 (defun fleet/add-url ()
   (interactive)
@@ -331,7 +359,6 @@
 (add-hook 'org-mode-hook #'pangu-spacing-mode)
 
 (require 'nov)
-(require 'nov-grep)
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 (define-key nov-mode-map (kbd "<volume-up>") 'nov-scroll-down)
 (define-key nov-mode-map (kbd "<volume-down>") 'nov-scroll-up)
@@ -339,18 +366,15 @@
   (let ((tool-bar-map (make-sparse-keymap)))
     (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
     (tool-bar-add-item "open" 'visit-books 'nov-open)
+    (tool-bar-add-item "search" 'my-nov-grep 'my-nov-grep)
     (tool-bar-add-item "home" 'nov-goto-toc 'nov-goto-toc)
     (tool-bar-add-item "left-arrow" 'nov-previous-document 'nov-previous-document)
     (tool-bar-add-item "right-arrow" 'nov-next-document 'nov-next-document)
-    (tool-bar-add-item "sort-ascending" 'fleet/add-region-bib 'fleet/add-region-bib)
+    (tool-bar-add-item "sort-ascending" 'lit/add-region 'lit/add-region)
     (tool-bar-add-item "copy" 'copy-region-as-kill 'copy-region-as-kill)
     (tool-bar-add-item "help" 'stardict-define-at-point 'stardict-define-at-point)
     ;; (tool-bar-add-item "zoom-in" 'delete-other-windows 'max)
-    (tool-bar-add-item "exit"
-                       (lambda ()
-                         (interactive)
-                         (switch-to-buffer (find-file-noselect (concat emacs-dir "bib-notes/" (substring (buffer-name) 0 (- (length (buffer-name)) 5)) ".org"))))
-                       'switch)
+    (tool-bar-add-item "exit" 'lit/visit-note 'switch)
     tool-bar-map))
 (add-hook 'nov-mode-hook (lambda () (setq-local tool-bar-map nov-tool-bar-map)))
 
