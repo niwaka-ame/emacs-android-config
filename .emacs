@@ -322,9 +322,21 @@
   (interactive)
   (switch-to-buffer (find-file-noselect (concat emacs-dir "glossary"))))
 
+(defvar glossary/hide-p t)
+
 (defun glossary/revisit ()
   (interactive)
-  (let ((word-number 40))
+  (if glossary/hide-p
+      (progn
+        (glossary/revisit-load)
+        (setq glossary/hide-p nil))
+    (progn
+      (switch-to-buffer "*glossary-revisit*")
+      (set-text-properties (point-min) (point-max) nil)
+      (setq glossary/hide-p t))))
+
+(defun glossary/revisit-load ()
+  (let ((word-number 4))
     (with-current-buffer (find-file-noselect (concat emacs-dir "glossary"))
       (let ((total-word-number
              (count-lines (point-min) (point-max))))
@@ -337,7 +349,13 @@
                 (when (= i 0) (erase-buffer))
                 (goto-char (point-max))
                 (when (> i 0) (newline))
-                (insert (stardict--lookup-and-return word))
+                (let* ((word-def (stardict--lookup-and-return word))
+                       (by-line (split-string word-def "\n"))
+                       (shown (mapconcat 'identity (cl-subseq by-line 0 2) "\n"))
+                       (hidden (mapconcat 'identity (cl-subseq by-line 2) "\n")))
+                  (insert shown)
+                  (newline)
+                  (insert (propertize hidden 'face '(:foreground "white"))))
                 (newline))))))))
   (switch-to-buffer "*glossary-revisit*")
   (goto-char (point-min)))
@@ -365,8 +383,8 @@
 (defvar stardict-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
     (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
-    (tool-bar-add-item "jump-to" 'glossary/add-at-point 'add-to-glossary)
     (tool-bar-add-item "help" 'stardict-define-at-point 'stardict-define-at-point)
+    (tool-bar-add-item "jump-to" 'glossary/add-at-point 'add-to-glossary)
     tool-bar-map))
 
 (add-hook 'stardict-mode-hook (lambda () (setq-local tool-bar-map stardict-tool-bar-map)))
