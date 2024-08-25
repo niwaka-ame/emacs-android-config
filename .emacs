@@ -519,6 +519,9 @@
     (tool-bar-add-item "paste" 'yank 'yank)
     (tool-bar-add-item "left-arrow" 'org-journal-previous-entry 'org-journal-previous-entry)
     (tool-bar-add-item "right-arrow" 'org-journal-next-entry 'org-journal-next-entry)
+    (tool-bar-add-item "search-replace"
+                       (lambda (prefix) (interactive "P") (org-journal-new-entry prefix) (delete-other-windows))
+                       'org-journal-new-entry)
     tool-bar-map))
 (add-hook 'org-journal-mode-hook (lambda () (setq-local tool-bar-map org-journal-tool-bar-map)))
 (add-hook 'org-journal-mode-hook #'delete-other-windows)
