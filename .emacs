@@ -78,6 +78,21 @@
 (setq eww-bookmarks-directory emacs-dir
       shr-inhibit-images t)
 
+;; eww-mode
+(tool-bar-local-item "next-page" 'eww-list-bookmarks 'eww-bookmark eww-tool-bar-map)
+(tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region eww-tool-bar-map)
+(tool-bar-local-item "copy" 'copy-region-as-kill 'copy-region-as-kill eww-tool-bar-map)
+(tool-bar-local-item "help" 'stardict-define-at-point 'stardict-define-at-point eww-tool-bar-map)
+(tool-bar-local-item "checked" 'eww-readable 'eww-readable eww-tool-bar-map)
+
+(defvar eww-bookmark-tool-bar-map
+  (let ((tool-bar-map (make-sparse-keymap)))
+    (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
+    (tool-bar-add-item "open" 'eww-bookmark-browse 'browse)
+    tool-bar-map))
+(add-hook 'eww-bookmark-mode-hook (lambda () (setq-local tool-bar-map eww-bookmark-tool-bar-map)))
+
+
 ;; RSS
 (require 'newsticker)
 (setq
@@ -380,13 +395,6 @@
     tool-bar-map))
 (add-hook 'nov-mode-hook (lambda () (setq-local tool-bar-map nov-tool-bar-map)))
 
-(defvar eww-bookmark-tool-bar-map
-  (let ((tool-bar-map (make-sparse-keymap)))
-    (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
-    (tool-bar-add-item "open" 'eww-bookmark-browse 'browse)
-    tool-bar-map))
-(add-hook 'eww-bookmark-mode-hook (lambda () (setq-local tool-bar-map eww-bookmark-tool-bar-map)))
-
 (require '@300)
 (defun @300/parse-to-json (file)
   (with-current-buffer (find-file-noselect file)
@@ -496,6 +504,25 @@
       org-journal-file-type 'weekly
       org-journal-encrypt-journal nil)
 
+(defvar org-journal-tool-bar-map
+  (let ((tool-bar-map (make-sparse-keymap)))
+    (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
+    (tool-bar-add-item "open"
+                       (lambda ()
+                         (interactive)
+                         (find-file-noselect org-journal-dir)
+                         (switch-to-buffer "journal"))
+                       'open-org-journal-dir)
+    (tool-bar-add-item "undo" 'undo 'undo)
+    (tool-bar-add-item "save" 'save-buffer 'save)
+    (tool-bar-add-item "copy" 'copy-region-as-kill 'copy-region-as-kill)
+    (tool-bar-add-item "paste" 'yank 'yank)
+    (tool-bar-add-item "left-arrow" 'org-journal-previous-entry 'org-journal-previous-entry)
+    (tool-bar-add-item "right-arrow" 'org-journal-next-entry 'org-journal-next-entry)
+    tool-bar-map))
+(add-hook 'org-journal-mode-hook (lambda () (setq-local tool-bar-map org-journal-tool-bar-map)))
+(add-hook 'org-journal-mode-hook #'delete-other-windows)
+
 (require 'denote)
 (setq denote-directory (concat emacs-dir "notes/")
       denote-backlinks-show-context t)
@@ -523,11 +550,9 @@
 (tool-bar-add-item "next-page" 'visit-books 'visit-books)
 (tool-bar-add-item "describe" 'elfeed 'elfeed)
 (tool-bar-add-item "spell" 'denote/visit-denote-dir 'denote)
-(tool-bar-local-item "next-page" 'eww-list-bookmarks 'eww-bookmark eww-tool-bar-map)
-(tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region eww-tool-bar-map)
-(tool-bar-local-item "copy" 'copy-region-as-kill 'copy-region-as-kill eww-tool-bar-map)
-(tool-bar-local-item "help" 'stardict-define-at-point 'stardict-define-at-point eww-tool-bar-map)
-(tool-bar-local-item "checked" 'eww-readable 'eww-readable eww-tool-bar-map)
+(tool-bar-add-item "search-replace"
+                   (lambda (prefix) (interactive "P") (org-journal-new-entry prefix) (delete-other-windows))
+                   'org-journal-new-entry)
 
 ;; mode line
 (setq-default mode-line-format
