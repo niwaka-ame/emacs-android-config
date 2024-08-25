@@ -502,7 +502,8 @@
       org-journal-file-format "%Y-%V-%b.org"
       org-journal-carryover-items ""
       org-journal-file-type 'weekly
-      org-journal-encrypt-journal nil)
+      org-journal-encrypt-journal nil
+      org-journal-hide-entries-p nil)
 
 (defvar org-journal-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
