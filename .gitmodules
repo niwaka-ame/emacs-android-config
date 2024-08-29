@@ -25,3 +25,12 @@
 [submodule "swiper"]
 	path = swiper
 	url = https://github.com/abo-abo/swiper.git
+[submodule "gptel"]
+	path = gptel
+	url = https://github.com/karthink/gptel.git
+[submodule "compat"]
+	path = compat
+	url = https://github.com/emacs-compat/compat.git
+[submodule "transient"]
+	path = transient
+	url = https://github.com/magit/transient.git

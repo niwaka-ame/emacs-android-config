@@ -523,6 +523,19 @@
       org-journal-encrypt-journal nil
       org-journal-hide-entries-p nil)
 
+(require 'gptel)
+(require 'gptel-curl)
+;; OpenRouter offers an OpenAI compatible API
+(setq gptel-model "meta-llama/llama-3.1-8b-instruct:free"
+      gptel-max-tokens 500
+      gptel-backend
+      (gptel-make-openai "OpenRouter"               ;Any name you want
+                         :host "openrouter.ai"
+                         :endpoint "/api/v1/chat/completions"
+                         :stream t
+                         :key (with-current-buffer (find-file-noselect (concat emacs-dir "llama")) (buffer-substring-no-properties (point-min) (1- (point-max))))
+                         :models '("meta-llama/llama-3.1-8b-instruct:free")))
+
 (defvar org-journal-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
     (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
