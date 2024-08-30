@@ -523,6 +523,7 @@
       org-journal-encrypt-journal nil
       org-journal-hide-entries-p nil)
 
+(require 'markdown-mode)
 (require 'gptel)
 (require 'gptel-curl)
 ;; OpenRouter offers an OpenAI compatible API
@@ -535,10 +536,10 @@
                          :stream t
                          :key (with-current-buffer (find-file-noselect (concat emacs-dir "llama")) (buffer-substring-no-properties (point-min) (1- (point-max))))
                          :models '("meta-llama/llama-3.1-8b-instruct:free")))
-(add-hook 'text-mode-hook #'variable-pitch-mode)
+(add-hook 'markdown-mode-hook #'variable-pitch-mode)
 (defun gptel/start-or-send ()
   (interactive)
-  (if (string= major-mode "text-mode")
+  (if (string= major-mode "markdown-mode")
       (gptel-send)
     (switch-to-buffer (gptel "*Llama3*"))))
 

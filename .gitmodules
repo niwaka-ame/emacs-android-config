@@ -34,3 +34,6 @@
 [submodule "transient"]
 	path = transient
 	url = https://github.com/magit/transient.git
+[submodule "markdown-mode"]
+	path = markdown-mode
+	url = https://github.com/jrblevin/markdown-mode.git
