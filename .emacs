@@ -535,6 +535,12 @@
                          :stream t
                          :key (with-current-buffer (find-file-noselect (concat emacs-dir "llama")) (buffer-substring-no-properties (point-min) (1- (point-max))))
                          :models '("meta-llama/llama-3.1-8b-instruct:free")))
+(add-hook 'text-mode-hook #'variable-pitch-mode)
+(defun gptel/start-or-send ()
+  (interactive)
+  (if (string= major-mode "text-mode")
+      (gptel-send)
+    (switch-to-buffer (gptel "*Llama3*"))))
 
 (defvar org-journal-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
@@ -571,7 +577,8 @@
 ;; tool bar
 ;; (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
 ;; (tool-bar-add-item "zoom-in" 'text-scale-increase 'zoom-in)
-(tool-bar-add-item "close" 'delete-window 'delete-window)
+;; (tool-bar-add-item "close" 'delete-window 'delete-window)
+(tool-bar-add-item "connect-to-url" 'gptel/start-or-send 'gptel/start-or-send)
 ;; utils
 (tool-bar-add-item "sort-column-ascending" 'diary 'diary)
 (tool-bar-add-item "sort-descending" 'fleet/todo-visit 'visit)
