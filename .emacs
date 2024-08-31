@@ -109,6 +109,12 @@
 (load (concat emacs-dir "rssfeeds.el"))
 (add-hook 'newsticker-mode-hook #'variable-pitch-mode)
 
+;; newsticker-mode
+(tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region newsticker--plainview-tool-bar-map)
+(tool-bar-local-item "copy" 'copy-region-as-kill 'copy-region-as-kill newsticker--plainview-tool-bar-map)
+(tool-bar-local-item "help" 'stardict-define-at-point 'stardict-define-at-point newsticker--plainview-tool-bar-map)
+(tool-bar-local-item "connect-to-url" 'gptel/ask-llama 'gptel/ask-llama newsticker--plainview-tool-bar-map)
+
 ;; truncate line in orgmode
 (require 'org)
 (add-hook 'org-mode-hook (lambda () (toggle-truncate-lines -1)))
