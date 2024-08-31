@@ -12,8 +12,8 @@
 (setq pop-up-windows nil)
 (setq auto-save-default nil)
 
-;;; smaller font in mode line
-(set-face-attribute 'mode-line nil :height 0.7)
+;;; smaller font in mode line (such that at least part of the buffer name is displayed)
+(set-face-attribute 'mode-line nil :height 0.8)
 
 ;;; set up a splash screen for diary
 
@@ -83,9 +83,10 @@
 
 ;; eww-mode
 (tool-bar-local-item "next-page" 'eww-list-bookmarks 'eww-bookmark eww-tool-bar-map)
-(tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region eww-tool-bar-map)
+;; (tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region eww-tool-bar-map)
 (tool-bar-local-item "copy" 'copy-region-as-kill 'copy-region-as-kill eww-tool-bar-map)
 (tool-bar-local-item "help" 'stardict-define-at-point 'stardict-define-at-point eww-tool-bar-map)
+(tool-bar-local-item "connect-to-url" 'gptel/ask-llama 'gptel/ask-llama eww-tool-bar-map)
 (tool-bar-local-item "checked" 'eww-readable 'eww-readable eww-tool-bar-map)
 
 (defvar eww-bookmark-tool-bar-map
@@ -411,6 +412,7 @@
     (tool-bar-add-item "sort-ascending" 'lit/add-region 'lit/add-region)
     (tool-bar-add-item "copy" 'copy-region-as-kill 'copy-region-as-kill)
     (tool-bar-add-item "help" 'stardict-define-at-point 'stardict-define-at-point)
+    (tool-bar-add-item "connect-to-url" 'gptel/ask-llama 'gptel/ask-llama)
     ;; (tool-bar-add-item "zoom-in" 'delete-other-windows 'max)
     (tool-bar-add-item "exit" 'lit/visit-note 'switch)
     tool-bar-map))
@@ -513,6 +515,7 @@
     (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
     (tool-bar-add-item "refresh" 'elfeed-update 'elfeed-update)
     (tool-bar-add-item "help" 'stardict-define-at-point 'stardict-define-at-point)
+    (tool-bar-add-item "connect-to-url" 'gptel/ask-llama 'gptel/ask-llama)
     tool-bar-map))
 (add-hook 'elfeed-search-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
 (add-hook 'elfeed-show-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
@@ -543,11 +546,28 @@
                          :key (with-current-buffer (find-file-noselect (concat emacs-dir "llama")) (buffer-substring-no-properties (point-min) (1- (point-max))))
                          :models '("meta-llama/llama-3.1-8b-instruct:free")))
 (add-hook 'markdown-mode-hook #'variable-pitch-mode)
+
 (defun gptel/start-or-send ()
   (interactive)
   (if (string= major-mode "markdown-mode")
       (gptel-send)
     (switch-to-buffer (gptel "*Llama3*"))))
+
+(defun gptel/ask-llama ()
+  (interactive)
+  (let ((query nil)
+        (sentence (replace-regexp-in-string "\n" " " (thing-at-point 'sentence))))
+    (if (region-active-p)
+        (setq query (replace-regexp-in-string
+                     "\n"
+                     " "
+                     (buffer-substring-no-properties (region-beginning)
+                                                     (region-end))))
+      (setq query (thing-at-point 'word)))
+    (switch-to-buffer (gptel "*Ask Llama3*"))
+    (erase-buffer)
+    (insert "### What is \"" query "\" in the context of \"" sentence "\"?")
+    (gptel-send)))
 
 (defvar org-journal-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
