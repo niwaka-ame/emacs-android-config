@@ -293,7 +293,7 @@
 
 (defun visit-books ()
   (interactive)
-  (find-file-noselect "/sdcard/emacs/books/")
+  (find-file-noselect (concat emacs-dir "books/"))
   (switch-to-buffer "books")
   (dired-revert))
 
