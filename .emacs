@@ -526,6 +526,9 @@
 (require 'markdown-mode)
 (require 'gptel)
 (require 'gptel-curl)
+(require 'gptel-transient)
+(load (concat emacs-dir "llama-directives.el"))
+(setq gptel--system-message (alist-get 'default gptel-directives))
 ;; OpenRouter offers an OpenAI compatible API
 (setq gptel-model "meta-llama/llama-3.1-8b-instruct:free"
       gptel-max-tokens 500
