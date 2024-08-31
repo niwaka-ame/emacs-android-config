@@ -12,6 +12,9 @@
 (setq pop-up-windows nil)
 (setq auto-save-default nil)
 
+;;; smaller font in mode line
+(set-face-attribute 'mode-line nil :height 0.7)
+
 ;;; set up a splash screen for diary
 
 (setq inhibit-startup-screen t
