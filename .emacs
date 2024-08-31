@@ -97,24 +97,6 @@
 (add-hook 'eww-bookmark-mode-hook (lambda () (setq-local tool-bar-map eww-bookmark-tool-bar-map)))
 
 
-;; RSS
-(require 'newsticker)
-(setq
-     newsticker-url-list-defaults nil
-     newsticker-retrieval-interval 0
-     newsticker-automatically-mark-items-as-old nil
-     newsticker-obsolete-item-max-age (* 2 86400)
-     newsticker-frontend 'newsticker-plainview)
-; RSS feed list in a separate file
-(load (concat emacs-dir "rssfeeds.el"))
-(add-hook 'newsticker-mode-hook #'variable-pitch-mode)
-
-;; newsticker-mode
-(tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region newsticker--plainview-tool-bar-map)
-(tool-bar-local-item "copy" 'copy-region-as-kill 'copy-region-as-kill newsticker--plainview-tool-bar-map)
-(tool-bar-local-item "help" 'stardict-define-at-point 'stardict-define-at-point newsticker--plainview-tool-bar-map)
-(tool-bar-local-item "connect-to-url" 'gptel/ask-llama 'gptel/ask-llama newsticker--plainview-tool-bar-map)
-
 ;; truncate line in orgmode
 (require 'org)
 (add-hook 'org-mode-hook (lambda () (toggle-truncate-lines -1)))
@@ -618,7 +600,6 @@
 (tool-bar-add-item "sort-column-ascending" 'diary 'diary)
 (tool-bar-add-item "sort-descending" 'fleet/todo-visit 'visit)
 (tool-bar-add-item "lock-ok" 'habit/visit-habit-file 'habit)
-(tool-bar-add-item "describe" 'newsticker-show-news 'news)
 (tool-bar-add-item "next-page" 'eww-list-bookmarks 'eww-bookmark)
 (tool-bar-add-item "spell" 'glossary/revisit 'glossary)
 (tool-bar-add-item "spell"
