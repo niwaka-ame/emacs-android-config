@@ -521,8 +521,9 @@
 (require 'gptel)
 (require 'gptel-curl)
 (require 'gptel-transient)
+;; setq `gptel-directives'
 (load (concat emacs-dir "llama-directives.el"))
-(setq gptel--system-message (alist-get 'default gptel-directives))
+
 ;; OpenRouter offers an OpenAI compatible API
 (setq gptel-model "meta-llama/llama-3.1-8b-instruct:free"
       gptel-max-tokens 500
@@ -534,6 +535,19 @@
                          :key (with-current-buffer (find-file-noselect (concat emacs-dir "llama")) (buffer-substring-no-properties (point-min) (1- (point-max))))
                          :models '("meta-llama/llama-3.1-8b-instruct:free")))
 (add-hook 'markdown-mode-hook #'variable-pitch-mode)
+(add-hook 'markdown-mode-hook (lambda () (setq gptel--system-message (alist-get 'default gptel-directives))))
+
+;; define the gptel-mode menu according to `gptel-directives'
+(defun gptel/menu-setup ()
+  "loop over `gptel-directives' to generate a menu."
+  (let ((result (list "gptel")))
+    (dolist (pair gptel-directives result)
+      (push `[,(symbol-name (car pair)) (lambda () (interactive) (setq-local gptel--system-message ,(cdr pair))) t] result))
+    (reverse result)))
+(easy-menu-define gptel-mode-menu gptel-mode-map
+  "gptel mode menu"
+  (gptel/menu-setup))
+(easy-menu-add gptel-mode-menu gptel-mode-map)
 
 (defun gptel/start-or-send ()
   (interactive)
