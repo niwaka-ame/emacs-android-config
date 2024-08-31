@@ -556,7 +556,9 @@
 (defun gptel/start-or-send ()
   (interactive)
   (if (string= major-mode "markdown-mode")
-      (gptel-send)
+      (if (string= (buffer-substring-no-properties (- (point-max) 4) (1- (point-max))) "###")
+          (message "empty input!")
+        (gptel-send))
     (switch-to-buffer (gptel "*Llama3*"))))
 
 (defun gptel/ask-llama ()
