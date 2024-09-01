@@ -1,39 +1,39 @@
 [submodule "pangu-spacing"]
-	path = pangu-spacing
+	path = extensions/pangu-spacing
 	url = https://github.com/coldnew/pangu-spacing.git
 [submodule "300"]
-	path = 300
+	path = extensions/300
 	url = https://github.com/xuchunyang/300.git
 [submodule "nov.el"]
-	path = nov.el
+	path = extensions/nov.el
 	url = https://depp.brause.cc/nov.el.git
 [submodule "esxml"]
-	path = esxml
+	path = extensions/esxml
 	url = https://github.com/tali713/esxml.git
 [submodule "elfeed"]
-	path = elfeed
+	path = extensions/elfeed
 	url = https://github.com/skeeto/elfeed.git
 [submodule "elfeed-org"]
-	path = elfeed-org
+	path = extensions/elfeed-org
 	url = https://github.com/remyhonig/elfeed-org.git
 [submodule "org-journal"]
-	path = org-journal
+	path = extensions/org-journal
 	url = https://github.com/bastibe/org-journal.git
 [submodule "denote"]
-	path = denote
+	path = extensions/denote
 	url = https://git.sr.ht/~protesilaos/denote
 [submodule "swiper"]
-	path = swiper
+	path = extensions/swiper
 	url = https://github.com/abo-abo/swiper.git
 [submodule "gptel"]
-	path = gptel
+	path = extensions/gptel
 	url = https://github.com/karthink/gptel.git
 [submodule "compat"]
-	path = compat
+	path = extensions/compat
 	url = https://github.com/emacs-compat/compat.git
 [submodule "transient"]
-	path = transient
+	path = extensions/transient
 	url = https://github.com/magit/transient.git
 [submodule "markdown-mode"]
-	path = markdown-mode
+	path = extensions/markdown-mode
 	url = https://github.com/jrblevin/markdown-mode.git
