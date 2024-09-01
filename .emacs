@@ -19,6 +19,9 @@
 (setq text-scale-mode-step 1.1)
 (setq pop-up-windows nil)
 (setq auto-save-default nil)
+;; font
+(set-face-attribute 'default nil :family "LXGW WenKai Screen")
+(set-face-attribute 'shr-text nil :family "LXGW WenKai Screen")
 
 ;;; mode line
 ;; smaller font in mode line (such that at least part of the buffer name is displayed)
@@ -716,7 +719,4 @@
   (evil-mode 1)
   ;; theme
   (require 'doom-themes)
-  (load-theme 'doom-solarized-light t)
-  ;; font
-  (set-face-attribute 'default nil :family "LXGW WenKai Screen")
-  (set-face-attribute 'shr-text nil :family "LXGW WenKai Screen"))
+  (load-theme 'doom-solarized-light t))
