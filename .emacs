@@ -76,6 +76,16 @@
       appt-message-warning-time 30)
 (appt-activate t)
 
+;;; shr
+;; preventing shr from adding hard line break when rendering.
+;; see https://emacs.stackexchange.com/questions/31882/how-to-prevent-eww-from-truncating-lines
+;; requires for nov-grep to function normally
+(eval-after-load 'shr
+  '(progn (setq shr-width -1)
+          (defun shr-fill-text (text) text)
+          (defun shr-fill-lines (start end) nil)
+          (defun shr-fill-line () nil)))
+
 ;;; EWW
 (require 'browse-url)
 ;; (require 'webjump)
@@ -86,6 +96,8 @@
 ;;         ("gsc" . [simple-query "scholar.google.com" "scholar.google.com/scholar?q=" ""])))
 (setq eww-bookmarks-directory emacs-dir
       shr-inhibit-images t)
+;; add this hook to allow soft line break in EWW
+(add-hook 'eww-mode-hook #'visual-line-mode)
 
 (tool-bar-local-item "next-page" 'eww-list-bookmarks 'EWW-bookmark eww-tool-bar-map)
 ;; (tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region eww-tool-bar-map)
@@ -386,6 +398,8 @@
 ;;; nov.el
 (require 'nov)
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+(setq shr-max-width nil)
+(setq shr-width 10000)
 
 (defun nov/visit-books ()
   (interactive)
