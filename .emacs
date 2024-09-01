@@ -425,6 +425,7 @@
     (tool-bar-add-item "exit" 'lit/visit-note 'note)
     tool-bar-map))
 (add-hook 'nov-mode-hook (lambda () (setq-local tool-bar-map nov-tool-bar-map)))
+(add-hook 'nov-mode-hook #'visual-line-mode)
 
 ;;; poems
 (require '@300)
