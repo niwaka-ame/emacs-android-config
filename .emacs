@@ -82,16 +82,16 @@
       shr-inhibit-images t)
 
 ;; eww-mode
-(tool-bar-local-item "next-page" 'eww-list-bookmarks 'eww-bookmark eww-tool-bar-map)
+(tool-bar-local-item "next-page" 'eww-list-bookmarks 'EWW-bookmark eww-tool-bar-map)
 ;; (tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region eww-tool-bar-map)
-(tool-bar-local-item "copy" 'copy-region-as-kill 'copy-region-as-kill eww-tool-bar-map)
-(tool-bar-local-item "help" 'stardict-define-at-point 'stardict-define-at-point eww-tool-bar-map)
-(tool-bar-local-item "connect-to-url" 'gptel/ask-llama 'gptel/ask-llama eww-tool-bar-map)
-(tool-bar-local-item "checked" 'eww-readable 'eww-readable eww-tool-bar-map)
+(tool-bar-local-item "copy" 'copy-region-as-kill 'copy eww-tool-bar-map)
+(tool-bar-local-item "help" 'stardict-define-at-point 'dict eww-tool-bar-map)
+(tool-bar-local-item "connect-to-url" 'gptel/ask-llama 'GPT eww-tool-bar-map)
+(tool-bar-local-item "checked" 'eww-readable 'EWW-readable eww-tool-bar-map)
 
 (defvar eww-bookmark-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
-    (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
+    (tool-bar-add-item "close" 'kill-current-buffer 'close)
     (tool-bar-add-item "open" 'eww-bookmark-browse 'browse)
     tool-bar-map))
 (add-hook 'eww-bookmark-mode-hook (lambda () (setq-local tool-bar-map eww-bookmark-tool-bar-map)))
@@ -118,12 +118,12 @@
 
 (defvar habit-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
-    (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
+    (tool-bar-add-item "close" 'kill-current-buffer 'close)
     (tool-bar-add-item "undo" 'undo 'undo)
     (tool-bar-add-item "save" 'save-buffer 'save)
     (tool-bar-add-item "sort-criteria" 'habit/add-habit 'add)
     (tool-bar-add-item "info" 'habit/org-habit-done 'complete)
-    (tool-bar-add-item "lock-ok" 'habit/visit-habit-file 'habit)
+    (tool-bar-add-item "lock-ok" 'habit/visit-habit-file 'org-habit)
     tool-bar-map))
 
 (add-hook 'habit-mode-hook (lambda () (setq-local tool-bar-map habit-tool-bar-map)))
@@ -174,7 +174,7 @@
 
 (defvar fleet-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
-    (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
+    (tool-bar-add-item "close" 'kill-current-buffer 'close)
     (tool-bar-add-item "undo" 'undo 'undo)
     (tool-bar-add-item "save" 'save-buffer 'save)
     (tool-bar-add-item "sort-criteria" 'fleet/todo-org 'todo)
@@ -275,10 +275,10 @@
 (define-derived-mode lit-mode org-mode "lit")
 (defvar lit-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
-    (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
+    (tool-bar-add-item "close" 'kill-current-buffer 'close)
     (tool-bar-add-item "undo" 'undo 'undo)
     (tool-bar-add-item "save" 'save-buffer 'save)
-    (tool-bar-add-item "search" 'lit/visit-epub 'lit/visit-epub)
+    (tool-bar-add-item "search" 'lit/visit-epub 'jump-back)
     tool-bar-map))
 (add-hook 'lit-mode-hook (lambda () (setq-local tool-bar-map lit-tool-bar-map)))
 
@@ -374,9 +374,9 @@
 ;; define a local tool bar for stardict
 (defvar stardict-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
-    (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
-    (tool-bar-add-item "help" 'stardict-define-at-point 'stardict-define-at-point)
-    (tool-bar-add-item "jump-to" 'glossary/add-at-point 'add-to-glossary)
+    (tool-bar-add-item "close" 'kill-current-buffer 'close)
+    (tool-bar-add-item "help" 'stardict-define-at-point 'dict)
+    (tool-bar-add-item "jump-to" 'glossary/add-at-point 'add-word)
     tool-bar-map))
 
 (add-hook 'stardict-mode-hook (lambda () (setq-local tool-bar-map stardict-tool-bar-map)))
@@ -391,16 +391,16 @@
 (define-key nov-mode-map (kbd "<volume-down>") 'nov-scroll-up)
 (defvar nov-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
-    (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
-    (tool-bar-add-item "open" 'visit-books 'nov-open)
-    (tool-bar-add-item "search" 'my-nov-grep 'my-nov-grep)
-    (tool-bar-add-item "home" 'nov-goto-toc 'nov-goto-toc)
-    (tool-bar-add-item "left-arrow" 'nov-previous-document 'nov-previous-document)
-    (tool-bar-add-item "right-arrow" 'nov-next-document 'nov-next-document)
-    (tool-bar-add-item "sort-ascending" 'lit/add-region 'lit/add-region)
-    (tool-bar-add-item "copy" 'copy-region-as-kill 'copy-region-as-kill)
-    (tool-bar-add-item "help" 'stardict-define-at-point 'stardict-define-at-point)
-    (tool-bar-add-item "connect-to-url" 'gptel/ask-llama 'gptel/ask-llama)
+    (tool-bar-add-item "close" 'kill-current-buffer 'close)
+    (tool-bar-add-item "open" 'visit-books 'open)
+    (tool-bar-add-item "copy" 'copy-region-as-kill 'copy)
+    (tool-bar-add-item "search" 'my-nov-grep 'search)
+    (tool-bar-add-item "home" 'nov-goto-toc 'TOC)
+    (tool-bar-add-item "left-arrow" 'nov-previous-document 'prev-chapter)
+    (tool-bar-add-item "right-arrow" 'nov-next-document 'next-chapter)
+    (tool-bar-add-item "sort-ascending" 'lit/add-region 'highlight)
+    (tool-bar-add-item "help" 'stardict-define-at-point 'dict)
+    (tool-bar-add-item "connect-to-url" 'gptel/ask-llama 'GPT)
     ;; (tool-bar-add-item "zoom-in" 'delete-other-windows 'max)
     (tool-bar-add-item "exit" 'lit/visit-note 'switch)
     tool-bar-map))
@@ -500,10 +500,10 @@
 
 (defvar elfeed-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
-    (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
-    (tool-bar-add-item "refresh" 'elfeed-update 'elfeed-update)
-    (tool-bar-add-item "help" 'stardict-define-at-point 'stardict-define-at-point)
-    (tool-bar-add-item "connect-to-url" 'gptel/ask-llama 'gptel/ask-llama)
+    (tool-bar-add-item "close" 'kill-current-buffer 'close)
+    (tool-bar-add-item "refresh" 'elfeed-update 'update)
+    (tool-bar-add-item "help" 'stardict-define-at-point 'dict)
+    (tool-bar-add-item "connect-to-url" 'gptel/ask-llama 'GPT)
     tool-bar-map))
 (add-hook 'elfeed-search-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
 (add-hook 'elfeed-show-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
@@ -575,22 +575,22 @@
 
 (defvar org-journal-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
-    (tool-bar-add-item "close" 'kill-current-buffer 'kill-current-buffer)
+    (tool-bar-add-item "close" 'kill-current-buffer 'close)
     (tool-bar-add-item "open"
                        (lambda ()
                          (interactive)
                          (find-file-noselect org-journal-dir)
                          (switch-to-buffer "journal"))
-                       'open-org-journal-dir)
+                       'open)
     (tool-bar-add-item "undo" 'undo 'undo)
     (tool-bar-add-item "save" 'save-buffer 'save)
-    (tool-bar-add-item "copy" 'copy-region-as-kill 'copy-region-as-kill)
-    (tool-bar-add-item "paste" 'yank 'yank)
-    (tool-bar-add-item "left-arrow" 'org-journal-previous-entry 'org-journal-previous-entry)
-    (tool-bar-add-item "right-arrow" 'org-journal-next-entry 'org-journal-next-entry)
+    (tool-bar-add-item "copy" 'copy-region-as-kill 'copy)
+    (tool-bar-add-item "paste" 'yank 'paste)
+    (tool-bar-add-item "left-arrow" 'org-journal-previous-entry 'previous-entry)
+    (tool-bar-add-item "right-arrow" 'org-journal-next-entry 'next-entry)
     (tool-bar-add-item "search-replace"
                        (lambda (prefix) (interactive "P") (org-journal-new-entry prefix) (delete-other-windows))
-                       'org-journal-new-entry)
+                       'new-entry)
     tool-bar-map))
 (add-hook 'org-journal-mode-hook (lambda () (setq-local tool-bar-map org-journal-tool-bar-map)))
 (add-hook 'org-journal-mode-hook #'delete-other-windows)
@@ -609,22 +609,20 @@
 ;; (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
 ;; (tool-bar-add-item "zoom-in" 'text-scale-increase 'zoom-in)
 ;; (tool-bar-add-item "close" 'delete-window 'delete-window)
-(tool-bar-add-item "connect-to-url" 'gptel/start-or-send 'gptel/start-or-send)
 ;; utils
 (tool-bar-add-item "sort-column-ascending" 'diary 'diary)
-(tool-bar-add-item "sort-descending" 'fleet/todo-visit 'visit)
+(tool-bar-add-item "sort-descending" 'fleet/todo-visit 'todo)
 (tool-bar-add-item "lock-ok" 'habit/visit-habit-file 'habit)
-(tool-bar-add-item "next-page" 'eww-list-bookmarks 'eww-bookmark)
+(tool-bar-add-item "next-page" 'eww-list-bookmarks 'EWW-bookmark)
 (tool-bar-add-item "spell" 'glossary/revisit 'glossary)
-(tool-bar-add-item "spell"
-                   '@300/random-shi
-                   'random-shi :help "random tangshi")
-(tool-bar-add-item "next-page" 'visit-books 'visit-books)
+(tool-bar-add-item "spell" '@300/random-shi 'poems)
+(tool-bar-add-item "next-page" 'visit-books 'books)
 (tool-bar-add-item "describe" 'elfeed 'elfeed)
 (tool-bar-add-item "spell" 'denote/visit-denote-dir 'denote)
 (tool-bar-add-item "search-replace"
                    (lambda (prefix) (interactive "P") (org-journal-new-entry prefix) (delete-other-windows))
-                   'org-journal-new-entry)
+                   'journal)
+(tool-bar-add-item "connect-to-url" 'gptel/start-or-send 'GPT)
 
 ;; mode line
 (setq-default mode-line-format
