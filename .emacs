@@ -1,32 +1,34 @@
 (defvar emacs-dir "/sdcard/emacs/kawa/")
+(defvar path-dir "/sdcard/emacs/emacs-android-config/")
 
-;; load theme
-;; (add-to-list 'custom-theme-load-path "/sdcard/emacs/emacs-android-config/eink-emacs/")
+;;; path
+(add-to-list 'load-path path-dir)
+(let ((default-directory path-dir))
+  (normal-top-level-add-subdirs-to-load-path))
+
+;;; load theme
+;; (add-to-list 'custom-theme-load-path (concat path-dir "eink-emacs/"))
 ;; (load-theme 'eink t)
-(setopt tool-bar-position 'bottom)
+(setq make-backup-files nil)
 
-;;; larger font on phone
+;;; appearance
+(setopt tool-bar-position 'bottom)
+;; larger font on phone
 (set-face-attribute 'default nil :height 230)
 (require 'face-remap)
 (setq text-scale-mode-step 1.1)
 (setq pop-up-windows nil)
 (setq auto-save-default nil)
 
-;;; smaller font in mode line (such that at least part of the buffer name is displayed)
+;;; mode line
+;; smaller font in mode line (such that at least part of the buffer name is displayed)
 (set-face-attribute 'mode-line nil :height 0.8)
+(setq-default mode-line-format
+      '("%e" mode-line-front-space mode-line-modes " " mode-line-position " " mode-line-buffer-identification " " mode-line-misc-info
+  mode-line-end-spaces))
+(setq-default line-number-mode nil)
 
-;;; set up a splash screen for diary
-
-(setq inhibit-startup-screen t
-      initial-scratch-message nil)
-
-(add-to-list 'load-path "/sdcard/emacs/emacs-android-config/")
-(let ((default-directory "/sdcard/emacs/emacs-android-config/"))
-  (normal-top-level-add-subdirs-to-load-path))
-
-(setq make-backup-files nil)
-
-;; some useful builtin mode
+;;; some useful builtin mode
 (require 'dired)
 (add-hook 'dired-mode-hook #'dired-hide-details-mode)
 (setq dired-kill-when-opening-new-dired-buffer t)
@@ -70,7 +72,7 @@
       appt-message-warning-time 30)
 (appt-activate t)
 
-;; internet
+;;; EWW
 (require 'browse-url)
 ;; (require 'webjump)
 (require 'eww)
@@ -81,7 +83,6 @@
 (setq eww-bookmarks-directory emacs-dir
       shr-inhibit-images t)
 
-;; eww-mode
 (tool-bar-local-item "next-page" 'eww-list-bookmarks 'EWW-bookmark eww-tool-bar-map)
 ;; (tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region eww-tool-bar-map)
 (tool-bar-local-item "copy" 'copy-region-as-kill 'copy eww-tool-bar-map)
@@ -97,7 +98,7 @@
 (add-hook 'eww-bookmark-mode-hook (lambda () (setq-local tool-bar-map eww-bookmark-tool-bar-map)))
 
 
-;; truncate line in orgmode
+;;; org mode
 (require 'org)
 (add-hook 'org-mode-hook (lambda () (toggle-truncate-lines -1)))
 (add-hook 'org-mode-hook #'variable-pitch-mode)
@@ -113,7 +114,7 @@
         (wl . wl-other-frame)))
 
 
-;; org-habit
+;;; org-habit
 (define-derived-mode habit-mode org-mode "habit")
 
 (defvar habit-tool-bar-map
@@ -169,7 +170,7 @@
     (org-set-property "STYLE" "habit")
     (switch-to-buffer (current-buffer))))
 
-;; use org files for fleeting notes
+;;; fleeting notes
 (define-derived-mode fleet-mode org-mode "fleet")
 
 (defvar fleet-tool-bar-map
@@ -231,6 +232,16 @@
           (save-buffer)))
     (message "mark region first!")))
 
+(defun fleet/add-url ()
+  (interactive)
+  (let ((url (plist-get eww-data :url)))
+    (when url
+      (fleet/todo-org 'no-switch)
+      (with-current-buffer "todo.org"
+        (insert url)
+        (save-buffer)))))
+
+;;; literature notes
 (defun lit/add-region ()
   (interactive)
   (if (region-active-p)
@@ -271,7 +282,6 @@
     (switch-to-buffer epub-buffer)
     (my-nov-grep first-line)))
 
-;; use org files for literature notes
 (define-derived-mode lit-mode org-mode "lit")
 (defvar lit-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
@@ -282,22 +292,7 @@
     tool-bar-map))
 (add-hook 'lit-mode-hook (lambda () (setq-local tool-bar-map lit-tool-bar-map)))
 
-(defun fleet/add-url ()
-  (interactive)
-  (let ((url (plist-get eww-data :url)))
-    (when url
-      (fleet/todo-org 'no-switch)
-      (with-current-buffer "todo.org"
-        (insert url)
-        (save-buffer)))))
-
-(defun visit-books ()
-  (interactive)
-  (find-file-noselect (concat emacs-dir "books/"))
-  (switch-to-buffer "books")
-  (dired-revert))
-
-;; glossary
+;;; glossary and stardict
 (require 'stardict)
 (defun glossary/add-at-point ()
   (interactive)
@@ -371,7 +366,6 @@
         ;; othewise update `WORD'
         (setq word str)))))
 
-;; define a local tool bar for stardict
 (defvar stardict-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
@@ -381,18 +375,26 @@
 
 (add-hook 'stardict-mode-hook (lambda () (setq-local tool-bar-map stardict-tool-bar-map)))
 
-;; third-party packages
+;;; pangu spacing
 (require 'pangu-spacing)
 (add-hook 'org-mode-hook #'pangu-spacing-mode)
 
+;;; nov.el
 (require 'nov)
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+
+(defun nov/visit-books ()
+  (interactive)
+  (find-file-noselect (concat emacs-dir "books/"))
+  (switch-to-buffer "books")
+  (dired-revert))
+
 (define-key nov-mode-map (kbd "<volume-up>") 'nov-scroll-down)
 (define-key nov-mode-map (kbd "<volume-down>") 'nov-scroll-up)
 (defvar nov-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
-    (tool-bar-add-item "open" 'visit-books 'open)
+    (tool-bar-add-item "open" 'nov/visit-books 'open)
     (tool-bar-add-item "copy" 'copy-region-as-kill 'copy)
     (tool-bar-add-item "search" 'my-nov-grep 'search)
     (tool-bar-add-item "home" 'nov-goto-toc 'TOC)
@@ -402,10 +404,11 @@
     (tool-bar-add-item "help" 'stardict-define-at-point 'dict)
     (tool-bar-add-item "connect-to-url" 'gptel/ask-llama 'GPT)
     ;; (tool-bar-add-item "zoom-in" 'delete-other-windows 'max)
-    (tool-bar-add-item "exit" 'lit/visit-note 'switch)
+    (tool-bar-add-item "exit" 'lit/visit-note 'note)
     tool-bar-map))
 (add-hook 'nov-mode-hook (lambda () (setq-local tool-bar-map nov-tool-bar-map)))
 
+;;; poems
 (require '@300)
 (defun @300/parse-to-json (file)
   (with-current-buffer (find-file-noselect file)
@@ -450,7 +453,7 @@
   (switch-to-buffer (find-file-noselect (concat emacs-dir "tangshi.org")))
   (goto-char (point-max)))
 
-(defun @300/random-shi ()
+(defun @300/random-poem ()
   (interactive)
   (if (= @300/prose-hidden 0)
       (progn
@@ -486,7 +489,7 @@
     (remove-text-properties (point-min) (point-max) '(face nil))
     (setq @300/prose-hidden 0)))
 
-
+;;; elfeed
 (require 'elfeed)
 (require 'elfeed-org)
 (elfeed-org)
@@ -508,6 +511,7 @@
 (add-hook 'elfeed-search-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
 (add-hook 'elfeed-show-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
 
+;;; org-journal
 (require 'org-journal)
 (setq org-journal-dir (concat emacs-dir "journal/")
       org-journal-date-format "%Y-%m-%d, %A"
@@ -517,6 +521,29 @@
       org-journal-encrypt-journal nil
       org-journal-hide-entries-p nil)
 
+(defvar org-journal-tool-bar-map
+  (let ((tool-bar-map (make-sparse-keymap)))
+    (tool-bar-add-item "close" 'kill-current-buffer 'close)
+    (tool-bar-add-item "open"
+                       (lambda ()
+                         (interactive)
+                         (find-file-noselect org-journal-dir)
+                         (switch-to-buffer "journal"))
+                       'open)
+    (tool-bar-add-item "undo" 'undo 'undo)
+    (tool-bar-add-item "save" 'save-buffer 'save)
+    (tool-bar-add-item "copy" 'copy-region-as-kill 'copy)
+    (tool-bar-add-item "paste" 'yank 'paste)
+    (tool-bar-add-item "left-arrow" 'org-journal-previous-entry 'previous-entry)
+    (tool-bar-add-item "right-arrow" 'org-journal-next-entry 'next-entry)
+    (tool-bar-add-item "search-replace"
+                       (lambda (prefix) (interactive "P") (org-journal-new-entry prefix) (delete-other-windows))
+                       'new-entry)
+    tool-bar-map))
+(add-hook 'org-journal-mode-hook (lambda () (setq-local tool-bar-map org-journal-tool-bar-map)))
+(add-hook 'org-journal-mode-hook #'delete-other-windows)
+
+;;; llama3
 (require 'markdown-mode)
 (require 'gptel)
 (require 'gptel-curl)
@@ -573,28 +600,7 @@
     (insert "### What is \"" query "\" in the context of \"" sentence "\"?")
     (gptel-send)))
 
-(defvar org-journal-tool-bar-map
-  (let ((tool-bar-map (make-sparse-keymap)))
-    (tool-bar-add-item "close" 'kill-current-buffer 'close)
-    (tool-bar-add-item "open"
-                       (lambda ()
-                         (interactive)
-                         (find-file-noselect org-journal-dir)
-                         (switch-to-buffer "journal"))
-                       'open)
-    (tool-bar-add-item "undo" 'undo 'undo)
-    (tool-bar-add-item "save" 'save-buffer 'save)
-    (tool-bar-add-item "copy" 'copy-region-as-kill 'copy)
-    (tool-bar-add-item "paste" 'yank 'paste)
-    (tool-bar-add-item "left-arrow" 'org-journal-previous-entry 'previous-entry)
-    (tool-bar-add-item "right-arrow" 'org-journal-next-entry 'next-entry)
-    (tool-bar-add-item "search-replace"
-                       (lambda (prefix) (interactive "P") (org-journal-new-entry prefix) (delete-other-windows))
-                       'new-entry)
-    tool-bar-map))
-(add-hook 'org-journal-mode-hook (lambda () (setq-local tool-bar-map org-journal-tool-bar-map)))
-(add-hook 'org-journal-mode-hook #'delete-other-windows)
-
+;;; denote
 (require 'denote)
 (setq denote-directory (concat emacs-dir "notes/")
       denote-backlinks-show-context t)
@@ -605,7 +611,7 @@
   (with-current-buffer (find-file-noselect denote-directory)
     (switch-to-buffer (current-buffer))))
 
-;; tool bar
+;;; tool bar
 ;; (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
 ;; (tool-bar-add-item "zoom-in" 'text-scale-increase 'zoom-in)
 ;; (tool-bar-add-item "close" 'delete-window 'delete-window)
@@ -615,8 +621,8 @@
 (tool-bar-add-item "lock-ok" 'habit/visit-habit-file 'habit)
 (tool-bar-add-item "next-page" 'eww-list-bookmarks 'EWW-bookmark)
 (tool-bar-add-item "spell" 'glossary/revisit 'glossary)
-(tool-bar-add-item "spell" '@300/random-shi 'poems)
-(tool-bar-add-item "next-page" 'visit-books 'books)
+(tool-bar-add-item "spell" '@300/random-poem 'poems)
+(tool-bar-add-item "next-page" 'nov/visit-books 'books)
 (tool-bar-add-item "describe" 'elfeed 'elfeed)
 (tool-bar-add-item "spell" 'denote/visit-denote-dir 'denote)
 (tool-bar-add-item "search-replace"
@@ -624,13 +630,7 @@
                    'journal)
 (tool-bar-add-item "connect-to-url" 'gptel/start-or-send 'GPT)
 
-;; mode line
-(setq-default mode-line-format
-      '("%e" mode-line-front-space mode-line-modes " " mode-line-position " " mode-line-buffer-identification " " mode-line-misc-info
-  mode-line-end-spaces))
-(setq-default line-number-mode nil)
-
-;; menu
+;;; menu
 (define-key global-map
   [menu-bar edit fleet/add-region]
   '("copy region to fleet" . fleet/add-region))
@@ -695,14 +695,16 @@
 (global-set-key (kbd "<volume-up>") 'scroll-down-command)
 (global-set-key (kbd "<volume-down>") 'scroll-up-command)
 
-;; TAB for minibuffer
+;;; TAB for minibuffer
 (define-key minibuffer-local-map (kbd "<volume-down>") 'minibuffer-complete)
 (define-key minibuffer-local-completion-map (kbd "<volume-down>") 'minibuffer-complete)
 (define-key minibuffer-local-completion-map (kbd "<volume-down>") 'minibuffer-complete)
 (define-key minibuffer-local-filename-completion-map (kbd "<volume-down>") 'minibuffer-complete)
 (define-key minibuffer-local-must-match-map (kbd "<volume-down>") 'minibuffer-complete)
 
-;; finalise startup apperance
+;;; finalise startup apperance
+(setq inhibit-startup-screen t
+      initial-scratch-message nil)
 (add-hook 'emacs-startup-hook
           (lambda ()
             (switch-to-buffer "*Fancy Diary Entries*")))
