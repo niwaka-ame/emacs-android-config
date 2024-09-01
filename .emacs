@@ -342,7 +342,7 @@
                        (hidden (mapconcat 'identity (cl-subseq by-line 2) "\n")))
                   (insert shown)
                   (newline)
-                  (insert (propertize hidden 'face '(:foreground "white"))))
+                  (insert (propertize hidden 'face `(:foreground ,(face-attribute 'default :background)))))
                 (newline))))))))
   (switch-to-buffer "*glossary-revisit*")
   (goto-char (point-min)))
@@ -477,8 +477,8 @@
                (comma-pos (re-search-forward "[，？。！]" line-end t)))
           (when comma-pos
             (if (= rand 1)
-                (put-text-property comma-pos line-end 'face '(:foreground "white"))
-              (put-text-property line-beg comma-pos 'face '(:foreground "white"))))
+                (put-text-property comma-pos line-end 'face `(:foreground ,(face-attribute 'default :background)))
+              (put-text-property line-beg comma-pos 'face `(:foreground ,(face-attribute 'default :background)))))
           (forward-line 1)
           ))))
   (setq @300/prose-hidden 1))
@@ -708,3 +708,15 @@
 (add-hook 'emacs-startup-hook
           (lambda ()
             (switch-to-buffer "*Fancy Diary Entries*")))
+
+;;; for PC
+(unless (string= system-type "android")
+  ;; evil
+  (require 'evil)
+  (evil-mode 1)
+  ;; theme
+  (require 'doom-themes)
+  (load-theme 'doom-solarized-light t)
+  ;; font
+  (set-face-attribute 'default nil :family "LXGW WenKai Screen")
+  (set-face-attribute 'shr-text nil :family "LXGW WenKai Screen"))

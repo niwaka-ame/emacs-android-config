@@ -37,3 +37,12 @@
 [submodule "markdown-mode"]
 	path = extensions/markdown-mode
 	url = https://github.com/jrblevin/markdown-mode.git
+[submodule "extensions/evil"]
+	path = extensions/evil
+	url = https://github.com/emacs-evil/evil.git
+[submodule "extensions/goto-chg"]
+	path = extensions/goto-chg
+	url = https://github.com/emacs-evil/goto-chg.git
+[submodule "extensions/themes"]
+	path = extensions/themes
+	url = https://github.com/doomemacs/themes.git
