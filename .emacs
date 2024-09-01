@@ -721,4 +721,15 @@
   (evil-mode 1)
   ;; theme
   (require 'doom-themes)
-  (load-theme 'doom-solarized-light t))
+  (load-theme 'doom-solarized-light t)
+  ;; scrolling for nov.el and eww
+  (with-eval-after-load 'nov
+    (tool-bar-local-item "left-arrow" 'nov-scroll-down 'prev-screen nov-tool-bar-map)
+    (tool-bar-local-item "right-arrow" 'nov-scroll-up 'next-screen nov-tool-bar-map))
+  (with-eval-after-load 'eww
+    (tool-bar-local-item "left-arrow" 'scroll-down-command 'prev-screen eww-tool-bar-map)
+    (tool-bar-local-item "right-arrow" 'scroll-up-command 'next-screen eww-tool-bar-map))
+  (with-eval-after-load 'elfeed
+    (tool-bar-local-item "left-arrow" 'elfeed-show-prev 'prev-feed elfeed-tool-bar-map)
+    (tool-bar-local-item "right-arrow" 'elfeed-show-next 'next-feed elfeed-tool-bar-map))
+  )
