@@ -21,7 +21,8 @@
 (setq auto-save-default nil)
 ;; font
 (set-face-attribute 'default nil :family "LXGW WenKai Screen")
-(set-face-attribute 'shr-text nil :family "LXGW WenKai Screen")
+(with-eval-after-load 'eww
+  (set-face-attribute 'shr-text nil :family "LXGW WenKai Screen"))
 
 ;;; mode line
 ;; smaller font in mode line (such that at least part of the buffer name is displayed)
@@ -65,8 +66,8 @@
 (add-hook 'diary-mark-entries-hook #'diary-mark-included-diary-files)
 (add-hook 'diary-nongregorian-listing-hook #'diary-chinese-list-entries)
 (add-hook 'diary-nongregorian-listing-hook #'diary-chinese-mark-entries)
-(add-hook 'diary-mode-hook #'variable-pitch-mode)
-(add-hook 'diary-fancy-display-mode-hook #'variable-pitch-mode)
+;; (add-hook 'diary-mode-hook #'variable-pitch-mode)
+;; (add-hook 'diary-fancy-display-mode-hook #'variable-pitch-mode)
 (add-hook 'diary-fancy-display-mode-hook
           (lambda () (switch-to-buffer "*Fancy Diary Entries*") (delete-other-windows)))
 
@@ -104,7 +105,7 @@
 ;;; org mode
 (require 'org)
 (add-hook 'org-mode-hook (lambda () (toggle-truncate-lines -1)))
-(add-hook 'org-mode-hook #'variable-pitch-mode)
+;; (add-hook 'org-mode-hook #'variable-pitch-mode)
 (add-hook 'org-mode-hook #'org-indent-mode)
 (add-hook 'org-mode-hook #'delete-other-windows)
 ;; larger font size
@@ -564,7 +565,7 @@
                          :stream t
                          :key (with-current-buffer (find-file-noselect (concat emacs-dir "llama")) (buffer-substring-no-properties (point-min) (1- (point-max))))
                          :models '("meta-llama/llama-3.1-8b-instruct:free")))
-(add-hook 'markdown-mode-hook #'variable-pitch-mode)
+;; (add-hook 'markdown-mode-hook #'variable-pitch-mode)
 (add-hook 'markdown-mode-hook (lambda () (setq gptel--system-message (alist-get 'default gptel-directives))))
 
 ;; define the gptel-mode menu according to `gptel-directives'
