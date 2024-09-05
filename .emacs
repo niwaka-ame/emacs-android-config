@@ -97,7 +97,7 @@
 (setq eww-bookmarks-directory emacs-dir
       shr-inhibit-images t)
 ;; add this hook to allow soft line break in EWW
-(add-hook 'eww-mode-hook #'visual-line-mode)
+(add-hook 'eww-after-render-hook #'visual-line-mode)
 
 (tool-bar-local-item "next-page" 'eww-list-bookmarks 'EWW-bookmark eww-tool-bar-map)
 ;; (tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region eww-tool-bar-map)
