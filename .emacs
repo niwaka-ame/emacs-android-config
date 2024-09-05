@@ -268,7 +268,7 @@
         (copy-region-as-kill beg (1+ end))
         (setq fleet/region nil)
         (with-current-buffer
-            (find-file-noselect (concat emacs-dir "bib-notes/" buf-name ".org"))
+            (find-file-noselect (concat emacs-dir "hl-notes/" buf-name ".org"))
           (goto-char (point-max))
           (org-insert-heading)
           (let ((string-to-add (replace-regexp-in-string "\n\n" "\t" (car kill-ring))))
@@ -286,7 +286,7 @@
   (interactive)
   (switch-to-buffer
    (find-file-noselect
-    (concat emacs-dir "bib-notes/" (substring (buffer-name) 0 (- (length (buffer-name)) 5)) ".org")))
+    (concat emacs-dir "hl-notes/" (substring (buffer-name) 0 (- (length (buffer-name)) 5)) ".org")))
   (lit-mode))
 
 (require 'nov-grep)
@@ -639,6 +639,7 @@
 (tool-bar-add-item "sort-column-ascending" 'diary 'diary)
 (tool-bar-add-item "sort-descending" 'fleet/todo-visit 'todo)
 (tool-bar-add-item "lock-ok" 'habit/visit-habit-file 'habit)
+(tool-bar-add-item "connect-to-url" 'eww 'EWW)
 (tool-bar-add-item "next-page" 'eww-list-bookmarks 'EWW-bookmark)
 (tool-bar-add-item "spell" 'glossary/revisit 'glossary)
 (tool-bar-add-item "spell" '@300/random-poem 'poems)
