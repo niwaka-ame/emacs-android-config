@@ -120,6 +120,7 @@
 ;; (add-hook 'org-mode-hook #'variable-pitch-mode)
 (add-hook 'org-mode-hook #'org-indent-mode)
 (add-hook 'org-mode-hook #'delete-other-windows)
+(add-hook 'org-mode-hook (lambda () (set-face-attribute 'org-level-1 nil :weight 'bold)))
 ;; larger font size
 (add-hook 'org-mode-hook (lambda () (text-scale-set 1)))
 (setq org-link-frame-setup
