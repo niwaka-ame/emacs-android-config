@@ -286,7 +286,18 @@
   (interactive)
   (switch-to-buffer
    (find-file-noselect
-    (concat emacs-dir "hl-notes/" (substring (buffer-name) 0 (- (length (buffer-name)) 5)) ".org")))
+    (if (string= major-mode "nov-mode")
+        (concat emacs-dir "hl-notes/" (substring (buffer-name) 0 (- (length (buffer-name)) 5)) ".org")
+      (concat emacs-dir "hl-notes/" (car (split-string (buffer-name) "<"))))))
+  (hlt-mode))
+
+(defun hlt/visit-lit-note ()
+  (interactive)
+  (switch-to-buffer
+   (find-file-noselect
+    (if (string= major-mode "nov-mode")
+        (concat emacs-dir "lit-notes/" (substring (buffer-name) 0 (- (length (buffer-name)) 5)) ".org")
+      (concat emacs-dir "lit-notes/" (car (split-string (buffer-name) "<"))))))
   (hlt-mode))
 
 (require 'nov-grep)
@@ -294,7 +305,7 @@
   (interactive)
   (let* ((heading (org-get-heading t t t t))
          (first-line (car (split-string heading "\t")))
-         (epub-buffer (concat (substring (buffer-name) 0 (- (length (buffer-name)) 3)) "epub")))
+         (epub-buffer (concat (substring (buffer-name) 0 (- (length (car (split-string (buffer-name) "<"))) 3)) "epub")))
     (switch-to-buffer epub-buffer)
     (my-nov-grep first-line)))
 
@@ -305,6 +316,8 @@
     (tool-bar-add-item "undo" 'undo 'undo)
     (tool-bar-add-item "save" 'save-buffer 'save)
     (tool-bar-add-item "search" 'hlt/visit-epub 'jump-back)
+    (tool-bar-add-item "exit" 'hlt/visit-note 'HL-note)
+    (tool-bar-add-item "print" 'hlt/visit-lit-note 'lit-note)
     tool-bar-map))
 (add-hook 'hlt-mode-hook (lambda () (setq-local tool-bar-map lit-tool-bar-map)))
 
@@ -422,7 +435,8 @@
     (tool-bar-add-item "help" 'stardict-define-at-point 'dict)
     (tool-bar-add-item "connect-to-url" 'gptel/ask-llama 'GPT)
     ;; (tool-bar-add-item "zoom-in" 'delete-other-windows 'max)
-    (tool-bar-add-item "exit" 'hlt/visit-note 'note)
+    (tool-bar-add-item "exit" 'hlt/visit-note 'HL-note)
+    (tool-bar-add-item "print" 'hlt/visit-lit-note 'lit-note)
     tool-bar-map))
 (add-hook 'nov-mode-hook (lambda () (setq-local tool-bar-map nov-tool-bar-map)))
 (add-hook 'nov-mode-hook #'visual-line-mode)
