@@ -639,12 +639,10 @@
 (require 'denote)
 (setq denote-directory (concat emacs-dir "notes/")
       denote-backlinks-show-context t)
-(setq denote-known-keywords
-      '(meta idea nonfiction fiction film documentary other))
-(defun denote/visit-denote-dir ()
+(setq denote-known-keywords nil)
+(defun denote/visit-entry ()
   (interactive)
-  (with-current-buffer (find-file-noselect denote-directory)
-    (switch-to-buffer (current-buffer))))
+  (switch-to-buffer (find-file-noselect (concat denote-directory "entry.org"))))
 
 ;;; tool bar
 ;; (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
@@ -660,7 +658,7 @@
 (tool-bar-add-item "spell" '@300/random-poem 'poems)
 (tool-bar-add-item "next-page" 'nov/visit-books 'books)
 (tool-bar-add-item "describe" 'elfeed 'elfeed)
-(tool-bar-add-item "spell" 'denote/visit-denote-dir 'denote)
+(tool-bar-add-item "spell" 'denote/visit-entry 'denote)
 (tool-bar-add-item "search-replace"
                    (lambda (prefix) (interactive "P") (org-journal-new-entry prefix) (delete-other-windows))
                    'journal)
@@ -753,6 +751,8 @@
   ;; theme
   (require 'doom-themes)
   (load-theme 'doom-solarized-light t)
+  ;; remove hook
+  (remove-hook 'org-mode-hook #'delete-other-windows)
   ;; scrolling for nov.el and eww
   (with-eval-after-load 'nov
     (tool-bar-local-item "left-arrow" 'nov-scroll-down 'prev-screen nov-tool-bar-map)
