@@ -258,7 +258,7 @@
         (save-buffer)))))
 
 ;;; literature notes
-(defun lit/add-region ()
+(defun hlt/add-region ()
   (interactive)
   (if (region-active-p)
       (let* ((beg (region-beginning))
@@ -282,15 +282,15 @@
           (save-buffer)))
     (message "mark region first!")))
 
-(defun lit/visit-note ()
+(defun hlt/visit-note ()
   (interactive)
   (switch-to-buffer
    (find-file-noselect
     (concat emacs-dir "hl-notes/" (substring (buffer-name) 0 (- (length (buffer-name)) 5)) ".org")))
-  (lit-mode))
+  (hlt-mode))
 
 (require 'nov-grep)
-(defun lit/visit-epub ()
+(defun hlt/visit-epub ()
   (interactive)
   (let* ((heading (org-get-heading t t t t))
          (first-line (car (split-string heading "\t")))
@@ -298,15 +298,15 @@
     (switch-to-buffer epub-buffer)
     (my-nov-grep first-line)))
 
-(define-derived-mode lit-mode org-mode "lit")
+(define-derived-mode hlt-mode org-mode "hlt")
 (defvar lit-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
     (tool-bar-add-item "undo" 'undo 'undo)
     (tool-bar-add-item "save" 'save-buffer 'save)
-    (tool-bar-add-item "search" 'lit/visit-epub 'jump-back)
+    (tool-bar-add-item "search" 'hlt/visit-epub 'jump-back)
     tool-bar-map))
-(add-hook 'lit-mode-hook (lambda () (setq-local tool-bar-map lit-tool-bar-map)))
+(add-hook 'hlt-mode-hook (lambda () (setq-local tool-bar-map lit-tool-bar-map)))
 
 ;;; glossary and stardict
 (require 'stardict)
@@ -418,11 +418,11 @@
     (tool-bar-add-item "home" 'nov-goto-toc 'TOC)
     (tool-bar-add-item "left-arrow" 'nov-previous-document 'prev-chapter)
     (tool-bar-add-item "right-arrow" 'nov-next-document 'next-chapter)
-    (tool-bar-add-item "sort-ascending" 'lit/add-region 'highlight)
+    (tool-bar-add-item "sort-ascending" 'hlt/add-region 'highlight)
     (tool-bar-add-item "help" 'stardict-define-at-point 'dict)
     (tool-bar-add-item "connect-to-url" 'gptel/ask-llama 'GPT)
     ;; (tool-bar-add-item "zoom-in" 'delete-other-windows 'max)
-    (tool-bar-add-item "exit" 'lit/visit-note 'note)
+    (tool-bar-add-item "exit" 'hlt/visit-note 'note)
     tool-bar-map))
 (add-hook 'nov-mode-hook (lambda () (setq-local tool-bar-map nov-tool-bar-map)))
 (add-hook 'nov-mode-hook #'visual-line-mode)
