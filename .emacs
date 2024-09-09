@@ -60,7 +60,8 @@
       diary-number-of-entries 7
       diary-file (concat emacs-dir "diary")
       diary-show-holidays-flag nil
-      calendar-mark-diary-entries-flag t)
+      calendar-mark-diary-entries-flag t
+      diary-list-include-blanks t)
 (add-hook 'diary-list-entries-hook #'diary-sort-entries t)
 (add-hook 'diary-list-entries-hook #'diary-include-other-diary-files)
 (add-hook 'diary-mark-entries-hook #'diary-mark-included-diary-files)
