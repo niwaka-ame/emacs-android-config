@@ -74,7 +74,8 @@
 
 (require 'appt)
 (setq appt-display-mode-line t
-      appt-message-warning-time 30)
+      appt-message-warning-time 30
+      appt-display-interval 15)
 (appt-activate t)
 
 ;;; shr
