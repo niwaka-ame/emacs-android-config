@@ -587,6 +587,8 @@
 (require 'gptel-transient)
 ;; setq `gptel-directives'
 (load (concat emacs-dir "llama-directives.el"))
+;; make thing-at-point recognise sentence with single space.
+(setq sentence-end-double-space nil)
 
 ;; OpenRouter offers an OpenAI compatible API
 (setq gptel-model "meta-llama/llama-3.1-8b-instruct:free"
