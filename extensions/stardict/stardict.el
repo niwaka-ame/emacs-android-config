@@ -41,6 +41,7 @@
 
 
 ;;; Code:
+(require 'stem)
 (defconst stardict-dir (file-name-directory (or load-file-name buffer-file-name)))
 (defconst stardict-name "langdao-ec-gb")
 (defvar stardict-dict-hash nil)
@@ -186,18 +187,13 @@ You should close the dict file yourself."
   (let ((word (downcase (thing-at-point 'word))))
     ;; if word is not in dictionary, try to truncate
     (unless (stardict-word-exist-p stardict-dict-hash word)
-      (let ((trunc-char
-             (cond
-              ((string-match "^.*ed$" word) -2)
-              ((string-match "^.*ing$" word) -3)
-              ((string-match "^.*es$" word) -2)
-              ((string-match "^.*'s$" word) -2)
-              ((string-match "^.*s$" word) -1)
-              ((string-match "^.*ly$" word) -2)
-              ((string-match "^.*er$" word) -2)
-              ((string-match "^.*est$" word) -3))))
-        (if trunc-char
-          (setq word (substring word 0 trunc-char))
+      (let ((word-list (cdr (reverse (stem-english word)))))
+        (catch 'found
+          (dolist (wd word-list)
+            (when (stardict-word-exist-p stardict-dict-hash wd)
+              (setq word wd)
+              (throw 'found wd)))
+          ;; if nothing is caught
           (setq word nil))))
     (if word
         (stardict--lookup-and-display word)

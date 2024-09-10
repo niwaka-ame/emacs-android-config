@@ -46,3 +46,6 @@
 [submodule "extensions/themes"]
 	path = extensions/themes
 	url = https://github.com/doomemacs/themes.git
+[submodule "extensions/stem"]
+	path = extensions/stem
+	url = https://github.com/yuutayamada/stem.git
