@@ -42,9 +42,10 @@
 
 ;;; Code:
 (require 'stem)
+(require 'persist)
 (defconst stardict-dir (file-name-directory (or load-file-name buffer-file-name)))
 (defconst stardict-name "langdao-ec-gb")
-(defvar stardict-dict-hash nil)
+(persist-defvar stardict-dict-hash nil "hash table that stores the dictionary.")
 
 (defun stardict-str2int (str)
   "Convert string `STR' to integer.
