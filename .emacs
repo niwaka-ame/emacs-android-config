@@ -539,6 +539,22 @@
 (define-key elfeed-show-mode-map (kbd "<volume-up>") 'elfeed-show-prev)
 (define-key elfeed-show-mode-map (kbd "<volume-down>") 'elfeed-show-next)
 
+(setq elfeed/filter-alist
+      '((magazines . "@6-months-ago +unread +maga")
+        (academia . "@3-days-ago +unread +aca")
+        (all . "@6-months-ago +unread")))
+(setq elfeed-search-filter (alist-get 'academia elfeed/filter-alist))
+
+(defun elfeed/menu-setup (alist)
+  (let ((result (list "elfeed")))
+    (dolist (pair alist result)
+      (push `[,(symbol-name (car pair)) (lambda () (interactive) (elfeed-search-set-filter ,(cdr pair))) t] result))
+    (reverse result)))
+(easy-menu-define elfeed-search-mode-menu elfeed-search-mode-map
+  "gptel mode menu"
+  (elfeed/menu-setup elfeed/filter-alist))
+(easy-menu-add elfeed-search-mode-menu elfeed-search-mode-map)
+
 (defvar elfeed-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
