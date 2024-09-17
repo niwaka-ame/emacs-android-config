@@ -118,6 +118,7 @@
 
 ;;; org mode
 (require 'org)
+(setq org-extend-today-until 2)
 (add-hook 'org-mode-hook (lambda () (toggle-truncate-lines -1)))
 ;; (add-hook 'org-mode-hook #'variable-pitch-mode)
 (add-hook 'org-mode-hook #'org-indent-mode)
