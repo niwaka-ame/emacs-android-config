@@ -545,6 +545,20 @@
         (all . "@6-months-ago +unread")))
 (setq elfeed-search-filter (alist-get 'academia elfeed/filter-alist))
 
+(defun elfeed/next-filter ()
+  (interactive)
+  (let ((curr-item (rassoc elfeed-search-filter elfeed/filter-alist))
+        (result elfeed/filter-alist))
+    (catch 'found
+      (dolist (item elfeed/filter-alist result)
+        (if (equal item curr-item)
+            (progn
+              (if (equal (cdr result) nil)
+                  (elfeed-search-set-filter (cdar elfeed/filter-alist))
+                (elfeed-search-set-filter (cdadr result)))
+              (throw 'found nil))
+          (setq result (cdr result)))))))
+
 (defun elfeed/menu-setup (alist)
   (let ((result (list "elfeed")))
     (dolist (pair alist result)
@@ -559,6 +573,7 @@
   (let ((tool-bar-map (make-sparse-keymap)))
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
     (tool-bar-add-item "refresh" 'elfeed-update 'update)
+    (tool-bar-add-item "right-arrow" 'elfeed/next-filter 'next-filter)
     (tool-bar-add-item "help" 'stardict-define-at-point 'dict)
     (tool-bar-add-item "connect-to-url" 'gptel/ask-llama 'GPT)
     tool-bar-map))
