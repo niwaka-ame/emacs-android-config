@@ -106,7 +106,8 @@
 (tool-bar-local-item "copy" 'copy-region-as-kill 'copy eww-tool-bar-map)
 (tool-bar-local-item "help" 'stardict-define-at-point 'dict eww-tool-bar-map)
 (tool-bar-local-item "connect-to-url" 'gptel/ask-llama 'GPT eww-tool-bar-map)
-(tool-bar-local-item "checked" 'eww-readable 'EWW-readable eww-tool-bar-map)
+(tool-bar-local-item "index" 'eww-readable 'EWW-readable eww-tool-bar-map)
+(tool-bar-local-item "contact" 'eww-toggle-images 'toggle-images eww-tool-bar-map)
 
 (defvar eww-bookmark-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
@@ -542,8 +543,8 @@
 (setq elfeed/filter-alist
       '((academia . "@3-days-ago +unread +aca")
         (long . "@6-months-ago +unread +long")
-        (short. "@3-days-ago +unread +short")
-        (biorxiv. "@3-days-ago +unread +brxiv")
+        (short . "@3-days-ago +unread +short")
+        (biorxiv . "@3-days-ago +unread +brxiv")
         (all . "@6-months-ago +unread")))
 (setq elfeed-search-filter (alist-get 'academia elfeed/filter-alist))
 
