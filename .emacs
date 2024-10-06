@@ -418,6 +418,7 @@
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 (setq shr-max-width nil)
 (setq shr-width 10000)
+(add-hook 'nov-post-html-render-hook #'visual-line-mode)
 
 (defun nov/visit-books ()
   (interactive)
