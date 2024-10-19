@@ -627,7 +627,7 @@
 (setq sentence-end-double-space nil)
 
 ;; OpenRouter offers an OpenAI compatible API
-(setq gptel-model "meta-llama/llama-3.1-8b-instruct:free"
+(setq gptel-model "meta-llama/llama-3.1-70b-instruct:free"
       gptel-max-tokens 500
       gptel-backend
       (gptel-make-openai "OpenRouter"               ;Any name you want
@@ -635,7 +635,7 @@
                          :endpoint "/api/v1/chat/completions"
                          :stream t
                          :key (with-current-buffer (find-file-noselect (concat emacs-dir "llama")) (buffer-substring-no-properties (point-min) (1- (point-max))))
-                         :models '("meta-llama/llama-3.1-8b-instruct:free")))
+                         :models '("meta-llama/llama-3.1-70b-instruct:free")))
 ;; (add-hook 'markdown-mode-hook #'variable-pitch-mode)
 (add-hook 'markdown-mode-hook (lambda () (setq gptel--system-message (alist-get 'default gptel-directives))))
 
