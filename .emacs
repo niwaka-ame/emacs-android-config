@@ -528,6 +528,16 @@
     (remove-text-properties (point-min) (point-max) '(face nil))
     (setq @300/prose-hidden 0)))
 
+;;; countdown
+(defun countdown (&optional seconds)
+  "Display a countdown from SECONDS in the echo area."
+  (interactive (list (read-number "Countdown seconds (default 90): " 90)))
+  (if (> seconds 0)
+      (progn
+        (message "Countdown: %d" seconds)
+        (run-at-time 1 nil #'countdown (1- seconds)))
+    (message "Time's up!")))
+
 ;;; elfeed
 (require 'elfeed)
 (require 'elfeed-org)
@@ -703,6 +713,7 @@
                    (lambda (prefix) (interactive "P") (org-journal-new-entry prefix) (delete-other-windows))
                    'journal)
 (tool-bar-add-item "connect-to-url" 'gptel/start-or-send 'GPT)
+(tool-bar-add-item "sort-row-ascending" 'countdown 'countdown)
 
 ;;; menu
 (define-key global-map
