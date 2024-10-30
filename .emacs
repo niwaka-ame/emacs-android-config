@@ -528,14 +528,14 @@
     (remove-text-properties (point-min) (point-max) '(face nil))
     (setq @300/prose-hidden 0)))
 
-;;; countdown
-(defun countdown (&optional seconds)
-  "Display a countdown from SECONDS in the echo area."
-  (interactive (list (read-number "Countdown seconds (default 90): " 90)))
+;;; my timer
+(defun my/timer (&optional seconds)
+  "Display a timer from SECONDS in the echo area."
+  (interactive (list (read-number "Timer seconds (default 90): " 90)))
   (if (> seconds 0)
       (progn
-        (message "Countdown: %d" seconds)
-        (run-at-time 1 nil #'countdown (1- seconds)))
+        (message "Timer: %d" seconds)
+        (run-at-time 1 nil #'my/timer (1- seconds)))
     (message "Time's up!")))
 
 ;;; elfeed
@@ -713,7 +713,7 @@
                    (lambda (prefix) (interactive "P") (org-journal-new-entry prefix) (delete-other-windows))
                    'journal)
 (tool-bar-add-item "connect-to-url" 'gptel/start-or-send 'GPT)
-(tool-bar-add-item "sort-row-ascending" 'countdown 'countdown)
+(tool-bar-add-item "sort-row-ascending" 'my/timer 'timer)
 
 ;;; menu
 (define-key global-map
@@ -731,6 +731,9 @@
   [my]
   (cons "My-magic" (make-sparse-keymap "My-magic"))
   'buffers)
+(define-key global-map
+  [menu-bar my my/timer]
+  '("timer" . my/timer))
 ; zoom in and out
 (define-key global-map
   [menu-bar my text-scale-increase]
