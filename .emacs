@@ -167,7 +167,7 @@
          (today-str (format-time-string "%Y-%m-%d 00:00:00"))
          (today (time-to-days (encode-time (parse-time-string today-str)))))
     (if (or (= 2 (length parsed-line)) (string= "" (car (last parsed-line))))
-        (concat (cadr parsed-line) ": never")
+        (concat (car parsed-line) ": never")
       (let* ((last-time (car (last parsed-line)))
              (last-time-str (concat last-time " 00:00:00"))
              (last-time-day (time-to-days (encode-time (parse-time-string last-time-str))))
