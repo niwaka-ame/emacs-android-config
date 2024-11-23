@@ -155,7 +155,7 @@
 (defun routine/done ()
   (interactive)
   (let* ((line-str (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
-         (parsed-line (split-string line-str ", "))
+         (parsed-line (split-string line-str ", " t ","))
          (today-str (format-time-string "%Y-%m-%d")))
     (save-excursion
       (delete-line)
