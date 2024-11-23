@@ -135,61 +135,60 @@
         (wl . wl-other-frame)))
 
 
-;;; org-habit
-(define-derived-mode habit-mode org-mode "habit")
-
-(defvar habit-tool-bar-map
+;;; routine
+(define-derived-mode routine-mode fundamental-mode "routine")
+(defvar routine-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
     (tool-bar-add-item "undo" 'undo 'undo)
     (tool-bar-add-item "save" 'save-buffer 'save)
-    (tool-bar-add-item "sort-criteria" 'habit/add-habit 'add)
-    (tool-bar-add-item "info" 'habit/org-habit-done 'complete)
-    (tool-bar-add-item "lock-ok" 'habit/visit-habit-file 'org-habit)
+    (tool-bar-add-item "info" 'routine/done 'complete)
+    (tool-bar-add-item "sort-column-ascending" 'diary 'diary)
     tool-bar-map))
+(add-hook 'routine-mode-hook (lambda () (setq-local tool-bar-map routine-tool-bar-map)))
 
-(add-hook 'habit-mode-hook (lambda () (setq-local tool-bar-map habit-tool-bar-map)))
-
-(add-to-list 'org-modules 'org-habit)
-(setq org-agenda-files (list (concat emacs-dir "habits.org"))
-      org-habit-show-all-today t
-      org-agenda-span 1
-      org-agenda-start-day "+0d"
-      org-habit-preceding-days 14
-      org-habit-following-days 6
-      org-habit-graph-column 27
-      )
-(add-hook 'org-agenda-mode-hook #'delete-other-windows)
-
-(defun habit/org-habit-done ()
+(defun routine/visit-routine-file ()
   (interactive)
-  (org-todo 'done))
+  (switch-to-buffer (find-file-noselect (concat emacs-dir "routines.csv")))
+  (routine-mode))
 
-(defun habit/visit-habit-file ()
+(defun routine/done ()
   (interactive)
-  (if (string= (buffer-name) "habits.org")
-      (org-agenda-list)
-    (progn
-      (switch-to-buffer (find-file-noselect (concat emacs-dir "habits.org")))
-      (habit-mode)
-      (org-cycle-content))))
-
-(defun habit/add-habit (habit freq)
-  (interactive "sHabit: \nsFrequency: ")
-  (with-current-buffer "habits.org"
-    (goto-char (point-max))
-    (newline)
-    (org-insert-heading)
-    (insert habit)
+  (let* ((line-str (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
+         (parsed-line (split-string line-str ", "))
+         (today-str (format-time-string "%Y-%m-%d")))
     (save-excursion
-      (newline)
-      (insert (concat
-               "SCHEDULED:"
-               (format-time-string "<%F %a " (current-time))
-               freq
-               ">")))
-    (org-set-property "STYLE" "habit")
-    (switch-to-buffer (current-buffer))))
+      (delete-line)
+      (insert (car parsed-line) ", " (cadr parsed-line) ", " today-str ?\n))))
+
+(defun routine/check-line ()
+  (let* ((line-str (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
+         (parsed-line (split-string line-str ", "))
+         (today-str (format-time-string "%Y-%m-%d 00:00:00"))
+         (today (time-to-days (encode-time (parse-time-string today-str)))))
+    (if (or (= 2 (length parsed-line)) (string= "" (car (last parsed-line))))
+        (concat (cadr parsed-line) ": never")
+      (let* ((last-time (car (last parsed-line)))
+             (last-time-str (concat last-time " 00:00:00"))
+             (last-time-day (time-to-days (encode-time (parse-time-string last-time-str))))
+             (day-diff (- today last-time-day))
+             (freq (string-to-number (cadr parsed-line)))
+             (overdue (- day-diff freq)))
+        (if (>= overdue 0)  ; things that are due today also count
+            (concat (car parsed-line) ": " (number-to-string overdue) "d"))))))
+
+(defun routine/check-and-warn ()
+  (let ((header-str "*overdue* "))
+    (with-current-buffer (find-file-noselect (concat emacs-dir "routines.csv"))
+      (goto-char (point-min))
+      (while (not (eobp))
+        (when-let ((overdue-task (routine/check-line)))
+          (setq header-str (concat header-str overdue-task "; ")))
+        (forward-line 1)))
+    ;; this function will only trigger upon entering diary buffer
+    (setq-local header-line-format header-str)))
+
+(add-hook 'diary-fancy-display-mode-hook #'routine/check-and-warn)
 
 ;;; fleeting notes
 (define-derived-mode fleet-mode org-mode "fleet")
@@ -701,7 +700,7 @@
 ;; utils
 (tool-bar-add-item "sort-column-ascending" 'diary 'diary)
 (tool-bar-add-item "sort-descending" 'fleet/todo-visit 'todo)
-(tool-bar-add-item "lock-ok" 'habit/visit-habit-file 'habit)
+(tool-bar-add-item "lock-ok" 'routine/visit-routine-file 'routine)
 (tool-bar-add-item "connect-to-url" 'eww 'EWW)
 (tool-bar-add-item "next-page" 'eww-list-bookmarks 'EWW-bookmark)
 (tool-bar-add-item "spell" 'glossary/revisit 'glossary)
@@ -795,7 +794,8 @@
       initial-scratch-message nil)
 (add-hook 'emacs-startup-hook
           (lambda ()
-            (switch-to-buffer "*Fancy Diary Entries*")))
+            (switch-to-buffer "*Fancy Diary Entries*")
+            (routine/check-and-warn)))
 
 ;;; for PC
 (unless (string= system-type "android")
