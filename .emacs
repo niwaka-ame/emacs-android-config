@@ -14,7 +14,7 @@
 ;;; appearance
 (setopt tool-bar-position 'bottom)
 ;; larger font on phone
-(set-face-attribute 'default nil :height 230)
+(set-face-attribute 'default nil :height 240)
 (require 'face-remap)
 (setq text-scale-mode-step 1.1)
 (setq pop-up-windows nil)
