@@ -184,7 +184,9 @@
       (while (not (eobp))
         (when-let ((overdue-task (routine/check-line)))
           (setq header-str (concat header-str overdue-task "; ")))
-        (forward-line 1)))
+        (forward-line 1))
+      ;; replace the last semicolon with period
+      (setq header-str (concat (substring header-str 0 -2) ".")))
     ;; this function will only trigger upon entering diary buffer
     (setq-local header-line-format header-str)))
 
@@ -699,8 +701,8 @@
 ;; (tool-bar-add-item "close" 'delete-window 'delete-window)
 ;; utils
 (tool-bar-add-item "sort-column-ascending" 'diary 'diary)
-(tool-bar-add-item "sort-descending" 'fleet/todo-visit 'todo)
 (tool-bar-add-item "lock-ok" 'routine/visit-routine-file 'routine)
+(tool-bar-add-item "sort-descending" 'fleet/todo-visit 'todo)
 (tool-bar-add-item "connect-to-url" 'eww 'EWW)
 (tool-bar-add-item "next-page" 'eww-list-bookmarks 'EWW-bookmark)
 (tool-bar-add-item "spell" 'glossary/revisit 'glossary)
