@@ -547,7 +547,7 @@
 (setq rmh-elfeed-org-files (list (concat emacs-dir "elfeed.org")))
 (setq elfeed-show-entry-switch 'switch-to-buffer)
 (setq elfeed-search-date-format (list "%m%d" 4 :left))
-(setq elfeed-search-title-min-width 27)
+(setq elfeed-search-title-min-width 36)
 (define-key elfeed-search-mode-map [mouse-1] 'elfeed-search-show-entry)
 (define-key elfeed-show-mode-map (kbd "<volume-up>") 'elfeed-show-prev)
 (define-key elfeed-show-mode-map (kbd "<volume-down>") 'elfeed-show-next)
@@ -593,6 +593,7 @@
     (tool-bar-add-item "connect-to-url" 'gptel/ask-llama 'GPT)
     tool-bar-map))
 (add-hook 'elfeed-search-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
+(add-hook 'elfeed-search-mode-hook (lambda () (text-scale-set -3)))
 (add-hook 'elfeed-show-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
 
 ;;; org-journal
