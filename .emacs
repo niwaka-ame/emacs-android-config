@@ -554,8 +554,9 @@
 
 (setq elfeed/filter-alist
       '((academia . "@3-days-ago +unread +aca")
+        (science . "@3-days-ago +unread +sci")
+        (news . "@7-days-ago +unread +cult")
         (long . "@6-months-ago +unread +long")
-        (short . "@3-days-ago +unread +short")
         (biorxiv . "@3-days-ago +unread +brxiv")
         (all . "@6-months-ago +unread")))
 (setq elfeed-search-filter (alist-get 'academia elfeed/filter-alist))
