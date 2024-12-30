@@ -559,7 +559,7 @@
         (long . "@6-months-ago +unread +long")
         (biorxiv . "@3-days-ago +unread +brxiv")
         (all . "@6-months-ago +unread")))
-(setq elfeed-search-filter (alist-get 'academia elfeed/filter-alist))
+(setq elfeed-search-filter (cadr elfeed/filter-alist))
 
 (defun elfeed/next-filter ()
   (interactive)
