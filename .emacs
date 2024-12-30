@@ -553,9 +553,9 @@
 (define-key elfeed-show-mode-map (kbd "<volume-down>") 'elfeed-show-next)
 
 (setq elfeed/filter-alist
-      '((academia . "@3-days-ago +unread +aca")
+      '((culture . "@7-days-ago +unread +cult")
         (science . "@3-days-ago +unread +sci")
-        (news . "@7-days-ago +unread +cult")
+        (academia . "@3-days-ago +unread +aca")
         (long . "@6-months-ago +unread +long")
         (biorxiv . "@3-days-ago +unread +brxiv")
         (all . "@6-months-ago +unread")))
