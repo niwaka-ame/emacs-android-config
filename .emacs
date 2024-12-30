@@ -553,12 +553,12 @@
 (define-key elfeed-show-mode-map (kbd "<volume-down>") 'elfeed-show-next)
 
 (setq elfeed/filter-alist
-      '((culture . "@7-days-ago +unread +cult")
-        (science . "@3-days-ago +unread +sci")
-        (academia . "@3-days-ago +unread +aca")
-        (long . "@6-months-ago +unread +long")
-        (biorxiv . "@3-days-ago +unread +brxiv")
-        (all . "@6-months-ago +unread")))
+      '((culture . "@7-days-ago +cult")
+        (science . "@3-days-ago +sci")
+        (academia . "@3-days-ago +aca")
+        (long . "@6-months-ago +long")
+        (biorxiv . "@3-days-ago +brxiv")
+        (all . "@6-months-ago")))
 (setq elfeed-search-filter (cdar elfeed/filter-alist))
 
 (defun elfeed/next-filter ()
