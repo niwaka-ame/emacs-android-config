@@ -548,9 +548,6 @@
 (setq elfeed-show-entry-switch 'switch-to-buffer)
 (setq elfeed-search-date-format (list "%m%d" 4 :left))
 (setq elfeed-search-title-min-width 36)
-(define-key elfeed-search-mode-map [mouse-1] 'elfeed-search-show-entry)
-(define-key elfeed-show-mode-map (kbd "<volume-up>") 'elfeed-show-prev)
-(define-key elfeed-show-mode-map (kbd "<volume-down>") 'elfeed-show-next)
 
 (setq elfeed/filter-alist
       '((culture . "@7-days-ago +cult")
@@ -574,6 +571,22 @@
                 (elfeed-search-set-filter (cdadr result)))
               (throw 'found nil))
           (setq result (cdr result)))))))
+
+(defun elfeed/next ()
+  (interactive)
+  (if (eq (window-end nil t) (point-max))
+      (elfeed-show-next)
+    (scroll-up-command)))
+
+(defun elfeed/prev ()
+  (interactive)
+  (if (eq (window-start) (point-min))
+      (elfeed-show-prev)
+    (scroll-down-command)))
+
+(define-key elfeed-search-mode-map [mouse-1] 'elfeed-search-show-entry)
+(define-key elfeed-show-mode-map (kbd "<volume-up>") 'elfeed/prev)
+(define-key elfeed-show-mode-map (kbd "<volume-down>") 'elfeed/next)
 
 (defun elfeed/menu-setup (alist)
   (let ((result (list "elfeed")))
