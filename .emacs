@@ -116,6 +116,16 @@
     tool-bar-map))
 (add-hook 'eww-bookmark-mode-hook (lambda () (setq-local tool-bar-map eww-bookmark-tool-bar-map)))
 
+(defun eww/remove-long-dashes()
+  (interactive)
+  (when (eq major-mode 'eww-mode)
+    (let ((inhibit-read-only t)) ; Temporarily allow modifications
+      (save-excursion
+        (goto-char (point-min))
+        (while (re-search-forward "^-\\{11,\\}$" nil t)
+          (replace-match "-----"))))))
+(add-hook 'eww-after-render-hook #'eww/remove-long-dashes)
+
 
 ;;; org mode
 (require 'org)
