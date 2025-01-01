@@ -122,8 +122,8 @@
     (let ((inhibit-read-only t)) ; Temporarily allow modifications
       (save-excursion
         (goto-char (point-min))
-        (while (re-search-forward "^-\\{11,\\}$" nil t)
-          (replace-match "-----"))))))
+        (while (re-search-forward "-\\{11,\\}" nil t)
+          (replace-match "====="))))))
 (add-hook 'eww-after-render-hook #'eww/remove-long-dashes)
 
 
