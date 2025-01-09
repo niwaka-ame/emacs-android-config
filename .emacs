@@ -23,6 +23,8 @@
 (set-face-attribute 'default nil :family "LXGW WenKai Screen")
 (with-eval-after-load 'eww
   (set-face-attribute 'shr-text nil :family "LXGW WenKai Screen"))
+;; disable clicking on minibuffer
+(define-key minibuffer-inactive-mode-map [mouse-1] 'ignore)
 
 ;;; mode line
 ;; smaller font in mode line (such that at least part of the buffer name is displayed)
@@ -106,8 +108,8 @@
 (tool-bar-local-item "copy" 'copy-region-as-kill 'copy eww-tool-bar-map)
 (tool-bar-local-item "help" 'stardict-define-at-point 'dict eww-tool-bar-map)
 (tool-bar-local-item "connect-to-url" 'gptel/ask-llama 'GPT eww-tool-bar-map)
-(tool-bar-local-item "contact" 'eww-toggle-images 'toggle-images eww-tool-bar-map)
-(tool-bar-local-item "checked" 'eww-readable 'EWW-readable eww-tool-bar-map)
+; (tool-bar-local-item "contact" 'eww-toggle-images 'toggle-images eww-tool-bar-map)
+(tool-bar-local-item "next-page" 'eww-readable 'EWW-readable eww-tool-bar-map)
 
 (defvar eww-bookmark-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
@@ -188,7 +190,7 @@
             (concat (car parsed-line) ": " (number-to-string overdue) "d"))))))
 
 (defun routine/check-and-warn ()
-  (let ((header-str "*overdue* "))
+  (let ((header-str ""))
     (with-current-buffer (find-file-noselect (concat emacs-dir "routines.csv"))
       (goto-char (point-min))
       (while (not (eobp))
