@@ -110,7 +110,7 @@
 (tool-bar-local-item "help" 'stardict-define-at-point 'dict eww-tool-bar-map)
 (tool-bar-local-item "connect-to-url" 'gptel/ask-llama 'GPT eww-tool-bar-map)
 ; (tool-bar-local-item "contact" 'eww-toggle-images 'toggle-images eww-tool-bar-map)
-(tool-bar-local-item "next-page" 'eww-readable 'EWW-readable eww-tool-bar-map)
+(tool-bar-local-item "next-page" 'eww/eww-readable 'EWW-readable eww-tool-bar-map)
 
 (defvar eww-bookmark-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
@@ -129,6 +129,11 @@
           (replace-match "====="))))))
 (add-hook 'eww-after-render-hook #'eww/remove-long-dashes)
 (add-hook 'eww-mode-hook (lambda () (text-scale-set -1)))
+
+(defun eww/eww-readable ()
+  (interactive)
+  (eww-readable)
+  (eww/remove-long-dashes))
 
 ;;; org mode
 (require 'org)
