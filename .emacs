@@ -73,6 +73,7 @@
 ;; (add-hook 'diary-fancy-display-mode-hook #'variable-pitch-mode)
 (add-hook 'diary-fancy-display-mode-hook
           (lambda () (switch-to-buffer "*Fancy Diary Entries*") (delete-other-windows)))
+(add-hook 'diary-fancy-display-mode-hook (lambda () (text-scale-set -2)))
 
 (require 'appt)
 (setq appt-display-mode-line t
@@ -127,7 +128,7 @@
         (while (re-search-forward "-\\{11,\\}" nil t)
           (replace-match "====="))))))
 (add-hook 'eww-after-render-hook #'eww/remove-long-dashes)
-
+(add-hook 'eww-mode-hook (lambda () (text-scale-set -1)))
 
 ;;; org mode
 (require 'org)
@@ -138,7 +139,7 @@
 (add-hook 'org-mode-hook #'delete-other-windows)
 (add-hook 'org-mode-hook (lambda () (set-face-attribute 'org-level-1 nil :weight 'bold)))
 ;; larger font size
-(add-hook 'org-mode-hook (lambda () (text-scale-set 1)))
+;; (add-hook 'org-mode-hook (lambda () (text-scale-set 1)))
 (setq org-link-frame-setup
       '((vm . vm-visit-folder-other-frame)
         (vm-imap . vm-visit-imap-folder-other-frame)
@@ -459,6 +460,7 @@
     tool-bar-map))
 (add-hook 'nov-mode-hook (lambda () (setq-local tool-bar-map nov-tool-bar-map)))
 (add-hook 'nov-mode-hook #'visual-line-mode)
+(add-hook 'nov-mode-hook (lambda () (text-scale-set -1)))
 
 ;;; poems
 (require '@300)
