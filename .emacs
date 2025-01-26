@@ -828,6 +828,8 @@
       initial-scratch-message nil)
 (add-hook 'emacs-startup-hook
           (lambda ()
+            ;; smaller font for header-line
+            (set-face-attribute 'header-line nil :height 0.8)
             (switch-to-buffer "*Fancy Diary Entries*")
             (routine/check-and-warn)))
 
