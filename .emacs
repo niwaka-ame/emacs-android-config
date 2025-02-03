@@ -15,6 +15,7 @@
 (setopt tool-bar-position 'bottom)
 ;; larger font on phone
 (set-face-attribute 'default nil :height 240)
+(set-fontset-font t nil (font-spec :name "Nom Na Tong"))
 (require 'face-remap)
 (setq text-scale-mode-step 1.1)
 (setq pop-up-windows nil)
@@ -816,12 +817,14 @@
 (global-set-key (kbd "<volume-up>") 'scroll-down-command)
 (global-set-key (kbd "<volume-down>") 'scroll-up-command)
 
-;;; TAB for minibuffer
+;;; TAB for minibuffer and eshell
 (define-key minibuffer-local-map (kbd "<volume-down>") 'minibuffer-complete)
 (define-key minibuffer-local-completion-map (kbd "<volume-down>") 'minibuffer-complete)
 (define-key minibuffer-local-completion-map (kbd "<volume-down>") 'minibuffer-complete)
 (define-key minibuffer-local-filename-completion-map (kbd "<volume-down>") 'minibuffer-complete)
 (define-key minibuffer-local-must-match-map (kbd "<volume-down>") 'minibuffer-complete)
+(with-eval-after-load 'eshell
+  (define-key eshell-mode-map (kbd "<volume-down>") 'completion-at-point))
 
 ;;; finalise startup apperance
 (setq inhibit-startup-screen t
