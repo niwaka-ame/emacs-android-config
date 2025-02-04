@@ -823,8 +823,10 @@
 (define-key minibuffer-local-completion-map (kbd "<volume-down>") 'minibuffer-complete)
 (define-key minibuffer-local-filename-completion-map (kbd "<volume-down>") 'minibuffer-complete)
 (define-key minibuffer-local-must-match-map (kbd "<volume-down>") 'minibuffer-complete)
-(with-eval-after-load 'eshell
-  (define-key eshell-mode-map (kbd "<volume-down>") 'completion-at-point))
+(add-hook 'eshell-mode-hook
+          '(lambda ()
+             (define-key eshell-mode-map (kbd "<volume-down>") 'completion-at-point)
+             (define-key eshell-mode-map (kbd "<volume-up>") 'eshell-previous-input)))
 
 ;;; finalise startup apperance
 (setq inhibit-startup-screen t
