@@ -108,11 +108,11 @@
 ;; add this hook to allow soft line break in EWW
 (add-hook 'eww-after-render-hook #'visual-line-mode)
 
-(tool-bar-local-item "next-page" 'eww-list-bookmarks 'EWW-bookmark eww-tool-bar-map)
+(tool-bar-local-item "star" 'eww-list-bookmarks 'EWW-bookmark eww-tool-bar-map)
 ;; (tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region eww-tool-bar-map)
 (tool-bar-local-item "copy" 'copy-region-as-kill 'copy eww-tool-bar-map)
 (tool-bar-local-item "help" 'stardict-define-at-point 'dict eww-tool-bar-map)
-(tool-bar-local-item "connect-to-url" 'gptel/ask-llama 'GPT eww-tool-bar-map)
+(tool-bar-local-item "robot" 'gptel/ask-llama 'GPT eww-tool-bar-map)
 ; (tool-bar-local-item "contact" 'eww-toggle-images 'toggle-images eww-tool-bar-map)
 (tool-bar-local-item "next-page" 'eww/eww-readable 'EWW-readable eww-tool-bar-map)
 
@@ -165,7 +165,7 @@
     (tool-bar-add-item "undo" 'undo 'undo)
     (tool-bar-add-item "save" 'save-buffer 'save)
     (tool-bar-add-item "info" 'routine/done 'complete)
-    (tool-bar-add-item "sort-column-ascending" 'diary 'diary)
+    (tool-bar-add-item "diary" 'diary 'diary)
     tool-bar-map))
 (add-hook 'routine-mode-hook (lambda () (setq-local tool-bar-map routine-tool-bar-map)))
 
@@ -462,7 +462,7 @@
     (tool-bar-add-item "right-arrow" 'nov-next-document 'next-chapter)
     (tool-bar-add-item "sort-ascending" 'hlt/add-region 'highlight)
     (tool-bar-add-item "help" 'stardict-define-at-point 'dict)
-    (tool-bar-add-item "connect-to-url" 'gptel/ask-llama 'GPT)
+    (tool-bar-add-item "robot" 'gptel/ask-llama 'GPT)
     ;; (tool-bar-add-item "zoom-in" 'delete-other-windows 'max)
     (tool-bar-add-item "exit" 'hlt/visit-note 'HL-note)
     (tool-bar-add-item "print" 'hlt/visit-lit-note 'lit-note)
@@ -635,7 +635,7 @@
     (tool-bar-add-item "refresh" 'elfeed-update 'update)
     (tool-bar-add-item "right-arrow" 'elfeed/next-filter 'next-filter)
     (tool-bar-add-item "help" 'stardict-define-at-point 'dict)
-    (tool-bar-add-item "connect-to-url" 'gptel/ask-llama 'GPT)
+    (tool-bar-add-item "robot" 'gptel/ask-llama 'GPT)
     tool-bar-map))
 (add-hook 'elfeed-search-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
 (add-hook 'elfeed-search-mode-hook (lambda () (text-scale-set -3)))
@@ -752,14 +752,14 @@
 (tool-bar-add-item "earth" 'eww 'EWW)
 (tool-bar-add-item "star" 'eww-list-bookmarks 'EWW-bookmark)
 (tool-bar-add-item "spell" 'glossary/revisit 'glossary)
-(tool-bar-add-item "spell" '@300/random-poem 'poems)
+(tool-bar-add-item "poem" '@300/random-poem 'poems)
 (tool-bar-add-item "nov" 'nov/visit-books 'books)
 (tool-bar-add-item "rss" 'elfeed 'elfeed)
 ;; (tool-bar-add-item "spell" 'denote/visit-entry 'denote)
 (tool-bar-add-item "journal"
                    (lambda (prefix) (interactive "P") (org-journal-new-entry prefix) (delete-other-windows))
                    'journal)
-(tool-bar-add-item "connect-to-url" 'gptel/start-or-send 'GPT)
+(tool-bar-add-item "robot" 'gptel/start-or-send 'GPT)
 (tool-bar-add-item "timer" 'my/timer 'timer)
 (tool-bar-add-item "wikipedia" 'my/visit-wikipedia 'wikipedia)
 
