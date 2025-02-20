@@ -559,6 +559,16 @@
         (run-at-time 1 nil #'my/timer (1- seconds)))
     (message "Time's up!")))
 
+;;; visit wikipedia
+(defun my/visit-wikipedia (query)
+  (interactive "sQuery: ")
+  (let* ((query-trim (string-trim query))
+         (query-no-space (replace-regexp-in-string "[ \t\n\r]+" "%20" query-trim)))
+    (if (string-match-p "[\u4e00-\u9fff]" query-no-space)
+        ;; query Chinese wikipedia
+        (eww (concat "https://zh.m.wikipedia.org/w/index.php?search=" query-no-space))
+      (eww (concat "https://en.m.wikipedia.org/w/index.php?search=" query-no-space)))))
+
 ;;; elfeed
 (require 'elfeed)
 (require 'elfeed-org)
@@ -748,6 +758,7 @@
                    'journal)
 (tool-bar-add-item "connect-to-url" 'gptel/start-or-send 'GPT)
 (tool-bar-add-item "sort-row-ascending" 'my/timer 'timer)
+(tool-bar-add-item "search" 'my/visit-wikipedia 'wikipedia)
 
 ;;; menu
 (define-key global-map
