@@ -30,11 +30,11 @@
 (set-face-attribute 'tool-bar nil :background "white smoke")
 ;; disable clicking on minibuffer
 (define-key minibuffer-inactive-mode-map [mouse-1] 'ignore)
-(set-face-attribute 'mode-line nil :background "gainsboro")
 
 ;;; mode line
 ;; smaller font in mode line (such that at least part of the buffer name is displayed)
-(set-face-attribute 'mode-line nil :height 0.8)
+;; also lighter background
+(set-face-attribute 'mode-line nil :height 0.8 :background "gainsboro")
 (setq-default mode-line-format
       '("%e" mode-line-front-space mode-line-modes " " mode-line-position " " mode-line-buffer-identification " " mode-line-misc-info
   mode-line-end-spaces))
@@ -669,7 +669,7 @@
     (tool-bar-add-item "paste" 'yank 'paste)
     (tool-bar-add-item "left-arrow" 'org-journal-previous-entry 'previous-entry)
     (tool-bar-add-item "right-arrow" 'org-journal-next-entry 'next-entry)
-    (tool-bar-add-item "search-replace"
+    (tool-bar-add-item "journal"
                        (lambda (prefix) (interactive "P") (org-journal-new-entry prefix) (delete-other-windows))
                        'new-entry)
     tool-bar-map))
