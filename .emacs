@@ -751,20 +751,22 @@
 ;; utils
 (tool-bar-add-item "diary" 'diary 'diary)
 (tool-bar-add-item "routine" 'routine/visit-routine-file 'routine)
-(tool-bar-add-item "todo" 'fleet/todo-visit 'todo)
 (tool-bar-add-item "earth" 'eww 'EWW)
 (tool-bar-add-item "star" 'eww-list-bookmarks 'EWW-bookmark)
+(tool-bar-add-item "wikipedia" 'my/visit-wikipedia 'wikipedia)
+(tool-bar-add-item "rss" 'elfeed 'elfeed)
+(tool-bar-add-item "separator" 'ignore 'sep1)
 (tool-bar-add-item "spell" 'glossary/revisit 'glossary)
 (tool-bar-add-item "poem" '@300/random-poem 'poems)
+(tool-bar-add-item "separator" 'ignore 'sep2)
+(tool-bar-add-item "timer" 'my/timer 'timer)
 (tool-bar-add-item "nov" 'nov/visit-books 'books)
-(tool-bar-add-item "rss" 'elfeed 'elfeed)
 ;; (tool-bar-add-item "spell" 'denote/visit-entry 'denote)
 (tool-bar-add-item "journal"
                    (lambda (prefix) (interactive "P") (org-journal-new-entry prefix) (delete-other-windows))
                    'journal)
 (tool-bar-add-item "robot" 'gptel/start-or-send 'GPT)
-(tool-bar-add-item "timer" 'my/timer 'timer)
-(tool-bar-add-item "wikipedia" 'my/visit-wikipedia 'wikipedia)
+(tool-bar-add-item "todo" 'fleet/todo-visit 'todo)
 
 ;;; menu
 (define-key global-map
