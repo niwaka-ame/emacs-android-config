@@ -550,6 +550,7 @@
 
 
 (defun @300/show-prose ()
+  (switch-to-buffer "*唐诗三百首*")
   (with-current-buffer "*唐诗三百首*"
     (remove-text-properties (point-min) (point-max) '(face nil))
     (setq @300/prose-hidden 0)))
