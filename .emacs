@@ -27,6 +27,7 @@
 ;; toolbar buttons
 ;; load customised 24x24 xpm images
 (add-to-list 'image-load-path (concat path-dir "images/"))
+(set-face-attribute 'tool-bar nil :background "white smoke")
 ;; disable clicking on minibuffer
 (define-key minibuffer-inactive-mode-map [mouse-1] 'ignore)
 
@@ -838,7 +839,7 @@
 (define-key minibuffer-local-filename-completion-map (kbd "<volume-down>") 'minibuffer-complete)
 (define-key minibuffer-local-must-match-map (kbd "<volume-down>") 'minibuffer-complete)
 (add-hook 'eshell-mode-hook
-          '(lambda ()
+          #'(lambda ()
              (define-key eshell-mode-map (kbd "<volume-down>") 'completion-at-point)
              (define-key eshell-mode-map (kbd "<volume-up>") 'eshell-previous-input)))
 
