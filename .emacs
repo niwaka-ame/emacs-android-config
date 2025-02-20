@@ -24,6 +24,9 @@
 (set-face-attribute 'default nil :family "LXGW WenKai Screen")
 (with-eval-after-load 'eww
   (set-face-attribute 'shr-text nil :family "LXGW WenKai Screen"))
+;; toolbar buttons
+;; load customised 24x24 xpm images
+(add-to-list 'image-load-path (concat path-dir "images/"))
 ;; disable clicking on minibuffer
 (define-key minibuffer-inactive-mode-map [mouse-1] 'ignore)
 
@@ -753,7 +756,7 @@
 (tool-bar-add-item "next-page" 'nov/visit-books 'books)
 (tool-bar-add-item "describe" 'elfeed 'elfeed)
 (tool-bar-add-item "spell" 'denote/visit-entry 'denote)
-(tool-bar-add-item "search-replace"
+(tool-bar-add-item "journal"
                    (lambda (prefix) (interactive "P") (org-journal-new-entry prefix) (delete-other-windows))
                    'journal)
 (tool-bar-add-item "connect-to-url" 'gptel/start-or-send 'GPT)
