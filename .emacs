@@ -30,6 +30,7 @@
 (set-face-attribute 'tool-bar nil :background "white smoke")
 ;; disable clicking on minibuffer
 (define-key minibuffer-inactive-mode-map [mouse-1] 'ignore)
+(set-face-attribute 'mode-line nil :background "gainsboro")
 
 ;;; mode line
 ;; smaller font in mode line (such that at least part of the buffer name is displayed)
