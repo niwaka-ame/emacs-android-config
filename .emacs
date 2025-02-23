@@ -316,18 +316,7 @@
   (interactive)
   (switch-to-buffer
    (find-file-noselect
-    (if (string= major-mode "nov-mode")
-        (concat emacs-dir "hl-notes/" (substring (buffer-name) 0 (- (length (buffer-name)) 5)) ".org")
-      (concat emacs-dir "hl-notes/" (car (split-string (buffer-name) "<"))))))
-  (hlt-mode))
-
-(defun hlt/visit-lit-note ()
-  (interactive)
-  (switch-to-buffer
-   (find-file-noselect
-    (if (string= major-mode "nov-mode")
-        (concat emacs-dir "lit-notes/" (substring (buffer-name) 0 (- (length (buffer-name)) 5)) ".org")
-      (concat emacs-dir "lit-notes/" (car (split-string (buffer-name) "<"))))))
+    (concat emacs-dir "hl-notes/" (substring (buffer-name) 0 (- (length (buffer-name)) 5)) ".org")))
   (hlt-mode))
 
 (require 'nov-grep)
@@ -340,16 +329,14 @@
     (my-nov-grep first-line)))
 
 (define-derived-mode hlt-mode org-mode "hlt")
-(defvar lit-tool-bar-map
+(defvar hlt-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
     (tool-bar-add-item "undo" 'undo 'undo)
     (tool-bar-add-item "save" 'save-buffer 'save)
     (tool-bar-add-item "search" 'hlt/visit-epub 'jump-back)
-    (tool-bar-add-item "exit" 'hlt/visit-note 'HL-note)
-    (tool-bar-add-item "print" 'hlt/visit-lit-note 'lit-note)
     tool-bar-map))
-(add-hook 'hlt-mode-hook (lambda () (setq-local tool-bar-map lit-tool-bar-map)))
+(add-hook 'hlt-mode-hook (lambda () (setq-local tool-bar-map hlt-tool-bar-map)))
 
 ;;; glossary and stardict
 (require 'stardict)
@@ -465,9 +452,7 @@
     (tool-bar-add-item "plus" 'hlt/add-region 'highlight)
     (tool-bar-add-item "dict" 'stardict-define-at-point 'dict)
     (tool-bar-add-item "robot" 'gptel/ask-llama 'GPT)
-    ;; (tool-bar-add-item "zoom-in" 'delete-other-windows 'max)
-    (tool-bar-add-item "exit" 'hlt/visit-note 'HL-note)
-    (tool-bar-add-item "print" 'hlt/visit-lit-note 'lit-note)
+    (tool-bar-add-item "journal" 'hlt/visit-note 'HL-note)
     tool-bar-map))
 (add-hook 'nov-mode-hook (lambda () (setq-local tool-bar-map nov-tool-bar-map)))
 (add-hook 'nov-mode-hook #'visual-line-mode)
