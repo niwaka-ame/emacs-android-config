@@ -687,7 +687,7 @@
 (setq sentence-end-double-space nil)
 
 ;; OpenRouter offers an OpenAI compatible API
-(setq gptel-model "meta-llama/llama-3.3-70b-instruct:free"
+(setq gptel-model "meta-llama/llama-3.1-70b-instruct:free"
       gptel-max-tokens 500
       gptel-backend
       (gptel-make-openai "OpenRouter"               ;Any name you want
