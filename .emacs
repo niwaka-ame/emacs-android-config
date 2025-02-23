@@ -575,17 +575,6 @@
         (eww (concat "https://zh.m.wikipedia.org/w/index.php?search=" query-no-space))
       (eww (concat "https://en.m.wikipedia.org/w/index.php?search=" query-no-space)))))
 
-;;; weather forecast
-(defun my/weather-forcast ()
-  (interactive)
-  (with-current-buffer (get-buffer-create "*weather*")
-    (eww-mode)
-    (eww "https://wttr.in/Cambridge")
-    (fundamental-mode)
-    (buffer-face-set '(:family "FreeMono" :weight bold))
-    (text-scale-set -10))
-  (switch-to-buffer "*weather*"))
-
 ;;; elfeed
 (require 'elfeed)
 (require 'elfeed-org)
@@ -765,7 +754,6 @@
 (tool-bar-add-item "earth" 'eww 'EWW)
 (tool-bar-add-item "star" 'eww-list-bookmarks 'EWW-bookmark)
 (tool-bar-add-item "wikipedia" 'my/visit-wikipedia 'wikipedia)
-(tool-bar-add-item "exit" 'my/weather-forcast 'weather)
 (tool-bar-add-item "rss" 'elfeed 'elfeed)
 (tool-bar-add-item "separator" 'ignore 'sep1)
 (tool-bar-add-item "spell" 'glossary/revisit 'glossary)
