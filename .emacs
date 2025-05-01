@@ -717,7 +717,9 @@
       (setq query (thing-at-point 'word)))
     (switch-to-buffer (gptel "*Ask Llama3*"))
     (erase-buffer)
-    (insert "### What is \"" query "\" in the context of \"" sentence "\"?")
+    (if (string-match-p "[\u4e00-\u9fff]" query)
+        (insert "### 在“" sentence "”里，“" query "”是什么意思？")
+      (insert "### What is \"" query "\" in the context of \"" sentence "\"?"))
     (gptel-send)))
 
 ;;; denote
