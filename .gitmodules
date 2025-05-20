@@ -49,3 +49,18 @@
 [submodule "extensions/stem"]
 	path = extensions/stem
 	url = https://github.com/yuutayamada/stem.git
+[submodule "extensions/dash.el"]
+	path = extensions/dash.el
+	url = https://github.com/magnars/dash.el.git
+[submodule "extensions/emacsql"]
+	path = extensions/emacsql
+	url = https://github.com/magit/emacsql.git
+[submodule "extensions/org-roam"]
+	path = extensions/org-roam
+	url = https://github.com/org-roam/org-roam.git
+[submodule "extensions/llama"]
+	path = extensions/llama
+	url = https://github.com/tarsius/llama.git
+[submodule "extensions/magit"]
+	path = extensions/magit
+	url = https://github.com/magit/magit.git

@@ -752,6 +752,7 @@
 (tool-bar-add-item "journal"
                    (lambda (prefix) (interactive "P") (org-journal-new-entry prefix) (delete-other-windows))
                    'journal)
+(tool-bar-add-item "journal" 'roam/visit-zettel 'roam)
 (tool-bar-add-item "robot" 'gptel/start-or-send 'GPT)
 (tool-bar-add-item "todo" 'fleet/todo-visit 'todo)
 
@@ -843,6 +844,46 @@
             (set-face-attribute 'header-line nil :height 0.8)
             (switch-to-buffer "*Fancy Diary Entries*")
             (routine/check-and-warn)))
+
+;;; org-roam
+(require 'org-roam)
+(setq org-roam-directory (file-truename (concat emacs-dir "roam/"))
+      org-roam-db-location (concat emacs-dir "org-roam.db"))
+
+
+(defun roam/visit-nodes ()
+  (interactive)
+  (find-file-noselect (concat emacs-dir "roam/"))
+  (switch-to-buffer "roam")
+  (dired-revert))
+
+(defun roam/visit-zettel ()
+  (interactive)
+  (switch-to-buffer (find-file-noselect (concat emacs-dir "roam/zettel.org"))))
+
+(defun roam/save ()
+  (interactive)
+  (save-buffer)
+  (org-roam-db-sync))
+
+(defvar org-tool-bar-map
+  (let ((tool-bar-map (make-sparse-keymap)))
+    (tool-bar-add-item "close" 'kill-current-buffer 'close)
+    (tool-bar-add-item "open" 'roam/visit-nodes 'open)
+    (tool-bar-add-item "undo" 'undo 'undo)
+    (tool-bar-add-item "save" 'roam/save 'save)
+    (tool-bar-add-item "copy" 'copy-region-as-kill 'copy)
+    (tool-bar-add-item "search" 'isearch-forward 'search)
+    (tool-bar-add-item "home" 'roam/visit-zettel 'zettel)
+    (tool-bar-add-item "right-arrow" 'org-roam-node-visit 'visit)
+    (tool-bar-add-item "left-arrow" 'org-roam-buffer-toggle 'backlink)
+    (tool-bar-add-item "plus" 'org-id-get-create 'add)
+    (tool-bar-add-item "plus" 'org-roam-node-insert 'insert)
+    (tool-bar-add-item "refresh" 'org-cycle-global 'cycle)
+    tool-bar-map))
+
+(add-hook 'org-mode-hook (lambda () (setq-local tool-bar-map org-tool-bar-map)))
+(add-hook 'org-roam-mode-hook (lambda () (setq-local tool-bar-map org-tool-bar-map)))
 
 ;;; for PC
 (unless (string= system-type "android")
