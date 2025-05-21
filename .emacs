@@ -752,7 +752,7 @@
 (tool-bar-add-item "journal"
                    (lambda (prefix) (interactive "P") (org-journal-new-entry prefix) (delete-other-windows))
                    'journal)
-(tool-bar-add-item "journal" 'roam/visit-zettel 'roam)
+(tool-bar-add-item "brain" 'roam/visit-zettel 'roam)
 (tool-bar-add-item "robot" 'gptel/start-or-send 'GPT)
 (tool-bar-add-item "todo" 'fleet/todo-visit 'todo)
 
@@ -862,7 +862,10 @@
 
 (defun roam/visit-zettel ()
   (interactive)
-  (switch-to-buffer (find-file-noselect (concat emacs-dir "roam/zettel.org"))))
+  ;; toggle between ethos and pathos.
+  (pcase (buffer-name)
+    ("pathos.org" (switch-to-buffer (find-file-noselect (concat emacs-dir "roam/ethos.org"))))
+    (_ (switch-to-buffer (find-file-noselect (concat emacs-dir "roam/pathos.org"))))))
 
 (defun roam/save ()
   (interactive)
@@ -879,7 +882,7 @@
     (tool-bar-add-item "save" 'roam/save 'save)
     (tool-bar-add-item "copy" 'copy-region-as-kill 'copy)
     (tool-bar-add-item "search" 'isearch-forward 'search)
-    (tool-bar-add-item "home" 'roam/visit-zettel 'zettel)
+    (tool-bar-add-item "brain" 'roam/visit-zettel 'zettel)
     (tool-bar-add-item "right-arrow" 'org-roam-node-visit 'visit)
     (tool-bar-add-item "left-arrow" 'org-roam-buffer-toggle 'backlink)
     (tool-bar-add-item "plus" 'org-id-get-create 'add)
