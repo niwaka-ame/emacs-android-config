@@ -847,8 +847,11 @@
 
 ;;; org-roam
 (require 'org-roam)
-(setq org-roam-directory (file-truename (concat emacs-dir "roam/"))
+(setq org-roam-directory (concat emacs-dir "roam/")
       org-roam-db-location (concat emacs-dir "org-roam.db"))
+;; hide property drawers
+(require 'org-tidy)
+(add-hook 'org-mode-hook #'org-tidy-mode)
 
 
 (defun roam/visit-nodes ()
@@ -864,7 +867,9 @@
 (defun roam/save ()
   (interactive)
   (save-buffer)
-  (org-roam-db-sync))
+  ;; avoid running sync in normal org-mode
+  (when (string= (file-name-directory (buffer-file-name)) (concat emacs-dir "roam/"))
+    (org-roam-db-sync)))
 
 (defvar org-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
@@ -878,7 +883,7 @@
     (tool-bar-add-item "right-arrow" 'org-roam-node-visit 'visit)
     (tool-bar-add-item "left-arrow" 'org-roam-buffer-toggle 'backlink)
     (tool-bar-add-item "plus" 'org-id-get-create 'add)
-    (tool-bar-add-item "plus" 'org-roam-node-insert 'insert)
+    (tool-bar-add-item "connect" 'org-roam-node-insert 'insert)
     (tool-bar-add-item "refresh" 'org-cycle-global 'cycle)
     tool-bar-map))
 

@@ -64,3 +64,6 @@
 [submodule "extensions/magit"]
 	path = extensions/magit
 	url = https://github.com/magit/magit.git
+[submodule "extensions/org-tidy"]
+	path = extensions/org-tidy
+	url = https://github.com/jxq0/org-tidy.git
