@@ -124,6 +124,7 @@
     (tool-bar-add-item "open" 'eww-bookmark-browse 'browse)
     tool-bar-map))
 (add-hook 'eww-bookmark-mode-hook (lambda () (setq-local tool-bar-map eww-bookmark-tool-bar-map)))
+(add-hook 'eww-bookmark-mode-hook (lambda () (text-scale-set 1)))
 
 (defun eww/remove-long-dashes()
   (interactive)
