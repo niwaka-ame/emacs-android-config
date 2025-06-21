@@ -736,15 +736,6 @@
       (insert "### What is \"" query "\" in the context of \"" sentence "\"?"))
     (gptel-send)))
 
-;;; denote
-(require 'denote)
-(setq denote-directory (concat emacs-dir "notes/")
-      denote-backlinks-show-context t)
-(setq denote-known-keywords nil)
-(defun denote/visit-entry ()
-  (interactive)
-  (switch-to-buffer (find-file-noselect (concat denote-directory "entry.org"))))
-
 ;;; tool bar
 ;; (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
 ;; (tool-bar-add-item "zoom-in" 'text-scale-increase 'zoom-in)
