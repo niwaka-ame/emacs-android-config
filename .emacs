@@ -295,21 +295,19 @@
       (let* ((beg (region-beginning))
              (end (region-end))
              (buf (current-buffer))
-             (buf-name (substring (buffer-name) 0 (- (length (buffer-name)) 5))))
+             (buf-name (substring (buffer-name) 0 (- (length (buffer-name)) 5)))
+             (novindex nov-documents-index))
         (copy-region-as-kill beg (1+ end))
         (setq fleet/region nil)
         (with-current-buffer
             (find-file-noselect (concat emacs-dir "hl-notes/" buf-name ".org"))
           (goto-char (point-max))
+          (when (not (= (point-min) (point-max))) (newline))
           (org-insert-heading)
-          (let ((string-to-add (replace-regexp-in-string "\n\n" "\t" (car kill-ring))))
-            ;; use \\t to represent new paragraph
-            (if (string-match-p "[\u4e00-\u9fff]" string-to-add)
-                (progn
-                  (insert (replace-regexp-in-string "\n" "" string-to-add)))
-              (progn
-                (insert (replace-regexp-in-string "\n" " " string-to-add)))))
-          (newline)
+          (org-set-property "NOVINDEX" (number-to-string novindex))
+          (let ((string-to-add (string-replace "\n" "\t" (car kill-ring))))
+            ;; use \\t to represent new line
+            (insert string-to-add))
           (save-buffer)))
     (message "mark region first!")))
 
@@ -320,14 +318,19 @@
     (concat emacs-dir "hl-notes/" (substring (buffer-name) 0 (- (length (buffer-name)) 5)) ".org")))
   (hlt-mode))
 
-(require 'nov-grep)
 (defun hlt/visit-epub ()
   (interactive)
   (let* ((heading (org-get-heading t t t t))
-         (first-line (car (split-string heading "\t")))
-         (epub-buffer (concat (substring (buffer-name) 0 (- (length (car (split-string (buffer-name) "<"))) 3)) "epub")))
+         ;; search appears struggling with these quotation marks.
+         (first-line (replace-regexp-in-string "[“”]" "." (car (split-string heading "\t"))))
+         (epub-buffer (concat (substring (buffer-name) 0 (- (length (car (split-string (buffer-name) "<"))) 3)) "epub"))
+         (novindex (org-entry-get (point) "NOVINDEX")))
     (switch-to-buffer epub-buffer)
-    (my-nov-grep first-line)))
+    (nov-goto-document (string-to-number novindex))
+    ;; must unhighlight first, otherwise the highlight won't work when revisit.
+    (unhighlight-regexp first-line)
+    (highlight-regexp first-line)
+    (re-search-forward first-line)))
 
 (define-derived-mode hlt-mode org-mode "hlt")
 (defvar hlt-tool-bar-map
