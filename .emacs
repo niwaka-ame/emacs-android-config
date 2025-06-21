@@ -43,6 +43,7 @@
 ;;; some useful builtin mode
 (require 'dired)
 (add-hook 'dired-mode-hook #'dired-hide-details-mode)
+(setq dired-listing-switches "-alt --group-directories-first")
 (setq dired-kill-when-opening-new-dired-buffer t)
 (advice-add 'dired-mouse-find-file-other-window :override 'dired-mouse-find-file)
 
