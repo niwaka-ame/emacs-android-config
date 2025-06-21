@@ -338,7 +338,7 @@
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
     (tool-bar-add-item "undo" 'undo 'undo)
     (tool-bar-add-item "save" 'save-buffer 'save)
-    (tool-bar-add-item "search" 'hlt/visit-epub 'jump-back)
+    (tool-bar-add-item "next-page" 'hlt/visit-epub 'jump-back)
     tool-bar-map))
 (add-hook 'hlt-mode-hook (lambda () (setq-local tool-bar-map hlt-tool-bar-map)))
 
