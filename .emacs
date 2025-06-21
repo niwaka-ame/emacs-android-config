@@ -760,7 +760,7 @@
 (tool-bar-add-item "brain" 'roam/visit-zettel 'roam)
 (tool-bar-add-item "robot" 'gptel/start-or-send 'GPT)
 (tool-bar-add-item "todo" 'fleet/todo-visit 'todo)
-(tool-bar-add-item "dict" 'stardict-define 'dict)
+(tool-bar-add-item "dict" 'glossary/flow 'dict)
 
 ;;; menu
 (define-key global-map
