@@ -747,10 +747,10 @@
 (tool-bar-add-item "star" 'eww-list-bookmarks 'EWW-bookmark)
 (tool-bar-add-item "wikipedia" 'my/visit-wikipedia 'wikipedia)
 (tool-bar-add-item "rss" 'elfeed 'elfeed)
-(tool-bar-add-item "separator" 'ignore 'sep1)
+;; (tool-bar-add-item "separator" 'ignore 'sep1)
 (tool-bar-add-item "spell" 'glossary/revisit 'glossary)
 (tool-bar-add-item "poem" '@300/random-poem 'poems)
-(tool-bar-add-item "separator" 'ignore 'sep2)
+;; (tool-bar-add-item "separator" 'ignore 'sep2)
 (tool-bar-add-item "timer" 'my/timer 'timer)
 (tool-bar-add-item "nov" 'nov/visit-books 'books)
 ;; (tool-bar-add-item "spell" 'denote/visit-entry 'denote)
@@ -760,6 +760,7 @@
 (tool-bar-add-item "brain" 'roam/visit-zettel 'roam)
 (tool-bar-add-item "robot" 'gptel/start-or-send 'GPT)
 (tool-bar-add-item "todo" 'fleet/todo-visit 'todo)
+(tool-bar-add-item "dict" 'stardict-define 'dict)
 
 ;;; menu
 (define-key global-map
