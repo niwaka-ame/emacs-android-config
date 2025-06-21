@@ -505,6 +505,7 @@
   (goto-char (point-max)))
 
 (defun @300/random-poem ()
+  ;; status: 0 -> 1 -> ... -> N -> -1 -> 0
   (interactive)
   (if (= @300/prose-hidden 0)
       (progn
@@ -512,9 +513,9 @@
         (switch-to-buffer "*唐诗三百首*")
         (text-scale-set 2)
         (@300/hide-prose))
-    (@300/show-prose))
-  (delete-other-windows)
-  )
+    (cond
+     ((= @300/prose-hidden -1) (@300/show-prose-all))
+     (t (@300/show-prose-one-by-one)))))
 
 (defun @300/hide-prose ()
   (with-current-buffer "*唐诗三百首*"
@@ -535,11 +536,20 @@
   (setq @300/prose-hidden 1))
 
 
-(defun @300/show-prose ()
+(defun @300/show-prose-all ()
   (switch-to-buffer "*唐诗三百首*")
   (with-current-buffer "*唐诗三百首*"
     (remove-text-properties (point-min) (point-max) '(face nil))
     (setq @300/prose-hidden 0)))
+
+(defun @300/show-prose-one-by-one ()
+  (switch-to-buffer "*唐诗三百首*")
+  (with-current-buffer "*唐诗三百首*"
+    (goto-line (+ @300/prose-hidden 3))
+    (if (= (point) (point-max))
+        (progn (@300/hide-prose) (setq @300/prose-hidden -1))
+      (progn (remove-text-properties (line-beginning-position) (line-end-position) '(face nil))
+             (cl-incf @300/prose-hidden)))))
 
 ;;; my timer
 (defun my/timer (&optional seconds)
