@@ -370,8 +370,16 @@
         (setq glossary/hide-p nil))
     (progn
       (switch-to-buffer "*glossary-revisit*")
-      (set-text-properties (point-min) (point-max) nil)
-      (setq glossary/hide-p t))))
+      ;; pass the first line (which is not hidden) or an empty line
+      (forward-line 1)
+      (while (and (not (eobp)) (not (looking-at-p "^[[:space:]]*$")))
+        ;; loop until reaches the next empty line
+        (set-text-properties (line-beginning-position) (line-end-position) nil)
+        (forward-line 1))
+      (when (eobp)
+        ;; revisit complete, go to next batch of words
+        (set-text-properties (line-beginning-position) (line-end-position) nil)
+        (setq glossary/hide-p t)))))
 
 (defun glossary/revisit-load ()
   (let ((word-number 4))
