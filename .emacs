@@ -652,7 +652,7 @@
     (tool-bar-add-item "dict" 'stardict-define-at-point 'dict)
     (tool-bar-add-item "robot" 'gptel/ask-llama 'GPT)
     (dolist (pair elfeed/filter-alist)
-        (tool-bar-add-item "search"
+        (tool-bar-add-item (symbol-name (car pair))
                            (eval `(lambda () (interactive) (elfeed/set-preset-filter ,(cdr pair))))
                            (car pair)))
     tool-bar-map))
