@@ -594,25 +594,29 @@
 (setq elfeed-search-title-min-width 36)
 
 (setq elfeed/filter-alist
-      '((science . "@3-days-ago +sci")
+      '((long . "@6-months-ago +long")
+        (science . "@3-days-ago +sci")
         (academia . "@3-days-ago +aca")
-        (long . "@6-months-ago +long")
         (all . "@6-months-ago")))
 (setq elfeed-search-filter (cdar elfeed/filter-alist))
 
-(defun elfeed/next-filter ()
-  (interactive)
-  (let ((curr-item (rassoc elfeed-search-filter elfeed/filter-alist))
-        (result elfeed/filter-alist))
-    (catch 'found
-      (dolist (item elfeed/filter-alist result)
-        (if (equal item curr-item)
-            (progn
-              (if (equal (cdr result) nil)
-                  (elfeed-search-set-filter (cdar elfeed/filter-alist))
-                (elfeed-search-set-filter (cdadr result)))
-              (throw 'found nil))
-          (setq result (cdr result)))))))
+;; (defun elfeed/next-filter ()
+;;   (interactive)
+;;   (let ((curr-item (rassoc elfeed-search-filter elfeed/filter-alist))
+;;         (result elfeed/filter-alist))
+;;     (catch 'found
+;;       (dolist (item elfeed/filter-alist result)
+;;         (if (equal item curr-item)
+;;             (progn
+;;               (if (equal (cdr result) nil)
+;;                   (elfeed-search-set-filter (cdar elfeed/filter-alist))
+;;                 (elfeed-search-set-filter (cdadr result)))
+;;               (throw 'found nil))
+;;           (setq result (cdr result)))))))
+
+(defun elfeed/set-preset-filter (filter)
+  (elfeed-search-set-filter filter)
+  (switch-to-buffer "*elfeed-search*"))
 
 (defun elfeed/next ()
   (interactive)
@@ -644,9 +648,13 @@
   (let ((tool-bar-map (make-sparse-keymap)))
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
     (tool-bar-add-item "refresh" 'elfeed-update 'update)
-    (tool-bar-add-item "right-arrow" 'elfeed/next-filter 'next-filter)
+    ;; (tool-bar-add-item "right-arrow" 'elfeed/next-filter 'next-filter)
     (tool-bar-add-item "dict" 'stardict-define-at-point 'dict)
     (tool-bar-add-item "robot" 'gptel/ask-llama 'GPT)
+    (dolist (pair elfeed/filter-alist)
+        (tool-bar-add-item "search"
+                           (eval `(lambda () (interactive) (elfeed/set-preset-filter ,(cdr pair))))
+                           (car pair)))
     tool-bar-map))
 (add-hook 'elfeed-search-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
 (add-hook 'elfeed-search-mode-hook (lambda () (text-scale-set -3)))
