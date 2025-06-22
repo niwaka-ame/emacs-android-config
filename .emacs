@@ -162,7 +162,7 @@
 
 
 ;;; routine
-(define-derived-mode routine-mode fundamental-mode "routine")
+(define-derived-mode routine-mode org-mode "routine")
 (defvar routine-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
