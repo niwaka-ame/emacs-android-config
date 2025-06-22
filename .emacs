@@ -659,6 +659,7 @@
 (add-hook 'elfeed-search-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
 (add-hook 'elfeed-search-mode-hook (lambda () (text-scale-set -3)))
 (add-hook 'elfeed-show-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
+(add-hook 'elfeed-show-mode-hook #'visual-line-mode)
 
 ;;; org-journal
 (require 'org-journal)
