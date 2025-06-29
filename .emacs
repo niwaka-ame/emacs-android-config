@@ -168,6 +168,7 @@
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
     (tool-bar-add-item "undo" 'undo 'undo)
     (tool-bar-add-item "save" 'save-buffer 'save)
+    (tool-bar-add-item "done" 'routine/yesterday 'yesterday)
     (tool-bar-add-item "done" 'routine/done 'complete)
     (tool-bar-add-item "diary" 'diary 'diary)
     tool-bar-map))
@@ -186,6 +187,15 @@
     (save-excursion
       (delete-line)
       (insert (car parsed-line) ", " (cadr parsed-line) ", " today-str ?\n))))
+
+(defun routine/yesterday ()
+  (interactive)
+  (let* ((line-str (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
+         (parsed-line (split-string line-str ", " t ","))
+         (yesterday-str (format-time-string "%Y-%m-%d" (time-subtract (current-time) (days-to-time 1)))))
+    (save-excursion
+      (delete-line)
+      (insert (car parsed-line) ", " (cadr parsed-line) ", " yesterday-str ?\n))))
 
 (defun routine/check-line ()
   (let* ((line-str (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
@@ -458,7 +468,7 @@
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
     (tool-bar-add-item "open" 'nov/visit-books 'open)
     (tool-bar-add-item "copy" 'copy-region-as-kill 'copy)
-    (tool-bar-add-item "search" 'my-nov-grep 'search)
+    (tool-bar-add-item "search" 'isearch-forward 'search)
     (tool-bar-add-item "home" 'nov-goto-toc 'TOC)
     (tool-bar-add-item "left-arrow" 'nov-previous-document 'prev-chapter)
     (tool-bar-add-item "right-arrow" 'nov-next-document 'next-chapter)
