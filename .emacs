@@ -805,18 +805,11 @@
 (define-key-after
   (lookup-key global-map [menu-bar])
   [my]
-  (cons "My-magic" (make-sparse-keymap "My-magic"))
+  (cons "魔术盒" (make-sparse-keymap "魔术盒"))
   'buffers)
 (define-key global-map
   [menu-bar my my/timer]
   '("timer" . my/timer))
-; zoom in and out
-(define-key global-map
-  [menu-bar my text-scale-increase]
-  '("zoom in" . text-scale-increase))
-(define-key global-map
-  [menu-bar my text-scale-decrease]
-  '("zoom out" . text-scale-decrease))
 ; tools
 (define-key global-map
   [menu-bar my @300/visit-tangshi-file]
@@ -853,9 +846,6 @@
 (define-key global-map
   [menu-bar my stardict-define-at-point]
   '("Define at point" . stardict-define-at-point))
-(define-key global-map
-  [menu-bar my denote-backlinks]
-  '("Denote backlinks" . denote-backlinks))
 (global-set-key (kbd "<volume-up>") 'scroll-down-command)
 (global-set-key (kbd "<volume-down>") 'scroll-up-command)
 
