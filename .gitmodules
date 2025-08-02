@@ -64,3 +64,6 @@
 [submodule "extensions/org-tidy"]
 	path = extensions/org-tidy
 	url = https://github.com/jxq0/org-tidy.git
+[submodule "extensions/deft"]
+	path = extensions/deft
+	url = https://github.com/jrblevin/deft.git

@@ -690,6 +690,12 @@
       org-journal-encrypt-journal nil
       org-journal-hide-entries-p nil)
 
+;; use deft to search journals
+(require 'deft)
+(setq deft-extensions '("org")
+      deft-directory org-journal-dir)
+(add-hook 'deft-mode-hook (lambda () (text-scale-set -2)))
+
 (defun org-journal/new-entry (prefix)
   (interactive "P")
   (org-journal-new-entry prefix)
@@ -734,6 +740,7 @@
                        'open)
     (tool-bar-add-item "undo" 'undo 'undo)
     (tool-bar-add-item "save" 'save-buffer 'save)
+    (tool-bar-add-item "search" 'deft 'deft)
     (tool-bar-add-item "copy" 'copy-region-as-kill 'copy)
     (tool-bar-add-item "paste" 'yank 'paste)
     (tool-bar-add-item "left-arrow" 'org-journal-previous-entry 'previous-entry)
