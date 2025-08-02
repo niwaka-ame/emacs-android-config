@@ -138,10 +138,19 @@
 (add-hook 'eww-after-render-hook #'eww/remove-long-dashes)
 (add-hook 'eww-mode-hook (lambda () (text-scale-set -1)))
 
+(defun eww/estimate-read-time ()
+  (let* ((word-count (count-words (point-min) (point-max)))
+         ;; readable mode won't remove all structural text
+         (word-discount 0.95)
+         ;; conservative estimation for long reads
+         (word-per-min 150))
+    (message "Estimated read time: %d min." (/ (* word-count word-discount) 150))))
+
 (defun eww/eww-readable ()
   (interactive)
   (eww-readable)
-  (eww/remove-long-dashes))
+  (eww/remove-long-dashes)
+  (eww/estimate-read-time))
 
 ;;; org mode
 (require 'org)
