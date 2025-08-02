@@ -32,7 +32,10 @@
 (define-key minibuffer-inactive-mode-map [mouse-1] 'ignore)
 ;; always display only one window on android
 (when (string= system-type "android")
-  (add-hook 'window-configuration-change-hook #'delete-other-windows))
+  (add-hook 'window-configuration-change-hook
+            (lambda ()
+              (when (> (length (window-list nil 'NO-MINIBUF)) 1)
+                (delete-other-windows)))))
 
 ;;; mode line
 ;; smaller font in mode line (such that at least part of the buffer name is displayed)
