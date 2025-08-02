@@ -750,6 +750,7 @@
                        'new-entry)
     tool-bar-map))
 (add-hook 'org-journal-mode-hook (lambda () (setq-local tool-bar-map org-journal-tool-bar-map)))
+(remove-hook 'org-journal-mode-hook #'turn-on-visual-line-mode)
 
 ;;; llama3
 (require 'markdown-mode)
