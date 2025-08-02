@@ -281,9 +281,8 @@
       (let* ((beg (region-beginning))
              (end (region-end))
              (buf (current-buffer))
-             (url (and (string= (buffer-name) "*eww*") (plist-get eww-data :url))))
+             (url (and (eq major-mode 'eww-mode) (plist-get eww-data :url))))
         (copy-region-as-kill beg (1+ end))
-        (setq fleet/region nil)
         (fleet/todo-org 'no-switch)
         (with-current-buffer "todo.org"
           (if url (progn
@@ -318,7 +317,6 @@
              (buf-name (substring (buffer-name) 0 (- (length (buffer-name)) 5)))
              (novindex nov-documents-index))
         (copy-region-as-kill beg (1+ end))
-        (setq fleet/region nil)
         (with-current-buffer
             (find-file-noselect (concat emacs-dir "hl-notes/" buf-name ".org"))
           (goto-char (point-max))
@@ -691,6 +689,39 @@
       org-journal-encrypt-journal nil
       org-journal-hide-entries-p nil)
 
+(defun org-journal/new-entry (prefix)
+  (interactive "P")
+  (org-journal-new-entry prefix)
+  (delete-other-windows))
+
+(defun org-journal/add-region (prefix)
+  (interactive "P")
+  (if (region-active-p)
+      (let* ((beg (region-beginning))
+             (end (region-end))
+             (buf (current-buffer))
+             (url (and (eq major-mode 'eww-mode) (plist-get eww-data :url)))
+             (book (and (eq major-mode 'nov-mode) (buffer-name))))
+        (copy-region-as-kill beg (1+ end))
+        (org-journal-new-entry prefix)
+        (delete-other-windows)
+        (save-excursion
+          (newline)
+          (if url (progn
+                    (insert "From: ")
+                    (insert url)
+                    (newline)))
+          (if book (progn
+                    (insert "From: ")
+                    (insert book)
+                    (newline)))
+          (insert "#+BEGIN_QUOTE\n")
+          (insert (string-trim-right (car kill-ring)))
+          (newline)
+          (insert "#+END_QUOTE\n")
+          (newline))))
+  (message "mark region first!"))
+
 (defvar org-journal-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
@@ -707,7 +738,7 @@
     (tool-bar-add-item "left-arrow" 'org-journal-previous-entry 'previous-entry)
     (tool-bar-add-item "right-arrow" 'org-journal-next-entry 'next-entry)
     (tool-bar-add-item "journal"
-                       (lambda (prefix) (interactive "P") (org-journal-new-entry prefix) (delete-other-windows))
+                       'org-journal/new-entry
                        'new-entry)
     tool-bar-map))
 (add-hook 'org-journal-mode-hook (lambda () (setq-local tool-bar-map org-journal-tool-bar-map)))
@@ -801,6 +832,9 @@
 (tool-bar-add-item "dict" 'glossary/flow 'dict)
 
 ;;; menu
+(define-key global-map
+  [menu-bar edit org-journal/add-region]
+  '("copy region to journal" . org-journal/add-region))
 (define-key global-map
   [menu-bar edit fleet/add-region]
   '("copy region to fleet" . fleet/add-region))
