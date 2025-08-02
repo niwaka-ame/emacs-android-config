@@ -30,6 +30,9 @@
 (set-face-attribute 'tool-bar nil :background "white smoke")
 ;; disable clicking on minibuffer
 (define-key minibuffer-inactive-mode-map [mouse-1] 'ignore)
+;; always display only one window on android
+(when (string= system-type "android")
+  (add-hook 'window-configuration-change-hook #'delete-other-windows))
 
 ;;; mode line
 ;; smaller font in mode line (such that at least part of the buffer name is displayed)
