@@ -723,6 +723,13 @@
           (newline))))
   (message "mark region first!"))
 
+;; use grep to search org-journal
+(require 'grep)
+(defun org-journal/search (pattern)
+  (interactive "sPattern: ")
+  (grep (concat "grep --color=auto -niH -e " pattern " *.org")))
+(add-hook 'grep-mode-hook #'delete-other-windows)
+
 (defvar org-journal-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
@@ -734,6 +741,7 @@
                        'open)
     (tool-bar-add-item "undo" 'undo 'undo)
     (tool-bar-add-item "save" 'save-buffer 'save)
+    (tool-bar-add-item "search" 'org-journal/search 'search)
     (tool-bar-add-item "copy" 'copy-region-as-kill 'copy)
     (tool-bar-add-item "paste" 'yank 'paste)
     (tool-bar-add-item "left-arrow" 'org-journal-previous-entry 'previous-entry)
