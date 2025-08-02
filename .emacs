@@ -781,7 +781,7 @@
 
 (defun gptel/start-or-send ()
   (interactive)
-  (if (string= major-mode "markdown-mode")
+  (if (eq major-mode 'markdown-mode)
       (if (string= (buffer-substring-no-properties (- (point-max) 4) (1- (point-max))) "###")
           (message "empty input!")
         (gptel-send))
@@ -832,15 +832,6 @@
 (tool-bar-add-item "dict" 'glossary/flow 'dict)
 
 ;;; menu
-(define-key global-map
-  [menu-bar edit org-journal/add-region]
-  '("copy region to journal" . org-journal/add-region))
-(define-key global-map
-  [menu-bar edit fleet/add-region]
-  '("copy region to fleet" . fleet/add-region))
-(define-key global-map
-  [menu-bar edit copy-region-as-kill]
-  '("copy region" . copy-region-as-kill))
 ; remove two menus
 (define-key global-map [menu-bar options] nil)
 (define-key global-map [menu-bar tools] nil)
@@ -850,9 +841,6 @@
   [my]
   (cons "魔术盒" (make-sparse-keymap "魔术盒"))
   'buffers)
-(define-key global-map
-  [menu-bar my my/timer]
-  '("timer" . my/timer))
 ; tools
 (define-key global-map
   [menu-bar my @300/visit-tangshi-file]
@@ -871,24 +859,81 @@
       (interactive)
       (find-file-noselect "/sdcard/emacs/emacs-android-config/")
       (switch-to-buffer "emacs-android-config"))))
-(define-key global-map
-  [menu-bar my fleet/add-url]
-  '("copy URL to fleet note" . fleet/add-url))
 ;; (define-key global-map
 ;;   [menu-bar my webjump]
 ;;   '("web jump" . webjump))
 (define-key global-map
-  [menu-bar my eww]
-  '("EWW" . eww))
-(define-key global-map
   [menu-bar my glossary/flow]
-  '("Define word cont." . glossary/flow))
+  '("define word cont." . glossary/flow))
 (define-key global-map
   [menu-bar my stardict-define]
-  '("Define word" . stardict-define))
+  '("define word" . stardict-define))
 (define-key global-map
   [menu-bar my stardict-define-at-point]
-  '("Define at point" . stardict-define-at-point))
+  '("define at point" . stardict-define-at-point))
+(define-key global-map
+  [menu-bar my fleet/add-url]
+  '("copy URL to fleet note" . fleet/add-url))
+(define-key global-map
+  [menu-bar my fleet/add-region]
+  '("copy region to fleet note" . fleet/add-region))
+(define-key global-map
+  [menu-bar my org-journal/add-region]
+  '("copy region to journal" . org-journal/add-region))
+
+;; make an apps menu, reflecting the apps on the global tool bar.
+(define-key-after
+  (lookup-key global-map [menu-bar])
+  [apps]
+  (cons "应用" (make-sparse-keymap "应用"))
+  'my)
+(define-key global-map
+  [menu-bar apps glossary/flow]
+  '("Dict" . glossary/flow))
+(define-key global-map
+  [menu-bar apps fleet/todo-visit]
+  '("Todo" . fleet/todo-visit))
+(define-key global-map
+  [menu-bar apps gptel/start-or-send]
+  '("GPT" . gptel/start-or-send))
+(define-key global-map
+  [menu-bar apps roam/visit-zettel]
+  '("Roam" . roam/visit-zettel))
+(define-key global-map
+  [menu-bar apps org-journal/new-entry]
+  '("Journal" . org-journal/new-entry))
+(define-key global-map
+  [menu-bar apps nov/visit-books]
+  '("Books" . nov/visit-books))
+(define-key global-map
+  [menu-bar apps my/timer]
+  '("Timer" . my/timer))
+(define-key global-map
+  [menu-bar apps @300/random-poem]
+  '("Poems" . @300/random-poem))
+(define-key global-map
+  [menu-bar apps glossary/revisit]
+  '("Glossary" . glossary/revisit))
+(define-key global-map
+  [menu-bar apps elfeed]
+  '("Elfeed" . elfeed))
+(define-key global-map
+  [menu-bar apps my/visit-wikipedia]
+  '("Wikipedia" . my/visit-wikipedia))
+(define-key global-map
+  [menu-bar apps eww-list-bookmarks]
+  '("EWW Bookmark" . eww-list-bookmarks))
+(define-key global-map
+  [menu-bar apps eww]
+  '("EWW" . eww))
+(define-key global-map
+  [menu-bar apps routine/visit-routine-file]
+  '("Routine" . routine/visit-routine-file))
+(define-key global-map
+  [menu-bar apps diary]
+  '("Diary" . diary))
+
+;; volume buttons
 (global-set-key (kbd "<volume-up>") 'scroll-down-command)
 (global-set-key (kbd "<volume-down>") 'scroll-up-command)
 
