@@ -68,7 +68,6 @@
       calendar-minimum-window-height 8)
 (add-hook 'calendar-today-visible-hook #'calendar-mark-today)
 (add-hook 'calendar-mode-hook (lambda () (toggle-truncate-lines 1)))
-(add-hook 'calendar-initial-window-hook #'delete-other-windows)
 
 (require 'diary-lib)
 (setq diary-display-function #'diary-fancy-display
@@ -84,8 +83,6 @@
 (add-hook 'diary-nongregorian-listing-hook #'diary-chinese-mark-entries)
 ;; (add-hook 'diary-mode-hook #'variable-pitch-mode)
 ;; (add-hook 'diary-fancy-display-mode-hook #'variable-pitch-mode)
-(add-hook 'diary-fancy-display-mode-hook
-          (lambda () (switch-to-buffer "*Fancy Diary Entries*") (delete-other-windows)))
 (add-hook 'diary-fancy-display-mode-hook (lambda () (text-scale-set -2)))
 
 (require 'appt)
@@ -165,7 +162,6 @@
 (add-hook 'org-mode-hook (lambda () (toggle-truncate-lines -1)))
 ;; (add-hook 'org-mode-hook #'variable-pitch-mode)
 (add-hook 'org-mode-hook #'org-indent-mode)
-(add-hook 'org-mode-hook #'delete-other-windows)
 (add-hook 'org-mode-hook (lambda () (set-face-attribute 'org-level-1 nil :weight 'bold)))
 ;; larger font size
 ;; (add-hook 'org-mode-hook (lambda () (text-scale-set 1)))
@@ -698,8 +694,7 @@
 
 (defun org-journal/new-entry (prefix)
   (interactive "P")
-  (org-journal-new-entry prefix)
-  (delete-other-windows))
+  (org-journal-new-entry prefix))
 
 (defun org-journal/add-region (prefix)
   (interactive "P")
@@ -711,7 +706,6 @@
              (book (and (eq major-mode 'nov-mode) (buffer-name))))
         (copy-region-as-kill beg (1+ end))
         (org-journal-new-entry prefix)
-        (delete-other-windows)
         (save-excursion
           (newline)
           (if url (progn
@@ -734,7 +728,6 @@
 (defun org-journal/search (pattern)
   (interactive "sPattern: ")
   (grep (concat "grep --color=auto -niH -e " pattern " *.org")))
-(add-hook 'grep-mode-hook #'delete-other-windows)
 
 (defvar org-journal-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
@@ -757,7 +750,6 @@
                        'new-entry)
     tool-bar-map))
 (add-hook 'org-journal-mode-hook (lambda () (setq-local tool-bar-map org-journal-tool-bar-map)))
-(add-hook 'org-journal-mode-hook #'delete-other-windows)
 
 ;;; llama3
 (require 'markdown-mode)
@@ -839,7 +831,7 @@
 (tool-bar-add-item "nov" 'nov/visit-books 'books)
 ;; (tool-bar-add-item "spell" 'denote/visit-entry 'denote)
 (tool-bar-add-item "journal"
-                   (lambda (prefix) (interactive "P") (org-journal-new-entry prefix) (delete-other-windows))
+                   'org-journal/new-entry
                    'journal)
 (tool-bar-add-item "brain" 'roam/visit-zettel 'roam)
 (tool-bar-add-item "robot" 'gptel/start-or-send 'GPT)
@@ -1029,8 +1021,6 @@
   ;; theme
   (require 'doom-themes)
   (load-theme 'doom-solarized-light t)
-  ;; remove hook
-  (remove-hook 'org-mode-hook #'delete-other-windows)
   ;; scrolling for nov.el and eww
   (with-eval-after-load 'nov
     (tool-bar-local-item "left-arrow" 'nov-scroll-down 'prev-screen nov-tool-bar-map)
