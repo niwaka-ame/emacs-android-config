@@ -611,7 +611,8 @@
 (setq rmh-elfeed-org-files (list (concat emacs-dir "elfeed.org")))
 (setq elfeed-show-entry-switch 'switch-to-buffer)
 (setq elfeed-search-date-format (list "%m%d" 4 :left))
-(setq elfeed-search-title-min-width 36)
+(setq elfeed-search-title-min-width 200)
+(setq elfeed-search-trailing-width 10)
 
 (setq elfeed/filter-alist
       '((long . "@6-months-ago +long")
@@ -619,6 +620,33 @@
         (academia . "@3-days-ago +aca")
         (all . "@6-months-ago")))
 (setq elfeed-search-filter (cdar elfeed/filter-alist))
+
+(defun elfeed-search-print-entry--notag (entry)
+  "Print ENTRY to the buffer."
+  (let* ((date (elfeed-search-format-date (elfeed-entry-date entry)))
+         (title (or (elfeed-meta entry :title) (elfeed-entry-title entry) ""))
+         (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
+         (feed (elfeed-entry-feed entry))
+         (feed-title
+          (when feed
+            (or (elfeed-meta feed :title) (elfeed-feed-title feed))))
+         (tags (mapcar #'symbol-name (elfeed-entry-tags entry)))
+         (tags-str (mapconcat
+                    (lambda (s) (propertize s 'face 'elfeed-search-tag-face))
+                    tags ","))
+         (title-width (- (window-width) 10 elfeed-search-trailing-width))
+         (title-column (elfeed-format-column
+                        title (elfeed-clamp
+                               elfeed-search-title-min-width
+                               title-width
+                               elfeed-search-title-max-width)
+                        :left)))
+    (insert (propertize date 'face 'elfeed-search-date-face) " ")
+    (when feed-title
+      (insert (propertize feed-title 'face 'elfeed-search-feed-face) " "))
+    (insert (propertize title-column 'face title-faces 'kbd-help title))))
+
+(setq elfeed-search-print-entry-function #'elfeed-search-print-entry--notag)
 
 ;; (defun elfeed/next-filter ()
 ;;   (interactive)
@@ -677,7 +705,7 @@
                            (car pair)))
     tool-bar-map))
 (add-hook 'elfeed-search-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
-(add-hook 'elfeed-search-mode-hook (lambda () (text-scale-set -3)))
+(add-hook 'elfeed-search-mode-hook (lambda () (text-scale-set -2)))
 (add-hook 'elfeed-show-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
 (add-hook 'elfeed-show-mode-hook #'visual-line-mode)
 (add-hook 'elfeed-show-mode-hook (lambda () (text-scale-set -1)))
