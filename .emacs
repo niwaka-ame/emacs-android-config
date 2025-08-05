@@ -644,7 +644,7 @@
     (insert (propertize date 'face 'elfeed-search-date-face) " ")
     (when feed-title
       (insert (propertize feed-title 'face 'elfeed-search-feed-face) " "))
-    (insert "\n" (propertize title-column 'face title-faces 'kbd-help title))))
+    (insert (propertize title-column 'face title-faces 'kbd-help title))))
 
 (setq elfeed-search-print-entry-function #'elfeed-search-print-entry--notag)
 
@@ -705,7 +705,7 @@
                            (car pair)))
     tool-bar-map))
 (add-hook 'elfeed-search-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
-(add-hook 'elfeed-search-mode-hook (lambda () (text-scale-set -2)))
+(add-hook 'elfeed-search-mode-hook (lambda () (text-scale-set -3)))
 (add-hook 'elfeed-show-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
 (add-hook 'elfeed-show-mode-hook #'visual-line-mode)
 (add-hook 'elfeed-show-mode-hook (lambda () (text-scale-set -1)))
