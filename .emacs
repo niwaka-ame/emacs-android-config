@@ -644,7 +644,7 @@
     (insert (propertize date 'face 'elfeed-search-date-face) " ")
     (when feed-title
       (insert (propertize feed-title 'face 'elfeed-search-feed-face) " "))
-    (insert (propertize title-column 'face title-faces 'kbd-help title))))
+    (insert "\n" (propertize title-column 'face title-faces 'kbd-help title))))
 
 (setq elfeed-search-print-entry-function #'elfeed-search-print-entry--notag)
 
