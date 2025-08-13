@@ -118,7 +118,7 @@
 (tool-bar-local-item "star" 'eww-list-bookmarks 'EWW-bookmark eww-tool-bar-map)
 ;; (tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region eww-tool-bar-map)
 (tool-bar-local-item "copy" 'copy-region-as-kill 'copy eww-tool-bar-map)
-(tool-bar-local-item "dict" 'stardict-define-at-point 'dict eww-tool-bar-map)
+(tool-bar-local-item "dict" 'glossary/define-at-point 'dict eww-tool-bar-map)
 (tool-bar-local-item "robot" 'gptel/ask-llama 'GPT eww-tool-bar-map)
 ; (tool-bar-local-item "contact" 'eww-toggle-images 'toggle-images eww-tool-bar-map)
 (tool-bar-local-item "next-page" 'eww/eww-readable 'EWW-readable eww-tool-bar-map)
@@ -365,12 +365,21 @@
 
 ;;; glossary and stardict
 (require 'stardict)
+(defvar glossary/context nil)
+(defvar glossary/current-word nil)
+
 (defun glossary/add-at-point ()
   (interactive)
   (let ((word (thing-at-point 'word)))
     (with-current-buffer (find-file-noselect (concat emacs-dir "glossary"))
       (goto-char (point-min))
-      (insert (concat word "\n"))
+      (if (and glossary/context
+               glossary/current-word
+               (string-match-p glossary/current-word glossary/context))
+          (insert (concat word "\t" glossary/context "\n"))
+        (insert (concat word "\n")))
+      (setq glossary/context nil)
+      (setq glossary/current-word nil)
       (save-buffer)
       (kill-buffer))
     (when (string= (buffer-name) "*stardict*")
@@ -410,7 +419,10 @@
           (goto-char (point-min))
           (let ((line (random total-word-number)))
             (forward-line line)
-            (let ((word (downcase (thing-at-point 'word))))
+            (let* ((word (downcase (thing-at-point 'word)))
+                   (line (thing-at-point 'line))
+                   (context (and (string-match-p "\t" line)
+                                 (cadr (split-string line "\t")))))
               (with-current-buffer (get-buffer-create "*glossary-revisit*")
                 (when (= i 0) (erase-buffer))
                 (goto-char (point-max))
@@ -421,15 +433,30 @@
                        (hidden (mapconcat 'identity (cl-subseq by-line 2) "\n")))
                   (insert shown)
                   (newline)
+                  (when context
+                    (insert (replace-regexp-in-string word "~" context)))
                   (insert (propertize hidden 'face `(:foreground ,(face-attribute 'default :background)))))
                 (newline))))))))
   (switch-to-buffer "*glossary-revisit*")
   (goto-char (point-min)))
 
+(defun glossary/define-at-point ()
+  (interactive)
+  (unless (eq major-mode 'stardict-mode)
+    (let ((context (thing-at-point 'sentence))
+          (curr-word (thing-at-point 'word)))
+      ;; in case we're not in a sentence but some e.g. bullet points
+      (unless (string-match-p "\n" context)
+        (setq glossary/context context)
+        (setq glossary/current-word curr-word))))
+  (stardict-define-at-point))
+
 (defun glossary/flow (word)
   "Prompt for a word continuously."
   (interactive "sWord: ")
   (stardict--load-dict)
+  (setq glossary/context nil)
+  (setq glossary/current-word nil)
   (while (not (string= word "q")) ; "q" means quit
     (setq word (string-trim (downcase word)))
     (if (stardict-word-exist-p stardict-dict-hash word)
@@ -448,7 +475,7 @@
 (defvar stardict-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
-    (tool-bar-add-item "dict" 'stardict-define-at-point 'dict)
+    (tool-bar-add-item "dict" 'glossary/define-at-point 'dict)
     (tool-bar-add-item "jump-to" 'glossary/add-at-point 'add-word)
     tool-bar-map))
 
@@ -483,7 +510,7 @@
     (tool-bar-add-item "left-arrow" 'nov-previous-document 'prev-chapter)
     (tool-bar-add-item "right-arrow" 'nov-next-document 'next-chapter)
     (tool-bar-add-item "plus" 'hlt/add-region 'highlight)
-    (tool-bar-add-item "dict" 'stardict-define-at-point 'dict)
+    (tool-bar-add-item "dict" 'glossary/define-at-point 'dict)
     (tool-bar-add-item "robot" 'gptel/ask-llama 'GPT)
     (tool-bar-add-item "journal" 'hlt/visit-note 'HL-note)
     tool-bar-map))
@@ -697,7 +724,7 @@
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
     (tool-bar-add-item "refresh" 'elfeed-update 'update)
     ;; (tool-bar-add-item "right-arrow" 'elfeed/next-filter 'next-filter)
-    (tool-bar-add-item "dict" 'stardict-define-at-point 'dict)
+    (tool-bar-add-item "dict" 'glossary/define-at-point 'dict)
     (tool-bar-add-item "robot" 'gptel/ask-llama 'GPT)
     (dolist (pair elfeed/filter-alist)
         (tool-bar-add-item (symbol-name (car pair))
@@ -905,8 +932,8 @@
   [menu-bar my stardict-define]
   '("define word" . stardict-define))
 (define-key global-map
-  [menu-bar my stardict-define-at-point]
-  '("define at point" . stardict-define-at-point))
+  [menu-bar my glossary/define-at-point]
+  '("define at point" . glossary/define-at-point))
 (define-key global-map
   [menu-bar my fleet/add-url]
   '("copy URL to fleet note" . fleet/add-url))
