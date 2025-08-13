@@ -7,8 +7,6 @@
   (normal-top-level-add-subdirs-to-load-path))
 
 ;;; load theme
-;; (add-to-list 'custom-theme-load-path (concat path-dir "eink-emacs/"))
-;; (load-theme 'eink t)
 (setq make-backup-files nil)
 
 ;;; appearance
@@ -81,8 +79,6 @@
 (add-hook 'diary-mark-entries-hook #'diary-mark-included-diary-files)
 (add-hook 'diary-nongregorian-listing-hook #'diary-chinese-list-entries)
 (add-hook 'diary-nongregorian-listing-hook #'diary-chinese-mark-entries)
-;; (add-hook 'diary-mode-hook #'variable-pitch-mode)
-;; (add-hook 'diary-fancy-display-mode-hook #'variable-pitch-mode)
 (add-hook 'diary-fancy-display-mode-hook (lambda () (text-scale-set -2)))
 
 (require 'appt)
@@ -103,12 +99,8 @@
 
 ;;; EWW
 (require 'browse-url)
-;; (require 'webjump)
 (require 'eww)
 (setq browse-url-browser-function 'eww)
-;; (setq webjump-sites
-;;       '(("ddg" . [simple-query "duckduckgo.com" "duckduckgo.com/?q=" ""])
-;;         ("gsc" . [simple-query "scholar.google.com" "scholar.google.com/scholar?q=" ""])))
 (setq eww-bookmarks-directory emacs-dir
       shr-inhibit-images t)
 ;; add this hook to allow soft line break in EWW
@@ -160,11 +152,8 @@
 (require 'org)
 (setq org-extend-today-until 2)
 (add-hook 'org-mode-hook (lambda () (toggle-truncate-lines -1)))
-;; (add-hook 'org-mode-hook #'variable-pitch-mode)
 (add-hook 'org-mode-hook #'org-indent-mode)
 (add-hook 'org-mode-hook (lambda () (set-face-attribute 'org-level-1 nil :weight 'bold)))
-;; larger font size
-;; (add-hook 'org-mode-hook (lambda () (text-scale-set 1)))
 (setq org-link-frame-setup
       '((vm . vm-visit-folder-other-frame)
         (vm-imap . vm-visit-imap-folder-other-frame)
@@ -675,20 +664,6 @@
 
 (setq elfeed-search-print-entry-function #'elfeed-search-print-entry--notag)
 
-;; (defun elfeed/next-filter ()
-;;   (interactive)
-;;   (let ((curr-item (rassoc elfeed-search-filter elfeed/filter-alist))
-;;         (result elfeed/filter-alist))
-;;     (catch 'found
-;;       (dolist (item elfeed/filter-alist result)
-;;         (if (equal item curr-item)
-;;             (progn
-;;               (if (equal (cdr result) nil)
-;;                   (elfeed-search-set-filter (cdar elfeed/filter-alist))
-;;                 (elfeed-search-set-filter (cdadr result)))
-;;               (throw 'found nil))
-;;           (setq result (cdr result)))))))
-
 (defun elfeed/set-preset-filter (filter)
   (elfeed-search-set-filter filter)
   (switch-to-buffer "*elfeed-search*"))
@@ -723,7 +698,6 @@
   (let ((tool-bar-map (make-sparse-keymap)))
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
     (tool-bar-add-item "refresh" 'elfeed-update 'update)
-    ;; (tool-bar-add-item "right-arrow" 'elfeed/next-filter 'next-filter)
     (tool-bar-add-item "dict" 'glossary/define-at-point 'dict)
     (tool-bar-add-item "robot" 'gptel/ask-llama 'GPT)
     (dolist (pair elfeed/filter-alist)
@@ -869,23 +843,16 @@
     (gptel-send)))
 
 ;;; tool bar
-;; (tool-bar-add-item "home" 'execute-extended-command 'Mx :help "execute command")
-;; (tool-bar-add-item "zoom-in" 'text-scale-increase 'zoom-in)
-;; (tool-bar-add-item "close" 'delete-window 'delete-window)
-;; utils
 (tool-bar-add-item "diary" 'diary 'diary)
 (tool-bar-add-item "routine" 'routine/visit-routine-file 'routine)
 (tool-bar-add-item "earth" 'eww 'EWW)
 (tool-bar-add-item "star" 'eww-list-bookmarks 'EWW-bookmark)
 (tool-bar-add-item "wikipedia" 'my/visit-wikipedia 'wikipedia)
 (tool-bar-add-item "rss" 'elfeed 'elfeed)
-;; (tool-bar-add-item "separator" 'ignore 'sep1)
 (tool-bar-add-item "spell" 'glossary/revisit 'glossary)
 (tool-bar-add-item "poem" '@300/random-poem 'poems)
-;; (tool-bar-add-item "separator" 'ignore 'sep2)
 (tool-bar-add-item "timer" 'my/timer 'timer)
 (tool-bar-add-item "nov" 'nov/visit-books 'books)
-;; (tool-bar-add-item "spell" 'denote/visit-entry 'denote)
 (tool-bar-add-item "journal"
                    'org-journal/new-entry
                    'journal)
@@ -922,9 +889,6 @@
       (interactive)
       (find-file-noselect "/sdcard/emacs/emacs-android-config/")
       (switch-to-buffer "emacs-android-config"))))
-;; (define-key global-map
-;;   [menu-bar my webjump]
-;;   '("web jump" . webjump))
 (define-key global-map
   [menu-bar my glossary/flow]
   '("define word cont." . glossary/flow))
