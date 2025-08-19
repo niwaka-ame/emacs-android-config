@@ -41,12 +41,6 @@
 
 
 ;;; Code:
-(require 'stem)
-(require 'persist)
-(defconst stardict-dir (file-name-directory (or load-file-name buffer-file-name)))
-(defconst stardict-name "langdao-ec-gb")
-(persist-defvar stardict-dict-hash nil "hash table that stores the dictionary.")
-
 (defun stardict-str2int (str)
   "Convert string `STR' to integer.
 \x21\x22 => 0x2122"
@@ -159,55 +153,6 @@ The return is used as `DICT' argument in other functions."
 You should close the dict file yourself."
   (with-current-buffer (find-file-noselect (nth 2 dict))
     (setq buffer-read-only t)))
-
-(define-derived-mode stardict-mode fundamental-mode "stardict")
-
-(defun stardict--load-dict ()
-  "load dictionary when call for first time."
-  (unless stardict-dict-hash
-    (setq stardict-dict-hash
-          (stardict-open stardict-dir stardict-name))))
-
-(defun stardict--lookup-and-display (word)
-  (with-current-buffer (get-buffer-create "*stardict*")
-    (erase-buffer)
-    (insert (concat word "\n"))
-    (insert (stardict-lookup stardict-dict-hash word))
-    (goto-char (point-min))
-    (stardict-mode)
-    (switch-to-buffer (current-buffer))))
-
-(defun stardict--lookup-and-return (word)
-  (stardict--load-dict)
-  (concat word "\n" (stardict-lookup stardict-dict-hash word)))
-
-(defun stardict-define-at-point ()
-  "Define the word at point."
-  (interactive)
-  (stardict--load-dict)
-  (let ((word (downcase (thing-at-point 'word))))
-    ;; if word is not in dictionary, try to truncate
-    (unless (stardict-word-exist-p stardict-dict-hash word)
-      (let ((word-list (cdr (reverse (stem-english word)))))
-        (catch 'found
-          (dolist (wd word-list)
-            (when (stardict-word-exist-p stardict-dict-hash wd)
-              (setq word wd)
-              (throw 'found wd)))
-          ;; if nothing is caught
-          (setq word nil))))
-    (if word
-        (stardict--lookup-and-display word)
-      (message "No definition is found!"))))
-
-(defun stardict-define (word)
-  "Prompt for `WORD' and define it."
-  (interactive "sWord: ")
-  (stardict--load-dict)
-  (setq word (string-trim (downcase word)))
-  (if (stardict-word-exist-p stardict-dict-hash word)
-      (stardict--lookup-and-display word)
-    (message "No definition is found!")))
 
 (provide 'stardict)
 

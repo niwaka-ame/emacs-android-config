@@ -64,3 +64,6 @@
 [submodule "extensions/org-tidy"]
 	path = extensions/org-tidy
 	url = https://github.com/jxq0/org-tidy.git
+[submodule "extensions/snowball-spanish.el"]
+	path = extensions/snowball-spanish.el
+	url = https://github.com/niwaka-ame/snowball-spanish.el.git

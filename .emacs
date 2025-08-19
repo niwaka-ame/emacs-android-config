@@ -354,6 +354,7 @@
 
 ;;; glossary and stardict
 (require 'stardict)
+(require 'stardict-es-en)
 (defvar glossary/context nil)
 (defvar glossary/current-word nil)
 
@@ -417,7 +418,7 @@
                 (goto-char (point-max))
                 (when (> i 0) (newline))
                 (let* ((word-def (stardict--lookup-and-return word))
-                       (by-line (split-string word-def "\n"))
+                       (by-line (split-string word-def "\n+"))
                        (shown (mapconcat 'identity (cl-subseq by-line 0 2) "\n"))
                        (hidden (mapconcat 'identity (cl-subseq by-line 2) "\n")))
                   (insert shown)
@@ -447,10 +448,7 @@
   (setq glossary/context nil)
   (setq glossary/current-word nil)
   (while (not (string= word "q")) ; "q" means quit
-    (setq word (string-trim (downcase word)))
-    (if (stardict-word-exist-p stardict-dict-hash word)
-        (stardict--lookup-and-display word)
-      (message "No definition is found!"))
+    (stardict-define word)
     (let ((str (read-string "Word: ")))
       (if (string= str "a") ; "a" means add to glossary
           (with-current-buffer (find-file-noselect (concat emacs-dir "glossary"))
