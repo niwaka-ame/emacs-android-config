@@ -77,27 +77,28 @@
         (d-list stardict-dict-hash-list)
         (s-list stardict-stemmer-list)
         (head t))
-    (cl-loop for i from 0 below (min (length d-list) (length s-list))
-             do (if (stardict-word-exist-p (nth i d-list) (stardict--remove-acute-accents word))
+    (cl-loop for dict in d-list
+             for stemmer in s-list
+             do (if (stardict-word-exist-p dict (stardict--remove-acute-accents word))
                     (push (stardict--remove-acute-accents word) word-list)
                   ;; if word is not in dictionary, try to stem (with the original accented form)
-                  (let* ((word-candidates (funcall (nth i s-list) word))
+                  (let* ((word-candidates (funcall stemmer word))
                          ;; remove ñ after stemming
                          (word-candidates-de-accented (mapcar #'stardict--remove-acute-accents word-candidates)))
                     (catch 'found
                       (dolist (wd word-candidates-de-accented)
-                        (when (stardict-word-exist-p (nth i d-list) wd)
+                        (when (stardict-word-exist-p dict wd)
                           (push wd word-list)
                           (throw 'found wd)))
                       ;; if nothing is caught
                       (push nil word-list)))))
     (if (cl-every 'null word-list)
         (message "No definition is found!")
-      (cl-loop for i from 0 below (length word-list)
-               do (let ((wd (nth i (reverse word-list))))
-                    (when wd
-                      (stardict--lookup-and-display wd (nth i d-list) head)
-                      (setq head nil)))))))
+      (cl-loop for wd in (reverse word-list)
+               for dict in d-list
+               when wd
+               do (progn (stardict--lookup-and-display wd dict head)
+                         (setq head nil))))))
 
 (defun stardict-define-at-point ()
   "Define the word at point."
@@ -113,12 +114,12 @@
   (setq word (string-trim (stardict--remove-acute-accents (downcase word))))
   (let ((flag nil)
         (head t))
-    (cl-loop for i from 0 below (length stardict-dict-hash-list)
-             do (let ((dict-hash (nth i stardict-dict-hash-list)))
-                  (when (stardict-word-exist-p dict-hash word)
-                    (stardict--lookup-and-display word dict-hash head)
-                    (setq flag 'success)
-                    (setq head nil))))
+    (cl-loop for dict in stardict-dict-hash-list
+             when (stardict-word-exist-p dict word)
+             do (progn
+                  (stardict--lookup-and-display word dict head)
+                  (setq flag 'success)
+                  (setq head nil)))
     (unless flag
       (message "No definition is found!"))))
 
