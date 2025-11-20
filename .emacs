@@ -782,23 +782,22 @@
 ;;; llama3
 (require 'markdown-mode)
 (require 'gptel)
-(require 'gptel-curl)
-(require 'gptel-transient)
 ;; setq `gptel-directives'
 (load (concat emacs-dir "llama-directives.el"))
 ;; make thing-at-point recognise sentence with single space.
 (setq sentence-end-double-space nil)
 
 ;; OpenRouter offers an OpenAI compatible API
-(setq gptel-model "deepseek/deepseek-chat-v3-0324:free"
-      gptel-max-tokens 500
+(setq gptel-model "tngtech/deepseek-r1t2-chimera:free"
+      gptel-max-tokens 2000
+      gptel-include-reasoning nil
       gptel-backend
       (gptel-make-openai "OpenRouter"               ;Any name you want
                          :host "openrouter.ai"
                          :endpoint "/api/v1/chat/completions"
                          :stream t
                          :key (with-current-buffer (find-file-noselect (concat emacs-dir "llama")) (buffer-substring-no-properties (point-min) (1- (point-max))))
-                         :models '("deepseek/deepseek-chat-v3-0324:free")))
+                         :models '("tngtech/deepseek-r1t2-chimera:free")))
 ;; (add-hook 'markdown-mode-hook #'variable-pitch-mode)
 (add-hook 'markdown-mode-hook (lambda () (setq gptel--system-message (alist-get 'default gptel-directives))))
 
