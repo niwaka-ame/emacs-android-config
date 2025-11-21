@@ -473,7 +473,7 @@
 (add-hook 'org-mode-hook #'pangu-spacing-mode)
 
 ;;; nov.el
-(require 'nov)
+(require 'init-nov)
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 (setq shr-max-width nil)
 (setq shr-width 10000)
@@ -500,6 +500,7 @@
     (tool-bar-add-item "dict" 'glossary/define-at-point 'dict)
     (tool-bar-add-item "robot" 'gptel/ask-llama 'GPT)
     (tool-bar-add-item "journal" 'hlt/visit-note 'HL-note)
+    (tool-bar-add-item "jump-to" 'nov-toggle-link-peeking 'peek)
     tool-bar-map))
 (add-hook 'nov-mode-hook (lambda () (setq-local tool-bar-map nov-tool-bar-map)))
 (add-hook 'nov-mode-hook #'visual-line-mode)
@@ -1049,3 +1050,4 @@
     (tool-bar-local-item "left-arrow" 'elfeed-show-prev 'prev-feed elfeed-tool-bar-map)
     (tool-bar-local-item "right-arrow" 'elfeed-show-next 'next-feed elfeed-tool-bar-map))
   )
+
