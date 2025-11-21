@@ -1,6 +1,7 @@
 ;;; init-nov.el --- Custom configuration for nov.el  -*- lexical-binding: t; -*-
 
 (require 'nov)
+(require 'shr)
 
 (with-eval-after-load 'nov
   ;; 1. DEFINITION: The Toggle Variable
@@ -87,6 +88,38 @@ while accepting back-links (target anchors)."
                   (message "%s" preview-text)
                 ;; Fallback to jump if peek fails
                 (apply 'nov-visit-relative-file (list filename target))))))))))
+
+(add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+(setq shr-max-width nil)
+(setq shr-width 10000)
+(add-hook 'nov-post-html-render-hook #'visual-line-mode)
+
+(defun nov/visit-books ()
+  (interactive)
+  (find-file-noselect (concat emacs-dir "books/"))
+  (switch-to-buffer "books")
+  (dired-revert))
+
+(define-key nov-mode-map (kbd "<volume-up>") 'nov-scroll-down)
+(define-key nov-mode-map (kbd "<volume-down>") 'nov-scroll-up)
+(defvar nov-tool-bar-map
+  (let ((tool-bar-map (make-sparse-keymap)))
+    (tool-bar-add-item "close" 'kill-current-buffer 'close)
+    (tool-bar-add-item "open" 'nov/visit-books 'open)
+    (tool-bar-add-item "copy" 'copy-region-as-kill 'copy)
+    (tool-bar-add-item "search" 'isearch-forward 'search)
+    (tool-bar-add-item "home" 'nov-goto-toc 'TOC)
+    (tool-bar-add-item "left-arrow" 'nov-previous-document 'prev-chapter)
+    (tool-bar-add-item "right-arrow" 'nov-next-document 'next-chapter)
+    (tool-bar-add-item "plus" 'hlt/add-region 'highlight)
+    (tool-bar-add-item "dict" 'glossary/define-at-point 'dict)
+    (tool-bar-add-item "robot" 'gptel/ask-llama 'GPT)
+    (tool-bar-add-item "journal" 'hlt/visit-note 'HL-note)
+    (tool-bar-add-item "jump-to" 'nov-toggle-link-peeking 'peek)
+    tool-bar-map))
+(add-hook 'nov-mode-hook (lambda () (setq-local tool-bar-map nov-tool-bar-map)))
+(add-hook 'nov-mode-hook #'visual-line-mode)
+(add-hook 'nov-mode-hook (lambda () (text-scale-set -1)))
 
 (provide 'init-nov)
 ;;; init-nov.el ends here

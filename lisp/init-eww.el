@@ -2,6 +2,11 @@
 
 (require 'browse-url)
 (require 'eww)
+(require 'shr)
+
+(with-eval-after-load 'eww
+  (set-face-attribute 'shr-text nil :family "LXGW WenKai Screen"))
+
 (setq browse-url-browser-function 'eww)
 (setq eww-bookmarks-directory emacs-dir
       shr-inhibit-images t)
