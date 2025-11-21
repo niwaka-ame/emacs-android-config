@@ -20,8 +20,6 @@
 (setq auto-save-default nil)
 ;; font
 (set-face-attribute 'default nil :family "LXGW WenKai Screen")
-(with-eval-after-load 'eww
-  (set-face-attribute 'shr-text nil :family "LXGW WenKai Screen"))
 ;; toolbar buttons
 ;; load customised 24x24 xpm images
 (add-to-list 'image-load-path (concat path-dir "images/"))
