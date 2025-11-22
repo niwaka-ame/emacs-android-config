@@ -539,97 +539,7 @@
       (eww (concat "https://en.m.wikipedia.org/w/index.php?search=" query-no-space)))))
 
 ;;; elfeed
-(require 'elfeed)
-(require 'elfeed-org)
-(elfeed-org)
-(setq elfeed-db-directory (concat emacs-dir ".elfeed-data"))
-(setq rmh-elfeed-org-files (list (concat emacs-dir "elfeed.org")))
-(setq elfeed-show-entry-switch 'switch-to-buffer)
-(setq elfeed-search-date-format (list "%m%d" 4 :left))
-(setq elfeed-search-title-min-width 200)
-(setq elfeed-search-trailing-width 10)
-
-(setq elfeed/filter-alist
-      '((long . "@6-months-ago +long")
-        (science . "@3-days-ago +sci")
-        (academia . "@3-days-ago +aca")
-        (all . "@6-months-ago")))
-(setq elfeed-search-filter (cdar elfeed/filter-alist))
-
-(defun elfeed-search-print-entry--notag (entry)
-  "Print ENTRY to the buffer."
-  (let* ((date (elfeed-search-format-date (elfeed-entry-date entry)))
-         (title (or (elfeed-meta entry :title) (elfeed-entry-title entry) ""))
-         (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
-         (feed (elfeed-entry-feed entry))
-         (feed-title
-          (when feed
-            (or (elfeed-meta feed :title) (elfeed-feed-title feed))))
-         (tags (mapcar #'symbol-name (elfeed-entry-tags entry)))
-         (tags-str (mapconcat
-                    (lambda (s) (propertize s 'face 'elfeed-search-tag-face))
-                    tags ","))
-         (title-width (- (window-width) 10 elfeed-search-trailing-width))
-         (title-column (elfeed-format-column
-                        title (elfeed-clamp
-                               elfeed-search-title-min-width
-                               title-width
-                               elfeed-search-title-max-width)
-                        :left)))
-    (insert (propertize date 'face 'elfeed-search-date-face) " ")
-    (when feed-title
-      (insert (propertize feed-title 'face 'elfeed-search-feed-face) " "))
-    (insert (propertize title-column 'face title-faces 'kbd-help title))))
-
-(setq elfeed-search-print-entry-function #'elfeed-search-print-entry--notag)
-
-(defun elfeed/set-preset-filter (filter)
-  (elfeed-search-set-filter filter)
-  (switch-to-buffer "*elfeed-search*"))
-
-(defun elfeed/next ()
-  (interactive)
-  (if (eq (window-end nil t) (point-max))
-      (elfeed-show-next)
-    (scroll-up-command)))
-
-(defun elfeed/prev ()
-  (interactive)
-  (if (eq (window-start) (point-min))
-      (elfeed-show-prev)
-    (scroll-down-command)))
-
-(define-key elfeed-search-mode-map [mouse-1] 'elfeed-search-show-entry)
-(define-key elfeed-show-mode-map (kbd "<volume-up>") 'elfeed/prev)
-(define-key elfeed-show-mode-map (kbd "<volume-down>") 'elfeed/next)
-
-(defun elfeed/menu-setup (alist)
-  (let ((result (list "elfeed")))
-    (dolist (pair alist result)
-      (push `[,(symbol-name (car pair)) (lambda () (interactive) (elfeed-search-set-filter ,(cdr pair))) t] result))
-    (reverse result)))
-(easy-menu-define elfeed-search-mode-menu elfeed-search-mode-map
-  "elfeed search mode menu"
-  (elfeed/menu-setup elfeed/filter-alist))
-(easy-menu-add elfeed-search-mode-menu elfeed-search-mode-map)
-
-(defvar elfeed-tool-bar-map
-  (let ((tool-bar-map (make-sparse-keymap)))
-    (tool-bar-add-item "close" 'kill-current-buffer 'close)
-    (tool-bar-add-item "refresh" 'elfeed-update 'update)
-    (tool-bar-add-item "dict" 'glossary/define-at-point 'dict)
-    (tool-bar-add-item "robot" 'gptel/ask-llama 'GPT)
-    (dolist (pair elfeed/filter-alist)
-        (tool-bar-add-item (symbol-name (car pair))
-                           (eval `(lambda () (interactive) (elfeed/set-preset-filter ,(cdr pair))))
-                           (car pair)))
-    tool-bar-map))
-(add-hook 'elfeed-search-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
-(add-hook 'elfeed-search-mode-hook (lambda () (text-scale-set -3)))
-(add-hook 'elfeed-search-mode-hook (lambda () (setq-local line-spacing 0.2)))
-(add-hook 'elfeed-show-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
-(add-hook 'elfeed-show-mode-hook #'visual-line-mode)
-(add-hook 'elfeed-show-mode-hook (lambda () (text-scale-set -1)))
+(require 'init-elfeed)
 
 ;;; org-journal
 (require 'org-journal)
@@ -760,6 +670,55 @@
         (insert "### 在“" sentence "”里，“" query "”是什么意思？")
       (insert "### What is \"" query "\" in the context of \"" sentence "\"?"))
     (gptel-send)))
+
+;;; org-roam
+(require 'org-roam)
+(setq org-roam-directory (concat emacs-dir "roam/")
+      org-roam-db-location (concat emacs-dir "org-roam.db"))
+;; hide property drawers
+(require 'org-tidy)
+(add-hook 'org-mode-hook #'org-tidy-mode)
+
+
+(defun roam/visit-nodes ()
+  (interactive)
+  (find-file-noselect (concat emacs-dir "roam/"))
+  (switch-to-buffer "roam")
+  (dired-revert))
+
+(defun roam/visit-zettel ()
+  (interactive)
+  ;; toggle between ethos and pathos.
+  (pcase (buffer-name)
+    ("pathos.org" (switch-to-buffer (find-file-noselect (concat emacs-dir "roam/ethos.org"))))
+    (_ (switch-to-buffer (find-file-noselect (concat emacs-dir "roam/pathos.org"))))))
+
+(defun roam/save ()
+  (interactive)
+  (save-buffer)
+  ;; avoid running sync in normal org-mode
+  (when (string= (file-name-directory (buffer-file-name)) (concat emacs-dir "roam/"))
+    (org-roam-db-sync)))
+
+(defvar org-tool-bar-map
+  (let ((tool-bar-map (make-sparse-keymap)))
+    (tool-bar-add-item "close" 'kill-current-buffer 'close)
+    (tool-bar-add-item "open" 'roam/visit-nodes 'open)
+    (tool-bar-add-item "undo" 'undo 'undo)
+    (tool-bar-add-item "save" 'roam/save 'save)
+    (tool-bar-add-item "copy" 'copy-region-as-kill 'copy)
+    (tool-bar-add-item "search" 'isearch-forward 'search)
+    (tool-bar-add-item "brain" 'roam/visit-zettel 'zettel)
+    (tool-bar-add-item "right-arrow" 'org-roam-node-visit 'visit)
+    (tool-bar-add-item "left-arrow" 'org-roam-buffer-toggle 'backlink)
+    (tool-bar-add-item "plus" 'org-id-get-create 'add)
+    (tool-bar-add-item "connect" 'org-roam-node-insert 'insert)
+    (tool-bar-add-item "refresh" 'org-cycle-global 'cycle)
+    tool-bar-map))
+
+(add-hook 'org-mode-hook (lambda () (setq-local tool-bar-map org-tool-bar-map)))
+(add-hook 'org-roam-mode-hook (lambda () (setq-local tool-bar-map org-tool-bar-map)))
+
 
 ;;; tool bar
 (tool-bar-add-item "diary" 'diary 'diary)
@@ -903,54 +862,6 @@
             (set-face-attribute 'header-line nil :height 0.8)
             (switch-to-buffer "*Fancy Diary Entries*")
             (routine/check-and-warn)))
-
-;;; org-roam
-(require 'org-roam)
-(setq org-roam-directory (concat emacs-dir "roam/")
-      org-roam-db-location (concat emacs-dir "org-roam.db"))
-;; hide property drawers
-(require 'org-tidy)
-(add-hook 'org-mode-hook #'org-tidy-mode)
-
-
-(defun roam/visit-nodes ()
-  (interactive)
-  (find-file-noselect (concat emacs-dir "roam/"))
-  (switch-to-buffer "roam")
-  (dired-revert))
-
-(defun roam/visit-zettel ()
-  (interactive)
-  ;; toggle between ethos and pathos.
-  (pcase (buffer-name)
-    ("pathos.org" (switch-to-buffer (find-file-noselect (concat emacs-dir "roam/ethos.org"))))
-    (_ (switch-to-buffer (find-file-noselect (concat emacs-dir "roam/pathos.org"))))))
-
-(defun roam/save ()
-  (interactive)
-  (save-buffer)
-  ;; avoid running sync in normal org-mode
-  (when (string= (file-name-directory (buffer-file-name)) (concat emacs-dir "roam/"))
-    (org-roam-db-sync)))
-
-(defvar org-tool-bar-map
-  (let ((tool-bar-map (make-sparse-keymap)))
-    (tool-bar-add-item "close" 'kill-current-buffer 'close)
-    (tool-bar-add-item "open" 'roam/visit-nodes 'open)
-    (tool-bar-add-item "undo" 'undo 'undo)
-    (tool-bar-add-item "save" 'roam/save 'save)
-    (tool-bar-add-item "copy" 'copy-region-as-kill 'copy)
-    (tool-bar-add-item "search" 'isearch-forward 'search)
-    (tool-bar-add-item "brain" 'roam/visit-zettel 'zettel)
-    (tool-bar-add-item "right-arrow" 'org-roam-node-visit 'visit)
-    (tool-bar-add-item "left-arrow" 'org-roam-buffer-toggle 'backlink)
-    (tool-bar-add-item "plus" 'org-id-get-create 'add)
-    (tool-bar-add-item "connect" 'org-roam-node-insert 'insert)
-    (tool-bar-add-item "refresh" 'org-cycle-global 'cycle)
-    tool-bar-map))
-
-(add-hook 'org-mode-hook (lambda () (setq-local tool-bar-map org-tool-bar-map)))
-(add-hook 'org-roam-mode-hook (lambda () (setq-local tool-bar-map org-tool-bar-map)))
 
 ;;; for PC
 (unless (string= system-type "android")
