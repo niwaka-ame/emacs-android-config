@@ -111,6 +111,9 @@
         (gnus . org-gnus-no-new-news)
         (file . find-file)
         (wl . wl-other-frame)))
+;; hide property drawers
+(require 'org-tidy)
+(add-hook 'org-mode-hook #'org-tidy-mode)
 
 
 ;;; routine
@@ -250,59 +253,6 @@
         (insert url)
         (save-buffer)))))
 
-;;; literature notes
-(defun hlt/add-region ()
-  (interactive)
-  (if (region-active-p)
-      (let* ((beg (region-beginning))
-             (end (region-end))
-             (buf (current-buffer))
-             (buf-name (substring (buffer-name) 0 (- (length (buffer-name)) 5)))
-             (novindex nov-documents-index))
-        (copy-region-as-kill beg (1+ end))
-        (with-current-buffer
-            (find-file-noselect (concat emacs-dir "hl-notes/" buf-name ".org"))
-          (goto-char (point-max))
-          (when (not (= (point-min) (point-max))) (newline))
-          (org-insert-heading)
-          (org-set-property "NOVINDEX" (number-to-string novindex))
-          (let ((string-to-add (string-replace "\n" "\t" (car kill-ring))))
-            ;; use \\t to represent new line
-            (insert string-to-add))
-          (save-buffer)))
-    (message "mark region first!")))
-
-(defun hlt/visit-note ()
-  (interactive)
-  (switch-to-buffer
-   (find-file-noselect
-    (concat emacs-dir "hl-notes/" (substring (buffer-name) 0 (- (length (buffer-name)) 5)) ".org")))
-  (hlt-mode))
-
-(defun hlt/visit-epub ()
-  (interactive)
-  (let* ((heading (org-get-heading t t t t))
-         ;; search appears struggling with these quotation marks.
-         (first-line (replace-regexp-in-string "[“”]" "." (car (split-string heading "\t"))))
-         (epub-buffer (concat (substring (buffer-name) 0 (- (length (car (split-string (buffer-name) "<"))) 3)) "epub"))
-         (novindex (org-entry-get (point) "NOVINDEX")))
-    (switch-to-buffer epub-buffer)
-    (nov-goto-document (string-to-number novindex))
-    ;; must unhighlight first, otherwise the highlight won't work when revisit.
-    (unhighlight-regexp first-line)
-    (highlight-regexp first-line)
-    (re-search-forward first-line)))
-
-(define-derived-mode hlt-mode org-mode "hlt")
-(defvar hlt-tool-bar-map
-  (let ((tool-bar-map (make-sparse-keymap)))
-    (tool-bar-add-item "close" 'kill-current-buffer 'close)
-    (tool-bar-add-item "undo" 'undo 'undo)
-    (tool-bar-add-item "save" 'save-buffer 'save)
-    (tool-bar-add-item "next-page" 'hlt/visit-epub 'jump-back)
-    tool-bar-map))
-(add-hook 'hlt-mode-hook (lambda () (setq-local tool-bar-map hlt-tool-bar-map)))
-
 ;;; glossary and stardict
 (require 'stardict)
 (require 'stardict-es-en)
@@ -427,96 +377,7 @@
 (require 'init-nov)
 
 ;;; poems
-(require '@300)
-(defun @300/parse-to-json (file)
-  (with-current-buffer (find-file-noselect file)
-    (save-excursion
-      (goto-char (point-min))
-      (let ((poems nil)
-            (counter 0))
-        (while (< (point) (point-max))
-          (let ((poem (list `(id . ,counter) '(type . ""))))
-            ;; title
-            (push `(title . ,(buffer-substring (line-beginning-position) (line-end-position))) poem)
-            (forward-line 1)
-            ;; author
-            (push `(author . ,(buffer-substring (line-beginning-position) (line-end-position))) poem)
-            (forward-line 1)
-            ;; verses
-            (let ((verses nil))
-              (while-let ((line (buffer-substring (line-beginning-position) (line-end-position)))
-                          (empty-p (not (string= line ""))))
-                (push line verses)
-                (forward-line 1))
-              (push `(contents . ,(mapconcat #'identity (reverse verses) "\n")) poem)
-              ;; skip the empty line
-              (forward-line 1))
-            (push poem poems)
-            (setq counter (1+ counter))))
-        (let ((output-str (json-encode poems))
-              (output-file (concat (buffer-file-name) ".json")))
-          (with-current-buffer (find-file-noselect output-file)
-            (erase-buffer)
-            (insert output-str)
-            (json-pretty-print-buffer)
-            (save-buffer)
-            (kill-buffer)))))
-    (kill-buffer)))
-(@300/parse-to-json (concat emacs-dir "tangshi.org"))
-(setq @300-json (concat emacs-dir "tangshi.org.json"))
-(defvar @300/prose-hidden 0)
-
-(defun @300/visit-tangshi-file ()
-  (interactive)
-  (switch-to-buffer (find-file-noselect (concat emacs-dir "tangshi.org")))
-  (goto-char (point-max)))
-
-(defun @300/random-poem ()
-  ;; status: 0 -> 1 -> ... -> N -> -1 -> 0
-  (interactive)
-  (if (= @300/prose-hidden 0)
-      (progn
-        (@300-random)
-        (switch-to-buffer "*唐诗三百首*")
-        (text-scale-set 2)
-        (@300/hide-prose))
-    (cond
-     ((= @300/prose-hidden -1) (@300/show-prose-all))
-     (t (@300/show-prose-one-by-one)))))
-
-(defun @300/hide-prose ()
-  (with-current-buffer "*唐诗三百首*"
-    (save-excursion
-      (goto-line 4)
-      (while (< (point) (point-max))
-        (beginning-of-line)
-        (let* ((rand (random 3))
-               (line-end (line-end-position))
-               (line-beg (line-beginning-position))
-               (comma-pos (re-search-forward "[，？。！]" line-end t)))
-          (when comma-pos
-            (if (= rand 1)
-                (put-text-property comma-pos line-end 'face `(:foreground ,(face-attribute 'default :background)))
-              (put-text-property line-beg comma-pos 'face `(:foreground ,(face-attribute 'default :background)))))
-          (forward-line 1)
-          ))))
-  (setq @300/prose-hidden 1))
-
-
-(defun @300/show-prose-all ()
-  (switch-to-buffer "*唐诗三百首*")
-  (with-current-buffer "*唐诗三百首*"
-    (remove-text-properties (point-min) (point-max) '(face nil))
-    (setq @300/prose-hidden 0)))
-
-(defun @300/show-prose-one-by-one ()
-  (switch-to-buffer "*唐诗三百首*")
-  (with-current-buffer "*唐诗三百首*"
-    (goto-line (+ @300/prose-hidden 3))
-    (if (= (point) (point-max))
-        (progn (@300/hide-prose) (setq @300/prose-hidden -1))
-      (progn (remove-text-properties (line-beginning-position) (line-end-position) '(face nil))
-             (cl-incf @300/prose-hidden)))))
+(require 'init-@300)
 
 ;;; my timer
 (defun my/timer (&optional seconds)
@@ -542,143 +403,15 @@
 (require 'init-elfeed)
 
 ;;; org-journal
-(require 'org-journal)
-(setq org-journal-dir (concat emacs-dir "journal/")
-      org-journal-date-format "%Y-%m-%d, %A"
-      org-journal-file-format "%Y-%V-%b.org"
-      org-journal-carryover-items ""
-      org-journal-file-type 'weekly
-      org-journal-encrypt-journal nil
-      org-journal-hide-entries-p nil)
+(require 'init-org-journal)
 
-(defun org-journal/new-entry (prefix)
-  (interactive "P")
-  (org-journal-new-entry prefix))
-
-(defun org-journal/add-region (prefix)
-  (interactive "P")
-  (if (region-active-p)
-      (let* ((beg (region-beginning))
-             (end (region-end))
-             (buf (current-buffer))
-             (url (and (eq major-mode 'eww-mode) (plist-get eww-data :url)))
-             (book (and (eq major-mode 'nov-mode) (buffer-name))))
-        (copy-region-as-kill beg (1+ end))
-        (org-journal-new-entry prefix)
-        (save-excursion
-          (newline)
-          (if url (progn
-                    (insert "From: ")
-                    (insert url)
-                    (newline)))
-          (if book (progn
-                    (insert "From: ")
-                    (insert book)
-                    (newline)))
-          (insert "#+BEGIN_QUOTE\n")
-          (insert (string-trim-right (car kill-ring)))
-          (newline)
-          (insert "#+END_QUOTE\n")
-          (newline))))
-  (message "mark region first!"))
-
-;; use grep to search org-journal
-(require 'grep)
-(defun org-journal/search (pattern)
-  (interactive "sPattern: ")
-  (grep (concat "grep --color=auto -niH -e " pattern " *.org")))
-
-(defvar org-journal-tool-bar-map
-  (let ((tool-bar-map (make-sparse-keymap)))
-    (tool-bar-add-item "close" 'kill-current-buffer 'close)
-    (tool-bar-add-item "open"
-                       (lambda ()
-                         (interactive)
-                         (find-file-noselect org-journal-dir)
-                         (switch-to-buffer "journal"))
-                       'open)
-    (tool-bar-add-item "undo" 'undo 'undo)
-    (tool-bar-add-item "save" 'save-buffer 'save)
-    (tool-bar-add-item "search" 'org-journal/search 'search)
-    (tool-bar-add-item "copy" 'copy-region-as-kill 'copy)
-    (tool-bar-add-item "paste" 'yank 'paste)
-    (tool-bar-add-item "left-arrow" 'org-journal-previous-entry 'previous-entry)
-    (tool-bar-add-item "right-arrow" 'org-journal-next-entry 'next-entry)
-    (tool-bar-add-item "journal"
-                       'org-journal/new-entry
-                       'new-entry)
-    tool-bar-map))
-(add-hook 'org-journal-mode-hook (lambda () (setq-local tool-bar-map org-journal-tool-bar-map)))
-(remove-hook 'org-journal-mode-hook #'turn-on-visual-line-mode)
-
-;;; llama3
-(require 'markdown-mode)
-(require 'gptel)
-;; setq `gptel-directives'
-(load (concat emacs-dir "llama-directives.el"))
-;; make thing-at-point recognise sentence with single space.
-(setq sentence-end-double-space nil)
-
-;; OpenRouter offers an OpenAI compatible API
-(setq gptel-model "tngtech/deepseek-r1t2-chimera:free"
-      gptel-max-tokens 2000
-      gptel-include-reasoning nil
-      gptel-backend
-      (gptel-make-openai "OpenRouter"               ;Any name you want
-                         :host "openrouter.ai"
-                         :endpoint "/api/v1/chat/completions"
-                         :stream t
-                         :key (with-current-buffer (find-file-noselect (concat emacs-dir "llama")) (buffer-substring-no-properties (point-min) (1- (point-max))))
-                         :models '("tngtech/deepseek-r1t2-chimera:free")))
-;; (add-hook 'markdown-mode-hook #'variable-pitch-mode)
-(add-hook 'markdown-mode-hook (lambda () (setq gptel--system-message (alist-get 'default gptel-directives))))
-
-;; define the gptel-mode menu according to `gptel-directives'
-(defun gptel/menu-setup ()
-  "loop over `gptel-directives' to generate a menu."
-  (let ((result (list "gptel")))
-    (dolist (pair gptel-directives result)
-      (push `[,(symbol-name (car pair)) (lambda () (interactive) (setq-local gptel--system-message ,(cdr pair))) t] result))
-    (reverse result)))
-(easy-menu-define gptel-mode-menu gptel-mode-map
-  "gptel mode menu"
-  (gptel/menu-setup))
-(easy-menu-add gptel-mode-menu gptel-mode-map)
-
-(defun gptel/start-or-send ()
-  (interactive)
-  (if (eq major-mode 'markdown-mode)
-      (if (string= (buffer-substring-no-properties (- (point-max) 4) (1- (point-max))) "###")
-          (message "empty input!")
-        (gptel-send))
-    (switch-to-buffer (gptel "*Llama3*"))))
-
-(defun gptel/ask-llama ()
-  (interactive)
-  (let ((query nil)
-        (sentence (replace-regexp-in-string "\n" " " (thing-at-point 'sentence))))
-    (if (region-active-p)
-        (setq query (replace-regexp-in-string
-                     "\n"
-                     " "
-                     (buffer-substring-no-properties (region-beginning)
-                                                     (region-end))))
-      (setq query (thing-at-point 'word)))
-    (switch-to-buffer (gptel "*Ask Llama3*"))
-    (erase-buffer)
-    (if (string-match-p "[\u4e00-\u9fff]" query)
-        (insert "### 在“" sentence "”里，“" query "”是什么意思？")
-      (insert "### What is \"" query "\" in the context of \"" sentence "\"?"))
-    (gptel-send)))
+;;; gptel
+(require 'init-gptel)
 
 ;;; org-roam
 (require 'org-roam)
 (setq org-roam-directory (concat emacs-dir "roam/")
       org-roam-db-location (concat emacs-dir "org-roam.db"))
-;; hide property drawers
-(require 'org-tidy)
-(add-hook 'org-mode-hook #'org-tidy-mode)
-
 
 (defun roam/visit-nodes ()
   (interactive)

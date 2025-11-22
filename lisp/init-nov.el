@@ -121,5 +121,60 @@ while accepting back-links (target anchors)."
 (add-hook 'nov-mode-hook #'visual-line-mode)
 (add-hook 'nov-mode-hook (lambda () (text-scale-set -1)))
 
+;;; literature notes
+(require 'org)
+
+(defun hlt/add-region ()
+  (interactive)
+  (if (region-active-p)
+      (let* ((beg (region-beginning))
+             (end (region-end))
+             (buf (current-buffer))
+             (buf-name (substring (buffer-name) 0 (- (length (buffer-name)) 5)))
+             (novindex nov-documents-index))
+        (copy-region-as-kill beg (1+ end))
+        (with-current-buffer
+            (find-file-noselect (concat emacs-dir "hl-notes/" buf-name ".org"))
+          (goto-char (point-max))
+          (when (not (= (point-min) (point-max))) (newline))
+          (org-insert-heading)
+          (org-set-property "NOVINDEX" (number-to-string novindex))
+          (let ((string-to-add (string-replace "\n" "\t" (car kill-ring))))
+            ;; use \\t to represent new line
+            (insert string-to-add))
+          (save-buffer)))
+    (message "mark region first!")))
+
+(defun hlt/visit-note ()
+  (interactive)
+  (switch-to-buffer
+   (find-file-noselect
+    (concat emacs-dir "hl-notes/" (substring (buffer-name) 0 (- (length (buffer-name)) 5)) ".org")))
+  (hlt-mode))
+
+(defun hlt/visit-epub ()
+  (interactive)
+  (let* ((heading (org-get-heading t t t t))
+         ;; search appears struggling with these quotation marks.
+         (first-line (replace-regexp-in-string "[“”]" "." (car (split-string heading "\t"))))
+         (epub-buffer (concat (substring (buffer-name) 0 (- (length (car (split-string (buffer-name) "<"))) 3)) "epub"))
+         (novindex (org-entry-get (point) "NOVINDEX")))
+    (switch-to-buffer epub-buffer)
+    (nov-goto-document (string-to-number novindex))
+    ;; must unhighlight first, otherwise the highlight won't work when revisit.
+    (unhighlight-regexp first-line)
+    (highlight-regexp first-line)
+    (re-search-forward first-line)))
+
+(define-derived-mode hlt-mode org-mode "hlt")
+(defvar hlt-tool-bar-map
+  (let ((tool-bar-map (make-sparse-keymap)))
+    (tool-bar-add-item "close" 'kill-current-buffer 'close)
+    (tool-bar-add-item "undo" 'undo 'undo)
+    (tool-bar-add-item "save" 'save-buffer 'save)
+    (tool-bar-add-item "next-page" 'hlt/visit-epub 'jump-back)
+    tool-bar-map))
+(add-hook 'hlt-mode-hook (lambda () (setq-local tool-bar-map hlt-tool-bar-map)))
+
 (provide 'init-nov)
 ;;; init-nov.el ends here
