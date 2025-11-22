@@ -124,4 +124,4 @@
       (message "No definition is found!"))))
 
 (provide 'stardict-es-en)
-;;; stardict-duo.el ends here
+;;; stardict-es-en.el ends here
