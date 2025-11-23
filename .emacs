@@ -11,6 +11,7 @@
 
 ;;; appearance
 (setopt tool-bar-position 'bottom)
+(setq max-mini-window-height 12)
 ;; larger font on phone
 (set-face-attribute 'default nil :height 240)
 (set-fontset-font t nil (font-spec :name "Nom Na Tong"))
@@ -113,6 +114,7 @@
 
 ;;; nov.el
 (require 'init-nov)
+(add-hook 'diary-fancy-display-mode-hook #'hlt/random-quote)
 
 ;;; poems
 (require 'init-@300)
@@ -290,7 +292,8 @@
             ;; smaller font for header-line
             (set-face-attribute 'header-line nil :height 0.8)
             (switch-to-buffer "*Fancy Diary Entries*")
-            (routine/check-and-warn)))
+            (routine/check-and-warn)
+            (hlt/random-quote)))
 
 ;;; for PC
 (unless (string= system-type "android")

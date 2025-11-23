@@ -123,6 +123,9 @@ while accepting back-links (target anchors)."
 
 ;;; literature notes
 (require 'org)
+(require 'seq)
+
+(defvar hlt/quote-directory (concat emacs-dir "hl-notes/"))
 
 (defun hlt/add-region ()
   (interactive)
@@ -134,7 +137,7 @@ while accepting back-links (target anchors)."
              (novindex nov-documents-index))
         (copy-region-as-kill beg (1+ end))
         (with-current-buffer
-            (find-file-noselect (concat emacs-dir "hl-notes/" buf-name ".org"))
+            (find-file-noselect (concat hlt/quote-directory buf-name ".org"))
           (goto-char (point-max))
           (when (not (= (point-min) (point-max))) (newline))
           (org-insert-heading)
@@ -149,7 +152,7 @@ while accepting back-links (target anchors)."
   (interactive)
   (switch-to-buffer
    (find-file-noselect
-    (concat emacs-dir "hl-notes/" (substring (buffer-name) 0 (- (length (buffer-name)) 5)) ".org")))
+    (concat hlt/quote-directory (substring (buffer-name) 0 (- (length (buffer-name)) 5)) ".org")))
   (hlt-mode))
 
 (defun hlt/visit-epub ()
@@ -175,6 +178,46 @@ while accepting back-links (target anchors)."
     (tool-bar-add-item "next-page" 'hlt/visit-epub 'jump-back)
     tool-bar-map))
 (add-hook 'hlt-mode-hook (lambda () (setq-local tool-bar-map hlt-tool-bar-map)))
+
+;; drawing random quote to display
+;; 1. Define a variable to hold the cache. Initial value is nil.
+(defvar hlt/quote-cache nil
+  "A cached list of (Quote . Book) pairs. Populated lazily.")
+
+(defun hlt/collect-all-quotes ()
+  "Scan all org files and return a list of (Quote . Book) pairs."
+  (let ((files (directory-files hlt/quote-directory t "\\.org$")))
+    (apply #'append
+           (mapcar
+            (lambda (file)
+              (let ((book-title (file-name-base file)))
+                (with-temp-buffer
+                  (insert-file-contents file)
+                  (delay-mode-hooks (org-mode))
+                  (org-map-entries
+                   (lambda ()
+                     (cons (org-get-heading t t t t) book-title))))))
+            files))))
+
+(defun hlt/random-quote (&optional force-refresh)
+  "Display a random quote.
+   If the cache is empty, it loads the quotes from disk.
+   Run with prefix argument (C-u) to force a reload from disk."
+  (interactive "P") ;; "P" allows the function to read the C-u prefix
+
+  ;; 2. Logic: If cache is nil OR user requested a refresh, load from disk
+  (when (or force-refresh (null hlt/quote-cache))
+    (message "Loading quotes from disk...")
+    (setq hlt/quote-cache (hlt/collect-all-quotes))
+    (message "Loaded %d quotes." (length hlt/quote-cache)))
+
+  ;; 3. Draw from the cache
+  (if (not hlt/quote-cache)
+      (message "No quotes found in %s" hlt/quote-directory)
+    (let* ((selected-pair (seq-random-elt hlt/quote-cache))
+           (quote-text (car selected-pair))
+           (book-title (cdr selected-pair)))
+      (message "[%s]: %s" book-title quote-text))))
 
 (provide 'init-nov)
 ;;; init-nov.el ends here
