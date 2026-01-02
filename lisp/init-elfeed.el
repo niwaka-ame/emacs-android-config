@@ -14,6 +14,7 @@
       '((long . "@6-months-ago +long")
         (science . "@3-days-ago +sci")
         (academia . "@3-days-ago +aca")
+        (tech . "@3-days-ago +tech")
         (all . "@6-months-ago")))
 (setq elfeed-search-filter (cdar elfeed/filter-alist))
 
