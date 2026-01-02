@@ -67,3 +67,6 @@
 [submodule "extensions/snowball-spanish.el"]
 	path = extensions/snowball-spanish.el
 	url = https://github.com/niwaka-ame/snowball-spanish.el.git
+[submodule "extensions/visual-fill-column"]
+	path = extensions/visual-fill-column
+	url = https://codeberg.org/joostkremers/visual-fill-column.git

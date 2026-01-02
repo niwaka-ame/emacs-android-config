@@ -305,6 +305,10 @@
   ;; theme
   (require 'doom-themes)
   (load-theme 'doom-solarized-light t)
+  ;; make reading easier
+  (require 'visual-fill-column)
+  (add-hook 'visual-line-mode-hook #'visual-fill-column-for-vline)
+  (setopt visual-fill-column-center-text t)
   ;; scrolling for nov.el and eww
   (with-eval-after-load 'nov
     (tool-bar-local-item "left-arrow" 'nov-scroll-down 'prev-screen nov-tool-bar-map)
