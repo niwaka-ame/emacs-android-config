@@ -13,7 +13,9 @@
 (setopt tool-bar-position 'bottom)
 (setq max-mini-window-height 12)
 ;; larger font on phone
-(set-face-attribute 'default nil :height 240)
+(if (string= system-type "android")
+    (set-face-attribute 'default nil :height 340)
+  (set-face-attribute 'default nil :height 240))
 (set-fontset-font t nil (font-spec :name "Nom Na Tong"))
 (require 'face-remap)
 (setq text-scale-mode-step 1.1)
