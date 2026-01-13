@@ -1,5 +1,5 @@
 (defvar emacs-dir "/sdcard/emacs/kawa/")
-(defvar path-dir "/sdcard/emacs/emacs-android-config/")
+(defvar path-dir "/sdcard/emacs/kawa/emacs-android-config/")
 
 ;;; path
 (add-to-list 'load-path path-dir)
