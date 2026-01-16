@@ -198,7 +198,7 @@
   '("visit config dir" .
     (lambda ()
       (interactive)
-      (find-file-noselect "/sdcard/emacs/emacs-android-config/")
+      (find-file-noselect path-dir)
       (switch-to-buffer "emacs-android-config"))))
 (define-key global-map
   [menu-bar my glossary/flow]
