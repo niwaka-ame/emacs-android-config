@@ -20,7 +20,6 @@
 (require 'stardict)
 (require 'stem)
 (require 'snowball-spanish)
-(require 'persist)
 
 (defun stardict--en-stemmer (word)
   (cdr (reverse (stem-english word))))
@@ -33,14 +32,14 @@
 (defconst stardict-stemmer-list (list #'stardict--es-stemmer #'stardict--en-stemmer))
 (defconst stardict-dir (file-name-directory (or load-file-name buffer-file-name)))
 (defconst stardict-name-list '("SCCS" "langdao-ec-gb"))
-(persist-defvar stardict-dict-hash-list nil "hash table list that stores the dictionaries.")
+(defvar stardict-dict-hash-list nil "hash table list that stores the dictionaries.")
 
 (defun stardict--remove-acute-accents (w)
   "Map áéíóúñ to aeioun in W."
   (replace-regexp-in-string
    "[áéíóúñ]" (lambda (m)
-               (cl-case (aref m 0)
-                 (?á "a") (?é "e") (?í "i") (?ó "o") (?ú "u") (?ñ "n")))
+                (cl-case (aref m 0)
+                  (?á "a") (?é "e") (?í "i") (?ó "o") (?ú "u") (?ñ "n")))
    w))
 
 (define-derived-mode stardict-mode fundamental-mode "stardict")
