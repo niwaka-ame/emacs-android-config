@@ -153,6 +153,9 @@
 ;;; org-roam
 (require 'init-org-roam)
 
+;;; sparkweather
+(require 'init-sparkweather)
+
 ;;; tool bar
 (tool-bar-add-item "diary" 'diary 'diary)
 (tool-bar-add-item "routine" 'routine/visit-routine-file 'routine)
@@ -270,6 +273,9 @@
 (define-key global-map
   [menu-bar apps diary]
   '("Diary" . diary))
+(define-key global-map
+  [menu-bar apps sparkweather]
+  '("Sparkweather" . sparkweather))
 
 ;; volume buttons
 (global-set-key (kbd "<volume-up>") 'scroll-down-command)
