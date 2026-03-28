@@ -141,6 +141,12 @@
         (eww (concat "https://zh.m.wikipedia.org/w/index.php?search=" query-no-space))
       (eww (concat "https://en.m.wikipedia.org/w/index.php?search=" query-no-space)))))
 
+;;; copy whole buffer
+(defun my/copy-whole-buffer ()
+  "Copy the entire buffer to the kill ring."
+  (interactive)
+  (clipboard-kill-ring-save (point-min) (point-max)))
+
 ;;; elfeed
 (require 'init-elfeed)
 
@@ -221,6 +227,9 @@
 (define-key global-map
   [menu-bar my org-journal/add-region]
   '("copy region to journal" . org-journal/add-region))
+(define-key global-map
+  [menu-bar my my/copy-whole-buffer]
+  '("copy whole buffer" . my/copy-whole-buffer))
 
 ;; make an apps menu, reflecting the apps on the global tool bar.
 (define-key-after
