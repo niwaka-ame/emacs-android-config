@@ -9,7 +9,7 @@
 (setq sentence-end-double-space nil)
 
 ;; OpenRouter offers an OpenAI compatible API
-(setq gptel-model 'tngtech/deepseek-r1t2-chimera:free
+(setq gptel-model 'nvidia/nemotron-3-super-120b-a12b:free
       gptel-max-tokens 2000
       gptel-include-reasoning nil
       gptel-backend
@@ -18,7 +18,7 @@
                          :endpoint "/api/v1/chat/completions"
                          :stream t
                          :key (with-current-buffer (find-file-noselect (concat emacs-dir "llama")) (buffer-substring-no-properties (point-min) (1- (point-max))))
-                         :models '(tngtech/deepseek-r1t2-chimera:free)))
+                         :models '(nvidia/nemotron-3-super-120b-a12b:free)))
 ;; (add-hook 'markdown-mode-hook #'variable-pitch-mode)
 (add-hook 'markdown-mode-hook (lambda () (setq gptel--system-message (alist-get 'default gptel-directives))))
 
