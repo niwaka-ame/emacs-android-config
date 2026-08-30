@@ -1,5 +1,6 @@
 ;;; init-elfeed.el --- Custom configuration for elfeed -*- lexical-binding: t; -*-
 
+(require 'compat-31)
 (require 'elfeed)
 (require 'elfeed-org)
 (elfeed-org)
@@ -17,7 +18,7 @@
         ;; (academia . "@3-days-ago +aca")
         ;; (tech . "@3-days-ago +tech")
         (all . "@6-months-ago")))
-(setq elfeed-search-filter (cdar elfeed/filter-alist))
+(setq-default elfeed-search-filter (cdar elfeed/filter-alist))
 
 (defun elfeed-search-print-entry--notag (entry)
   "Print ENTRY to the buffer on two visual lines."
