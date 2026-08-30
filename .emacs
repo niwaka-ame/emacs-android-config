@@ -137,12 +137,16 @@
 ;;; visit wikipedia
 (defun my/visit-wikipedia (query)
   (interactive "sQuery: ")
-  (let* ((query-trim (string-trim query))
-         (query-no-space (replace-regexp-in-string "[ \t\n\r]+" "%20" query-trim)))
-    (if (string-match-p "[\u4e00-\u9fff]" query-no-space)
-        ;; query Chinese wikipedia
-        (eww (concat "https://zh.m.wikipedia.org/w/index.php?search=" query-no-space))
-      (eww (concat "https://en.m.wikipedia.org/w/index.php?search=" query-no-space)))))
+  (let ((query-trim (string-trim query)))
+    (unless (string-empty-p query-trim)
+      (let ((query-no-space
+             (replace-regexp-in-string "[ \t\n\r]+" "%20" query-trim)))
+        (if (string-match-p "[\u4e00-\u9fff]" query-no-space)
+            ;; query Chinese wikipedia
+            (eww (concat "https://zh.m.wikipedia.org/w/index.php?search="
+                         query-no-space))
+          (eww (concat "https://en.m.wikipedia.org/w/index.php?search="
+                       query-no-space)))))))
 
 ;;; copy whole buffer
 (defun my/copy-whole-buffer ()
