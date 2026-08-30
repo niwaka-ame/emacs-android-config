@@ -51,6 +51,7 @@
       (progn
         (@300-random)
         (switch-to-buffer "*唐诗三百首*")
+        (@300-mode)
         (text-scale-set 2)
         (@300/hide-prose))
     (cond
@@ -90,6 +91,17 @@
         (progn (@300/hide-prose) (setq @300/prose-hidden -1))
       (progn (remove-text-properties (line-beginning-position) (line-end-position) '(face nil))
              (cl-incf @300/prose-hidden)))))
+
+(define-derived-mode @300-mode fundamental-mode "@300-mode")
+
+(defvar @300-tool-bar-map
+  (let ((tool-bar-map (make-sparse-keymap)))
+    (tool-bar-add-item "close" 'kill-current-buffer 'close)
+    (tool-bar-add-item "undo" 'undo 'undo)
+    (tool-bar-add-item "poem" '@300/random-poem 'poems)
+    tool-bar-map))
+
+(add-hook '@300-mode-hook (lambda () (setq-local tool-bar-map @300-tool-bar-map)))
 
 (provide 'init-@300)
 ;;; init-@300.el ends here
