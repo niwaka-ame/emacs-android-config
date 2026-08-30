@@ -250,8 +250,8 @@
   [menu-bar apps roam/visit-zettel]
   '("Roam" . roam/visit-zettel))
 (define-key global-map
-  [menu-bar apps org-journal/new-entry]
-  '("Journal" . org-journal/new-entry))
+  [menu-bar apps org-journal/open-latest]
+  '("Journal" . org-journal/open-latest))
 (define-key global-map
   [menu-bar apps nov/visit-books]
   '("Books" . nov/visit-books))
