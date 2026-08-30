@@ -9,39 +9,56 @@
 (setq elfeed-search-date-format (list "%m%d" 4 :left))
 (setq elfeed-search-title-min-width 200)
 (setq elfeed-search-trailing-width 10)
+(setq elfeed-search-title-max-width 120)
 
 (setq elfeed/filter-alist
       '((long . "@6-months-ago +long")
-        (science . "@3-days-ago +sci")
-        (academia . "@3-days-ago +aca")
-        (tech . "@3-days-ago +tech")
+        (science . "@7-days-ago +sci")
+        ;; (academia . "@3-days-ago +aca")
+        ;; (tech . "@3-days-ago +tech")
         (all . "@6-months-ago")))
 (setq elfeed-search-filter (cdar elfeed/filter-alist))
 
 (defun elfeed-search-print-entry--notag (entry)
-  "Print ENTRY to the buffer."
+  "Print ENTRY to the buffer on two visual lines."
   (let* ((date (elfeed-search-format-date (elfeed-entry-date entry)))
-         (title (or (elfeed-meta entry :title) (elfeed-entry-title entry) ""))
+         (title (or (elfeed-meta entry :title)
+                    (elfeed-entry-title entry)
+                    ""))
          (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
          (feed (elfeed-entry-feed entry))
          (feed-title
           (when feed
-            (or (elfeed-meta feed :title) (elfeed-feed-title feed))))
-         (tags (mapcar #'symbol-name (elfeed-entry-tags entry)))
-         (tags-str (mapconcat
-                    (lambda (s) (propertize s 'face 'elfeed-search-tag-face))
-                    tags ","))
+            (or (elfeed-meta feed :title)
+                (elfeed-feed-title feed))))
          (title-width (- (window-width) 10 elfeed-search-trailing-width))
-         (title-column (elfeed-format-column
-                        title (elfeed-clamp
-                               elfeed-search-title-min-width
-                               title-width
-                               elfeed-search-title-max-width)
-                        :left)))
-    (insert (propertize date 'face 'elfeed-search-date-face) " ")
-    (when feed-title
-      (insert (propertize feed-title 'face 'elfeed-search-feed-face) " "))
-    (insert (propertize title-column 'face title-faces 'kbd-help title))))
+         (title-column
+          (elfeed-format-column
+           title
+           (elfeed-clamp
+            elfeed-search-title-min-width
+            title-width
+            elfeed-search-title-max-width)
+           :left)))
+
+    ;; One real buffer character, displayed as the metadata line.
+    (insert
+     (propertize
+      " "
+      'display
+      (concat
+       (propertize date 'face 'elfeed-search-date-face)
+       (when feed-title
+         (concat
+          " "
+          (propertize feed-title 'face 'elfeed-search-feed-face)))
+       "\n")))
+
+    ;; This is EXACTLY your original title insertion.
+    (insert
+     (propertize title-column
+                 'face title-faces
+                 'kbd-help title))))
 
 (setq elfeed-search-print-entry-function #'elfeed-search-print-entry--notag)
 
@@ -87,11 +104,12 @@
     (tool-bar-add-item "robot" 'gptel/ask-llama 'GPT)
     tool-bar-map))
 (add-hook 'elfeed-search-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
-(add-hook 'elfeed-search-mode-hook (lambda () (text-scale-set -3)))
+(add-hook 'elfeed-search-mode-hook (lambda () (text-scale-set -2)))
 (add-hook 'elfeed-search-mode-hook (lambda () (setq-local line-spacing 0.2)))
 (add-hook 'elfeed-show-mode-hook (lambda () (setq-local tool-bar-map elfeed-tool-bar-map)))
 (add-hook 'elfeed-show-mode-hook #'visual-line-mode)
 (add-hook 'elfeed-show-mode-hook (lambda () (text-scale-set -1)))
+(remove-hook 'elfeed-search-update-hook #'elfeed-search-add-separators)
 
 (provide 'init-elfeed)
 ;;; init-elfeed.el ends here
