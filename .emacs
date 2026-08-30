@@ -178,7 +178,6 @@
 (tool-bar-add-item "rss" 'elfeed 'elfeed)
 (tool-bar-add-item "spell" 'glossary/revisit 'glossary)
 (tool-bar-add-item "poem" '@300/random-poem 'poems)
-(tool-bar-add-item "timer" 'my/timer 'timer)
 (tool-bar-add-item "nov" 'nov/visit-books 'books)
 (tool-bar-add-item "journal"
                    'org-journal/open-latest
@@ -187,6 +186,7 @@
 (tool-bar-add-item "robot" 'gptel/start-or-send 'GPT)
 (tool-bar-add-item "todo" 'fleet/todo-visit 'todo)
 (tool-bar-add-item "dict" 'glossary/flow 'dict)
+(tool-bar-add-item "timer" 'my/timer 'timer)
 
 ;;; menu
 ; remove two menus
@@ -245,6 +245,9 @@
   (cons "应用" (make-sparse-keymap "应用"))
   'my)
 (define-key global-map
+  [menu-bar apps my/timer]
+  '("Timer" . my/timer))
+(define-key global-map
   [menu-bar apps glossary/flow]
   '("Dict" . glossary/flow))
 (define-key global-map
@@ -262,9 +265,6 @@
 (define-key global-map
   [menu-bar apps nov/visit-books]
   '("Books" . nov/visit-books))
-(define-key global-map
-  [menu-bar apps my/timer]
-  '("Timer" . my/timer))
 (define-key global-map
   [menu-bar apps @300/random-poem]
   '("Poems" . @300/random-poem))
