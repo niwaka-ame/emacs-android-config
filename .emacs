@@ -116,7 +116,7 @@
 
 ;;; nov.el
 (require 'init-nov)
-(add-hook 'diary-fancy-display-mode-hook #'hlt/random-quote)
+;; (add-hook 'diary-fancy-display-mode-hook #'hlt/random-quote)
 
 ;;; poems
 (require 'init-@300)
@@ -309,8 +309,8 @@
             ;; smaller font for header-line
             (set-face-attribute 'header-line nil :height 0.8)
             (switch-to-buffer "*Fancy Diary Entries*")
-            (routine/check-and-warn)
-            (hlt/random-quote)))
+            (routine/check-and-warn)))
+            ;; (hlt/random-quote)))
 
 ;;; for PC
 (unless (string= system-type "android")
