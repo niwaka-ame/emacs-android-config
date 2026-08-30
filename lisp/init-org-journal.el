@@ -47,6 +47,21 @@
   (interactive "sPattern: ")
   (grep (concat "grep --color=auto -niH -e " pattern " *.org")))
 
+(defun org-journal/open-latest ()
+  "Open the latest journal file and go to its last daily entry."
+  (interactive)
+  (let* ((files (directory-files
+                 org-journal-dir t
+                 "\\`[0-9]\\{4\\}-[0-9]\\{2\\}-.*\\.org\\'"))
+         (latest (car (last (sort files #'string<)))))
+    (unless latest
+      (user-error "No journal files found"))
+    (find-file latest)
+    (goto-char (point-max))
+    (when (re-search-backward "^\\* " nil t)
+      (org-show-entry)
+      (org-show-subtree))))
+
 (defvar org-journal-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
     (tool-bar-add-item "close" 'kill-current-buffer 'close)

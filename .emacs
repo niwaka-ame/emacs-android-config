@@ -174,7 +174,7 @@
 (tool-bar-add-item "timer" 'my/timer 'timer)
 (tool-bar-add-item "nov" 'nov/visit-books 'books)
 (tool-bar-add-item "journal"
-                   'org-journal/new-entry
+                   'org-journal/open-latest
                    'journal)
 (tool-bar-add-item "brain" 'roam/visit-zettel 'roam)
 (tool-bar-add-item "robot" 'gptel/start-or-send 'GPT)
