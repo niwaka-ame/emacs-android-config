@@ -93,7 +93,7 @@
       (progn (remove-text-properties (line-beginning-position) (line-end-position) '(face nil))
              (cl-incf @300/prose-hidden)))))
 
-(define-derived-mode @300-mode fundamental-mode "@300-mode")
+(define-derived-mode @300-mode fundamental-mode "@300")
 
 (defvar @300-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
