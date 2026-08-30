@@ -1,11 +1,14 @@
 ;;; fleet.el --- Defining fleet mode. -*- lexical-binding: t; -*-
 
 (require 'org)
+(require 'toolbar-spacer)
 
 (define-derived-mode fleet-mode org-mode "fleet")
 
 (defvar fleet-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
+    (define-key tool-bar-map [spacer]
+                (toolbar-spacer-item 325))
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
     (tool-bar-add-item "undo" 'undo 'undo)
     (tool-bar-add-item "save" 'save-buffer 'save)

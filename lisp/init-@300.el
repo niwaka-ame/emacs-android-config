@@ -1,6 +1,7 @@
 ;;; init-@300.el --- Custom configuration for @300. -*- lexical-binding: t; -*-
 
 (require '@300)
+(require 'toolbar-spacer)
 (defun @300/parse-to-json (file)
   (with-current-buffer (find-file-noselect file)
     (save-excursion
@@ -96,6 +97,8 @@
 
 (defvar @300-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
+    (define-key tool-bar-map [spacer]
+                (toolbar-spacer-item 325))
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
     (tool-bar-add-item "undo" 'undo 'undo)
     (tool-bar-add-item "poem" '@300/random-poem 'poems)

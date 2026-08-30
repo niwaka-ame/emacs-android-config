@@ -3,6 +3,7 @@
 (require 'browse-url)
 (require 'eww)
 (require 'shr)
+(require 'toolbar-spacer)
 
 (with-eval-after-load 'eww
   (set-face-attribute 'shr-text nil :family "LXGW WenKai Screen"))
@@ -24,6 +25,8 @@
 
 (defvar eww-bookmark-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
+    (define-key tool-bar-map [spacer]
+                (toolbar-spacer-item 325))
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
     (tool-bar-add-item "open" 'eww-bookmark-browse 'browse)
     tool-bar-map))
