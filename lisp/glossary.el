@@ -76,6 +76,7 @@
                   (insert (propertize hidden 'face `(:foreground ,(face-attribute 'default :background)))))
                 (newline))))))))
   (switch-to-buffer "*glossary-revisit*")
+  (glossary-mode)
   (goto-char (point-min)))
 
 (defun glossary/define-at-point ()
@@ -106,6 +107,18 @@
             (kill-buffer))
         ;; othewise update `WORD'
         (setq word str)))))
+
+(define-derived-mode glossary-mode fundamental-mode "glossary")
+
+(defvar glossary-tool-bar-map
+  (let ((tool-bar-map (make-sparse-keymap)))
+    (define-key tool-bar-map [spacer]
+                (toolbar-spacer-item 325))
+    (tool-bar-add-item "close" 'kill-current-buffer 'close)
+    (tool-bar-add-item "spell" 'glossary/revisit 'glossary)
+    tool-bar-map))
+
+(add-hook 'glossary-mode-hook (lambda () (setq-local tool-bar-map glossary-tool-bar-map)))
 
 (provide 'glossary)
 ;;; glossary.el ends here
