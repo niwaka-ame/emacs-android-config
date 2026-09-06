@@ -107,7 +107,7 @@ while accepting back-links (target anchors)."
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
     (tool-bar-add-item "open" 'nov/visit-books 'open)
     (tool-bar-add-item "copy" 'copy-region-as-kill 'copy)
-    (tool-bar-add-item "search" 'isearch-forward 'search)
+    (tool-bar-add-item "search" 'my/isearch-forward-gboard 'search)
     (tool-bar-add-item "home" 'nov-goto-toc 'TOC)
     (tool-bar-add-item "left-arrow" 'nov-previous-document 'prev-chapter)
     (tool-bar-add-item "right-arrow" 'nov-next-document 'next-chapter)

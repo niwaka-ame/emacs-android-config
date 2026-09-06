@@ -29,8 +29,10 @@
 (set-face-attribute 'tool-bar nil :background "white smoke")
 ;; disable clicking on minibuffer
 (define-key minibuffer-inactive-mode-map [mouse-1] 'ignore)
-;; always display only one window on android
 (when (string= system-type "android")
+  ;; always allow all Gboard inputs
+  (setq-default text-conversion-style t)
+  ;; always display only one window
   (add-hook 'window-configuration-change-hook
             (lambda ()
               (when (> (length (window-list nil 'NO-MINIBUF)) 1)
@@ -153,6 +155,13 @@
   "Copy the entire buffer to the kill ring."
   (interactive)
   (clipboard-kill-ring-save (point-min) (point-max)))
+
+;;; my i-search button
+(defun my/isearch-forward-gboard ()
+  "Start I-search and immediately edit the query in the minibuffer."
+  (interactive)
+  (isearch-forward nil t)
+  (isearch-edit-string))
 
 ;;; elfeed
 (require 'init-elfeed)
