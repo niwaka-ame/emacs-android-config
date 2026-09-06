@@ -163,6 +163,10 @@
   (isearch-forward nil t)
   (isearch-edit-string))
 
+;; Don't summon Gboard merely by tapping in selected modes.
+(defun my/no-keyboard-on-touch ()
+  (setq-local touch-screen-set-point-commands nil))
+
 ;;; elfeed
 (require 'init-elfeed)
 

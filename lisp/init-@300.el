@@ -105,6 +105,7 @@
     tool-bar-map))
 
 (add-hook '@300-mode-hook (lambda () (setq-local tool-bar-map @300-tool-bar-map)))
+(add-hook '@300-mode-hook 'my/no-keyboard-on-touch)
 
 (provide 'init-@300)
 ;;; init-@300.el ends here

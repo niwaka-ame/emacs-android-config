@@ -29,7 +29,7 @@
 
 ;;; routine
 (require 'toolbar-spacer)
-(define-derived-mode routine-mode org-mode "routine")
+(define-derived-mode routine-mode fundamental-mode "routine")
 (defvar routine-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
     (define-key tool-bar-map [spacer]
@@ -42,6 +42,7 @@
     (tool-bar-add-item "diary" 'diary 'diary)
     tool-bar-map))
 (add-hook 'routine-mode-hook (lambda () (setq-local tool-bar-map routine-tool-bar-map)))
+(add-hook 'routine-mode-hook 'my/no-keyboard-on-touch)
 
 (defun routine/visit-routine-file ()
   (interactive)
