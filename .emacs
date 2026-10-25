@@ -37,6 +37,8 @@
             (lambda ()
               (when (> (length (window-list nil 'NO-MINIBUF)) 1)
                 (delete-other-windows)))))
+;; scrolling
+(setq next-screen-context-lines 0)
 
 ;;; mode line
 ;; smaller font in mode line (such that at least part of the buffer name is displayed)
