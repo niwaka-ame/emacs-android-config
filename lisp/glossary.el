@@ -120,6 +120,7 @@
 
 (add-hook 'glossary-mode-hook (lambda () (setq-local tool-bar-map glossary-tool-bar-map)))
 (add-hook 'glossary-mode-hook 'my/no-keyboard-on-touch)
+(add-hook 'stardict-mode-hook 'my/no-keyboard-on-touch)
 
 (provide 'glossary)
 ;;; glossary.el ends here
