@@ -131,7 +131,7 @@
 ;;; my timer
 (defun my/timer (&optional seconds)
   "Display a timer from SECONDS in the echo area."
-  (interactive (list (read-number "Timer seconds (default 90): " 90)))
+  (interactive (list (read-number "Timer seconds (default 120): " 120)))
   (if (> seconds 0)
       (progn
         (message "Timer: %d" seconds)
