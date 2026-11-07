@@ -1,6 +1,9 @@
 (defvar emacs-dir "/sdcard/emacs/kawa/")
 (defvar path-dir "/sdcard/emacs/kawa/emacs-android-config/")
 
+;;; warning
+(add-to-list 'warning-suppress-types '(files missing-lexbind-cookie))
+
 ;;; path
 (add-to-list 'load-path path-dir)
 (let ((default-directory path-dir))
@@ -331,7 +334,8 @@
             ;; smaller font for header-line
             (set-face-attribute 'header-line nil :height 0.8)
             (switch-to-buffer "*Fancy Diary Entries*")
-            (routine/check-and-warn)))
+            (routine/check-and-warn)
+            (delete-other-windows)))
             ;; (hlt/random-quote)))
 
 ;;; for PC
