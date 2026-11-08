@@ -14,6 +14,11 @@
 ;; add this hook to allow soft line break in EWW
 (add-hook 'eww-after-render-hook #'visual-line-mode)
 
+(with-eval-after-load 'eww
+  (tool-bar-local-item "show" #'eww-toggle-images
+                       (intern "View page source")
+                       eww-tool-bar-map
+                       :help "Toggle images"))
 (tool-bar-local-item "search" 'my/isearch-forward-gboard 'search eww-tool-bar-map)
 (tool-bar-local-item "star" 'eww-list-bookmarks 'EWW-bookmark eww-tool-bar-map)
 ;; (tool-bar-local-item "sort-ascending" 'fleet/add-region 'fleet/add-region eww-tool-bar-map)
