@@ -340,6 +340,8 @@
 
 ;;; for PC
 (unless (string= system-type "android")
+  ;; suppress dir-local variables from another emacs
+  (setq enable-dir-local-variables nil)
   ;; evil
   (require 'evil)
   (evil-mode 1)
