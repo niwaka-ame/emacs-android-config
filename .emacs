@@ -134,7 +134,9 @@
 ;;; my timer
 (defun my/timer (&optional seconds)
   "Display a timer from SECONDS in the echo area."
-  (interactive (list (read-number "Timer seconds (default 120): " 120)))
+  (interactive
+   (let ((overriding-text-conversion-style 'password))
+     (list (read-number "Timer seconds (default 120): " 120))))
   (if (> seconds 0)
       (progn
         (message "Timer: %d" seconds)
