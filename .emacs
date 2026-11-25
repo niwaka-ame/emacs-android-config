@@ -161,6 +161,17 @@
   (interactive)
   (clipboard-kill-ring-save (point-min) (point-max)))
 
+;;; search region with duckduckgo
+(defun my/search-region-ddg (beg end)
+  "Search DuckDuckGo for the text in the active region."
+  (interactive "r")
+  (if (use-region-p)
+      (browse-url
+       (concat "https://duckduckgo.com/?q="
+               (url-hexify-string
+                (buffer-substring-no-properties beg end))))
+    (user-error "No active region")))
+
 ;;; my i-search button
 (defun my/isearch-forward-gboard ()
   "Start I-search and immediately edit the query in the minibuffer."
@@ -255,6 +266,9 @@
 (define-key global-map
   [menu-bar my my/copy-whole-buffer]
   '("copy whole buffer" . my/copy-whole-buffer))
+(define-key global-map
+  [menu-bar my my/search-region-ddg]
+  '("search region with Duckduckgo" . my/search-region-ddg))
 
 ;; make an apps menu, reflecting the apps on the global tool bar.
 (define-key-after
