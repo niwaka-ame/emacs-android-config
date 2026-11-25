@@ -167,7 +167,7 @@
   (interactive "r")
   (if (use-region-p)
       (browse-url
-       (concat "https://duckduckgo.com/?q="
+       (concat "https://duckduckgo.com/html/?q="
                (url-hexify-string
                 (buffer-substring-no-properties beg end))))
     (user-error "No active region")))
