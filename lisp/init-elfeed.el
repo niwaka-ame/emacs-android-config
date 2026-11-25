@@ -3,6 +3,7 @@
 (require 'compat-31)
 (require 'elfeed)
 (require 'elfeed-org)
+(require 'toolbar-spacer)
 (elfeed-org)
 (setq elfeed-db-directory (concat emacs-dir ".elfeed-data"))
 (setq rmh-elfeed-org-files (list (concat emacs-dir "elfeed.org")))
@@ -95,6 +96,8 @@
 
 (defvar elfeed-tool-bar-map
   (let ((tool-bar-map (make-sparse-keymap)))
+    (define-key tool-bar-map [spacer]
+                (toolbar-spacer-item 325))
     (tool-bar-add-item "close" 'kill-current-buffer 'close)
     (tool-bar-add-item "refresh" 'elfeed-update 'update)
     (dolist (pair elfeed/filter-alist)
