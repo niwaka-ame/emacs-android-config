@@ -380,10 +380,10 @@
     (tool-bar-local-item "right-arrow" 'elfeed-show-next 'next-feed elfeed-tool-bar-map))
   )
 
-;;; pedagogically show command names
-(defun my-echo-menu-command ()
-  (let ((keys (this-command-keys-vector)))
-    (when (or (seq-contains-p keys 'menu-bar)
-              (seq-contains-p keys 'tool-bar))
-      (message "%S" this-command))))
-(add-hook 'post-command-hook #'my-echo-menu-command)
+;; ;;; pedagogically show command names
+;; (defun my-echo-menu-command ()
+;;   (let ((keys (this-command-keys-vector)))
+;;     (when (or (seq-contains-p keys 'menu-bar)
+;;               (seq-contains-p keys 'tool-bar))
+;;       (message "%S" this-command))))
+;; (add-hook 'post-command-hook #'my-echo-menu-command)
